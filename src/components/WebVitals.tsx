@@ -14,7 +14,7 @@ export function WebVitals() {
 		import("web-vitals").then(
 			({ onCLS, onFID, onFCP, onLCP, onTTFB, onINP }) => {
 				function sendToGoogleAnalytics(metric: Metric) {
-					// Send to Google Analytics G-00ZDLV4JQ0 via Partytown
+					// Send to Google Analytics G-00ZDLV4JQ0
 					try {
 						if (window.gtag) {
 							window.gtag("event", metric.name, {

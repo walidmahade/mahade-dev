@@ -9,7 +9,11 @@
       "mcp__chrome-devtools__take_snapshot",
       "Bash(pnpm build:*)",
       "Bash(pnpm check:*)",
-      "Bash(VITE_CJS_TRACE=1 pnpm build:*)"
+      "Bash(VITE_CJS_TRACE=1 pnpm build:*)",
+      "Bash(find:*)",
+      "Bash(pnpm start)",
+      "WebSearch",
+      "Bash(pnpm install:*)"
     ]
   }
 }

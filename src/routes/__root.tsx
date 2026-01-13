@@ -1,5 +1,4 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
-import { Partytown } from "@qwik.dev/partytown/react";
 import { lazy, Suspense } from "react";
 
 import appCss from "../styles.css?url";
@@ -233,20 +232,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 		<html lang="en">
 			<head>
 				<HeadContent />
-				<Partytown
-					debug={false}
-					forward={["dataLayer.push", "gtag", "gtag.config", "gtag.event"]}
-				/>
 				<script
-					type="text/partytown"
+					async
 					src="https://www.googletagmanager.com/gtag/js?id=G-00ZDLV4JQ0"
-					suppressHydrationWarning
 				/>
-				<script
-					type="text/partytown"
-					src="/gtag.js"
-					suppressHydrationWarning
-				/>
+				<script src="/gtag.js" />
 				<link rel="preload" href={appCss} as="style" />
 			</head>
 			<body>

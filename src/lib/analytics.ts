@@ -1,4 +1,4 @@
-// Google Analytics utility functions with Partytown support
+// Google Analytics utility functions
 declare global {
 	interface Window {
 		gtag?: (...args: unknown[]) => void;
@@ -6,7 +6,7 @@ declare global {
 	}
 }
 
-// Simplified helper for Partytown
+// Simplified helper for gtag
 function safeGtag(...args: unknown[]) {
 	if (typeof window !== "undefined" && window.gtag) {
 		try {
