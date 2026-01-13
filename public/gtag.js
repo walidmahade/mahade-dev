@@ -5,7 +5,7 @@ function gtag(){
 }
 window.gtag = gtag;
 gtag('js', new Date());
-gtag('config', '', {
+gtag('config', 'G-V3VTFDNC0J', {
   page_title: document.title,
   page_location: window.location.href
 });

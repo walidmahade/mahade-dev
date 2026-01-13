@@ -36,36 +36,7 @@ const config = defineConfig(({ mode }) => ({
       },
     },
     rollupOptions: {
-      treeshake: {
-        preset: 'recommended',
-        moduleSideEffects: false,
-      },
-      external: (id) => {
-        // Exclude development dependencies from production build
-        if (mode === 'production') {
-          return id.includes('@tanstack/react-devtools') || 
-                 id.includes('@tanstack/react-router-devtools');
-        }
-        return false;
-      },
       output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor';
-            }
-            if (id.includes('@tanstack/react-router')) {
-              return 'router';
-            }
-            if (id.includes('lucide-react')) {
-              return 'icons';
-            }
-            if (id.includes('web-vitals')) {
-              return 'analytics';
-            }
-            return 'vendor';
-          }
-        },
         assetFileNames: (assetInfo) => {
           if (!assetInfo.name) return `assets/[name]-[hash][extname]`
           const info = assetInfo.name.split('.')
