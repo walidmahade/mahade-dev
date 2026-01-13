@@ -1,0 +1,29 @@
+================================================================================
+                              PROGRESS LOG
+================================================================================
+
+[2026-01-13] Project initialized
+- Created plans folder structure
+- Added prd.json for feature tracking
+- Added ralph.sh and ralph-once.sh scripts
+- Added progress.txt for logging
+
+[2026-01-13] Blog Feature Planned (F001)
+- Created feature specification with 8 requirements
+- Broke down into 10 tasks (T001-T010)
+- Technical decisions: Markdown files + Parsedown parser
+- Task dependencies mapped for execution order
+
+Task Summary:
+  T001: Create blog directory structure
+  T002: Add Parsedown library
+  T003: Create blog data helper functions
+  T004: Create blog listing page
+  T005: Create single blog post page
+  T006: Update router.php for blog routes
+  T007: Update navigation with Blog link
+  T008: Create sample blog posts
+  T009: Add blog typography styles
+  T010: Add SEO meta tags for posts
+
+--------------------------------------------------------------------------------

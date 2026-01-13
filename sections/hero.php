@@ -19,11 +19,11 @@
                 </div>
 
                 <p class="text-base text-zinc-300 leading-relaxed max-w-xl font-geist tracking-tight">
-                    Hey <span class="inline-block">&#128075;</span> I'm a developer, an explorer, a music buff, and a home cook. Currently building design systems at&nbsp;
-                    <span class="text-zinc-200 font-medium">Allica Bank</span>.
-                    Started in 2019 with JavaScript games.
+                    Hey <span class="inline-block">&#128075;</span> I'm a results-driven lead web developer currently guiding frontend strategy and delivery at&nbsp;
+                    <span class="text-zinc-200 font-medium">GetOnNet</span> since 2021.
+                    I specialize in crafting engaging, responsive frontend experiences with a focus on performance, cross-browser compatibility, and clean, scalable code.
                     <br><br>
-                    When not coding, I'm grooving to 90s Bollywood or cooking.
+                    My technical lens spans JavaScript, TypeScript, React, and modern CSS (SCSS/Tailwind), with practical exposure to VR, Three.js, and backend work in Node.js, Laravel, and WordPress. I hold certifications in PHP, Vue.js, and React.js. With a physics degree, I bring strong analytical rigor to problem solving and am exploring AI and machine learning to further elevate web experiences.
                     <span class="flex items-center gap-2 mt-3 text-sm text-zinc-300">
                         <!-- MapPin Icon -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-300">
@@ -41,7 +41,7 @@
                     <div class="w-32 h-64 sm:w-40 sm:h-40 rounded-lg overflow-hidden shadow-lg shadow-black/20 group-hover:shadow-xl group-hover:shadow-black/30 transition-all duration-300">
                         <img
                             src="/assets/images/mahade-headshot.webp"
-                            alt="<?php echo htmlspecialchars($site_config['name']); ?> - Senior Frontend Engineer"
+                            alt="<?php echo htmlspecialchars($site_config['name']); ?> - Lead Web Developer"
                             width="260"
                             height="260"
                             class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-300"

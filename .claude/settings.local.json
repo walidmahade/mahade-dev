@@ -18,7 +18,10 @@
       "Bash(pkill:*)",
       "Bash(git add:*)",
       "Bash(git restore:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(chmod:*)",
+      "WebFetch(domain:www.getprog.ai)",
+      "WebFetch(domain:www.linkedin.com)"
     ]
   }
 }

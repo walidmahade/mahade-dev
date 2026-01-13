@@ -1,0 +1,163 @@
+{
+  "project": "mahade-dev",
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "F001",
+      "name": "Blog Feature",
+      "description": "A personal blog section for sharing technical articles, tutorials, and thoughts",
+      "status": "planned",
+      "priority": "high",
+      "created": "2026-01-13",
+      "requirements": [
+        "Blog listing page with all posts",
+        "Individual blog post pages with clean URLs",
+        "Markdown support for writing posts",
+        "Tags/categories for organization",
+        "Reading time estimation",
+        "SEO-friendly meta tags per post",
+        "Mobile responsive design",
+        "Consistent with existing site styling"
+      ],
+      "technical_decisions": {
+        "storage": "Markdown files in content/blog/ directory",
+        "parser": "PHP Markdown parser (Parsedown)",
+        "routing": "Clean URLs like /blog/post-slug",
+        "styling": "Tailwind CSS (existing CDN setup)"
+      }
+    }
+  ],
+  "backlog": [
+    {
+      "id": "T001",
+      "feature": "F001",
+      "task": "Create blog directory structure",
+      "description": "Set up content/blog/ for markdown files and sections/blog/ for templates",
+      "status": "pending",
+      "estimate": "small"
+    },
+    {
+      "id": "T002",
+      "feature": "F001",
+      "task": "Add Parsedown library",
+      "description": "Download and include Parsedown.php for Markdown parsing",
+      "status": "pending",
+      "estimate": "small",
+      "depends_on": ["T001"]
+    },
+    {
+      "id": "T003",
+      "feature": "F001",
+      "task": "Create blog data helper",
+      "description": "Create includes/blog-helpers.php with functions to read/parse blog posts from markdown files",
+      "status": "pending",
+      "estimate": "medium",
+      "depends_on": ["T002"],
+      "functions": [
+        "getBlogPosts() - Get all posts with metadata",
+        "getBlogPost($slug) - Get single post by slug",
+        "parseFrontMatter($content) - Extract YAML front matter",
+        "calculateReadingTime($content) - Estimate reading time"
+      ]
+    },
+    {
+      "id": "T004",
+      "feature": "F001",
+      "task": "Create blog listing page",
+      "description": "Create blog.php with grid/list of all blog posts",
+      "status": "pending",
+      "estimate": "medium",
+      "depends_on": ["T003"],
+      "ui_elements": [
+        "Post cards with title, excerpt, date, tags",
+        "Reading time display",
+        "Featured image (optional)",
+        "Pagination (if needed)"
+      ]
+    },
+    {
+      "id": "T005",
+      "feature": "F001",
+      "task": "Create single blog post page",
+      "description": "Create blog-post.php template for individual posts",
+      "status": "pending",
+      "estimate": "medium",
+      "depends_on": ["T003"],
+      "ui_elements": [
+        "Post title and metadata",
+        "Rendered markdown content",
+        "Tags display",
+        "Back to blog link",
+        "Share buttons (optional)"
+      ]
+    },
+    {
+      "id": "T006",
+      "feature": "F001",
+      "task": "Update router.php",
+      "description": "Add routes for /blog and /blog/{slug}",
+      "status": "pending",
+      "estimate": "small",
+      "depends_on": ["T004", "T005"],
+      "routes": [
+        "/blog - Blog listing page",
+        "/blog/{slug} - Individual post page"
+      ]
+    },
+    {
+      "id": "T007",
+      "feature": "F001",
+      "task": "Update navigation",
+      "description": "Add Blog link to header.php navigation",
+      "status": "pending",
+      "estimate": "small",
+      "depends_on": ["T006"]
+    },
+    {
+      "id": "T008",
+      "feature": "F001",
+      "task": "Create sample blog posts",
+      "description": "Create 2-3 sample markdown posts to test the feature",
+      "status": "pending",
+      "estimate": "small",
+      "depends_on": ["T003"],
+      "sample_posts": [
+        "hello-world.md - Introduction post",
+        "building-audio-x.md - Technical deep dive"
+      ]
+    },
+    {
+      "id": "T009",
+      "feature": "F001",
+      "task": "Add blog styles",
+      "description": "Add typography styles for blog content in styles.css",
+      "status": "pending",
+      "estimate": "small",
+      "depends_on": ["T005"],
+      "styles": [
+        "Prose styling for markdown content",
+        "Code block syntax highlighting",
+        "Blockquote styling",
+        "Image styling"
+      ]
+    },
+    {
+      "id": "T010",
+      "feature": "F001",
+      "task": "Add SEO meta tags",
+      "description": "Update head.php to support dynamic meta tags for blog posts",
+      "status": "pending",
+      "estimate": "small",
+      "depends_on": ["T005"],
+      "meta_tags": [
+        "og:title",
+        "og:description",
+        "og:image",
+        "article:published_time",
+        "article:author"
+      ]
+    }
+  ],
+  "in_progress": [],
+  "completed": []
+}

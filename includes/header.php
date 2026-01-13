@@ -26,7 +26,7 @@ $current_page = $current_page ?? 'home';
                     <a href="/#projects" class="nav-link transition-all duration-200 px-3 py-1.5 rounded-full font-medium tracking-tight backdrop-blur-sm border text-white/70 hover:text-white hover:bg-white/10 border-transparent" data-section="projects">
                         Projects
                     </a>
-                    <a href="/uses.php" class="<?php echo $current_page === 'uses' ? 'text-white bg-white/15 border-white/20' : 'text-white/70 hover:text-white hover:bg-white/10 border-transparent'; ?> transition-all duration-200 px-3 py-1.5 rounded-full font-medium tracking-tight backdrop-blur-sm border">
+                    <a href="/uses" class="<?php echo $current_page === 'uses' ? 'text-white bg-white/15 border-white/20' : 'text-white/70 hover:text-white hover:bg-white/10 border-transparent'; ?> transition-all duration-200 px-3 py-1.5 rounded-full font-medium tracking-tight backdrop-blur-sm border">
                         Uses
                     </a>
                     <a href="/#contact" class="nav-link transition-all duration-200 px-3 py-1.5 rounded-full font-medium tracking-tight backdrop-blur-sm border text-white/70 hover:text-white hover:bg-white/10 border-transparent" data-section="contact">
