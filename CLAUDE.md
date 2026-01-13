@@ -5,43 +5,47 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build & Development Commands
 
 ```bash
-pnpm dev              # Start dev server on port 3000
-pnpm build            # Production build (runs partytown copylib first)
-pnpm start            # Run production server
-pnpm test             # Run tests with Vitest
-pnpm lint             # Lint with Biome
-pnpm format           # Format with Biome
-pnpm check            # Run Biome check (lint + format)
+php -S localhost:3000 router.php    # Start dev server on port 3000
 ```
 
 ## Architecture Overview
 
-This is a portfolio website built with TanStack Start (React SSR framework) deployed to Cloudflare Workers.
+This is a portfolio website built with vanilla PHP deployed to Railway.
 
 ### Tech Stack
-- **Framework**: TanStack Start with file-based routing
-- **Styling**: Tailwind CSS v4
-- **Linting/Formatting**: Biome (tabs, double quotes)
-- **Testing**: Vitest
-- **Deployment**: Cloudflare Workers (see `wrangler.toml`)
-- **Analytics**: Google Analytics via Partytown (web worker offloading)
+- **Framework**: Vanilla PHP (no framework)
+- **Styling**: Tailwind CSS v4 (via CDN)
+- **Deployment**: Railway (see `nixpacks.toml` and `Procfile`)
+- **Analytics**: Google Analytics
 
 ### Project Structure
-- `src/routes/` - File-based routes (TanStack Router auto-generates `routeTree.gen.ts`)
-- `src/routes/__root.tsx` - Root layout with SEO meta tags, fonts, and Partytown setup
-- `src/components/sections/` - Page sections (Hero, Header, Experience, Projects, Contact)
-- `src/data/portfolio.ts` - Static data for experiences, projects, and skills
-- `src/lib/` - Utilities (`cn()` for class merging, analytics, status)
+- `index.php` - Homepage (main entry point)
+- `uses.php` - Tools & technologies page
+- `404.php` - Custom 404 page
+- `router.php` - URL routing for PHP built-in server
+- `includes/` - Reusable PHP components
+  - `data.php` - Portfolio data (experiences, projects, skills)
+  - `head.php` - HTML head with meta tags, fonts, styles
+  - `header.php` - Navigation component
+  - `footer.php` - Footer component
+- `sections/` - Page sections
+  - `hero.php` - Hero/intro section
+  - `experience.php` - Work experience section
+  - `projects.php` - Projects section with GitHub activity
+  - `contact.php` - Contact CTA section
+- `assets/` - Static assets
+  - `css/styles.css` - Custom animations and styles
+  - `images/` - Images (headshot, favicon)
+- `archive-tanstack-start/` - Previous TanStack Start implementation
 
 ### Key Patterns
-- **Lazy loading**: Below-fold sections use React.lazy() for code splitting
-- **Path aliases**: `@/*` maps to `./src/*`
-- **Chunk splitting**: Vite config separates vendor, router, icons, and analytics bundles
-- **Devtools exclusion**: TanStack devtools are externalized in production builds
+- **Includes**: PHP `include` statements for component reuse
+- **Data separation**: All content in `includes/data.php` as PHP arrays
+- **Tailwind CDN**: No build step required, configured inline
+- **Railway deployment**: Uses PHP built-in server with router.php
 
-## Adding UI Components
-
-Use Shadcn with pnpm:
-```bash
-pnpx shadcn@latest add button
-```
+### Deployment to Railway
+1. Push to GitHub
+2. Connect repo to Railway
+3. Railway auto-detects PHP via `nixpacks.toml`
+4. Deploy with `Procfile` command

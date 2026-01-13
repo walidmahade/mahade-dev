@@ -2,6 +2,9 @@
   "name": "mahade.dev",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "vite dev --port 3000",
     "start": "node dist/server/server.js",
