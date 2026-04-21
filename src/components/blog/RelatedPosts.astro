@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentSlug: string;
+  cluster?: string;
+  limit?: number;
+}
+const { currentSlug, cluster, limit = 3 } = Astro.props;
+
+const all = await getCollection('blog', ({ data }) => !data.draft);
+const related = all
+  .filter((p) => p.id !== currentSlug && (cluster ? p.data.cluster === cluster : true))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, limit);
+---
+{related.length > 0 && (
+  <section class="mt-16 not-prose">
+    <p class="text-eyebrow text-brand">Keep reading</p>
+    <h2 class="mt-2 text-heading-lg text-ink">Related posts</h2>
+    <ul class="mt-5 space-y-3">
+      {related.map((p) => (
+        <li>
+          <a
+            href={`/blog/${p.id}`}
+            class="group flex items-baseline gap-3 border-b border-line py-3 hover:border-ink transition-colors"
+          >
+            <span class="text-body font-medium text-ink group-hover:text-brand transition-colors">
+              {p.data.title}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
