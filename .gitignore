@@ -4,6 +4,9 @@ dist/
 .astro/
 # cloudflare local dev state
 .wrangler/
+# Playwright MCP screenshots (local verification only)
+.playwright-mcp/
+/*.png
 
 # dependencies
 node_modules/
