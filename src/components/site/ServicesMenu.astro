@@ -1,0 +1,131 @@
+---
+import ServiceIcon from './ServiceIcon.astro';
+import { serviceLandings } from '@/data/serviceLandings';
+import { ChevronDown, ArrowUpRight } from 'lucide-react';
+
+const pathname = Astro.url.pathname;
+const isActive = pathname.startsWith('/services');
+---
+<div class="services-menu relative" data-services-menu>
+  <button
+    type="button"
+    class:list={[
+      'services-menu__trigger inline-flex items-center gap-1 text-sm transition-colors',
+      isActive ? 'text-ink font-medium' : 'text-ink-muted hover:text-ink',
+    ]}
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls="services-menu-panel"
+  >
+    Services
+    <ChevronDown size={14} strokeWidth={2} className="services-menu__chevron transition-transform" />
+  </button>
+
+  <div
+    id="services-menu-panel"
+    class="services-menu__panel absolute left-0 top-full mt-2 w-[480px] max-w-[calc(100vw-3rem)] rounded-lg border border-line-strong bg-paper p-2"
+    role="menu"
+  >
+    {serviceLandings.map((svc) => {
+      const isLast = svc.slug === 'upwork';
+      return (
+        <Fragment>
+          {isLast && (
+            <div class="my-1 border-t border-line" aria-hidden="true" />
+          )}
+          <a
+            href={svc.href}
+            class="services-menu__row group flex items-start gap-4 rounded-md p-3 hover:bg-paper-tint transition-colors"
+            role="menuitem"
+          >
+            <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand-soft text-brand group-hover:bg-brand group-hover:text-white transition-colors">
+              <ServiceIcon name={svc.icon} size={20} />
+            </span>
+            <span class="flex-1 min-w-0">
+              <span class="flex items-center gap-1.5 text-body-sm font-medium text-ink">
+                {svc.name}
+                {isLast && (
+                  <ArrowUpRight size={14} strokeWidth={2} className="text-ink-muted" />
+                )}
+              </span>
+              <span class="mt-0.5 block text-body-sm text-ink-muted">
+                {svc.tagline}
+              </span>
+            </span>
+          </a>
+        </Fragment>
+      );
+    })}
+  </div>
+</div>
+
+<style>
+  .services-menu__panel {
+    display: none;
+    z-index: 50;
+  }
+
+  /* Open on hover (pointer users) */
+  @media (hover: hover) {
+    .services-menu:hover .services-menu__panel {
+      display: block;
+    }
+    .services-menu:hover .services-menu__chevron {
+      transform: rotate(180deg);
+    }
+  }
+
+  /* Open on keyboard focus */
+  .services-menu:focus-within .services-menu__panel {
+    display: block;
+  }
+  .services-menu:focus-within .services-menu__chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Open via JS toggle (click users) */
+  .services-menu.is-open .services-menu__panel {
+    display: block;
+  }
+  .services-menu.is-open .services-menu__chevron {
+    transform: rotate(180deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .services-menu__chevron {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const menus = document.querySelectorAll<HTMLElement>('[data-services-menu]');
+  menus.forEach((menu) => {
+    const trigger = menu.querySelector<HTMLButtonElement>('.services-menu__trigger');
+    if (!trigger) return;
+
+    const close = () => {
+      menu.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    };
+
+    const toggle = (e: MouseEvent) => {
+      e.preventDefault();
+      const open = menu.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+
+    trigger.addEventListener('click', toggle);
+
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target as Node)) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        close();
+        trigger.focus();
+      }
+    });
+  });
+</script>
