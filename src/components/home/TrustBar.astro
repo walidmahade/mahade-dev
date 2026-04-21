@@ -1,0 +1,28 @@
+---
+import Container from '../layout/Container.astro';
+import Eyebrow from '../layout/Eyebrow.astro';
+
+const clients = [
+  'Amply',
+  'Gartnerforbundet',
+  'Tixio',
+  'AI-Suitup',
+  'Ads by Joris',
+  'Tangerine Search',
+  'Bidder',
+  'Vadio',
+  'Trez',
+  'Charly Agency',
+  'Pretakst',
+];
+---
+<div class="border-y border-line bg-paper py-10">
+  <Container>
+    <Eyebrow class="text-center mb-6">Teams I have built for</Eyebrow>
+    <ul class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+      {clients.map((name) => (
+        <li class="text-ink-subtle font-medium tracking-tight">{name}</li>
+      ))}
+    </ul>
+  </Container>
+</div>

@@ -1,0 +1,45 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import DisplayHeading from '../layout/DisplayHeading.astro';
+import { site } from '@/data/site';
+---
+<Section tone="paper" size="compact">
+  <Container>
+    <div
+      data-reveal
+      class="rounded-xl bg-ink text-paper p-12 md:p-16 text-center relative overflow-hidden"
+    >
+      <div
+        aria-hidden="true"
+        class="absolute -top-24 left-1/2 -translate-x-1/2 h-64 w-[800px] rounded-full bg-brand/30 blur-3xl"
+      ></div>
+      <div class="relative">
+        <DisplayHeading as="h2" size="lg" class="text-paper max-w-2xl mx-auto">
+          Ready to ship your next Webflow site?
+        </DisplayHeading>
+        <p class="mt-4 text-paper/80 max-w-xl mx-auto text-body-lg">
+          Book a 30-minute call to see if we are a fit, or message me on Upwork.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href={site.links.cal}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex h-12 items-center rounded-[10px] bg-brand px-6 font-medium text-white hover:bg-brand-hover hover:-translate-y-0.5 transition-all"
+          >
+            Book a call
+          </a>
+          <a
+            href={site.links.upwork}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex h-12 items-center rounded-[10px] border border-paper/40 px-6 font-medium text-paper hover:bg-paper/10 transition-colors"
+          >
+            Hire on Upwork
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>

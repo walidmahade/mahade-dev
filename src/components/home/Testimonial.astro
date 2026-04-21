@@ -1,0 +1,36 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import { testimonials } from '@/data/testimonials';
+
+const featured = testimonials[0];
+---
+{featured && (
+  <Section tone="paper">
+    <Container width="prose">
+      <figure class="text-center" data-reveal>
+        <span
+          aria-hidden="true"
+          class="text-[6rem] md:text-[8rem] font-display text-brand leading-none block"
+          style="line-height: 0.8;"
+        >
+          &ldquo;
+        </span>
+        <blockquote class="text-display-md text-ink leading-snug mt-4">
+          {featured.quote}
+        </blockquote>
+        <figcaption class="mt-8 text-ink-muted">
+          <span class="font-semibold text-ink">{featured.author}</span>
+          <span aria-hidden="true"> · </span>
+          <span>{featured.role}</span>
+          {featured.company && (
+            <span>
+              <span aria-hidden="true"> · </span>
+              {featured.company}
+            </span>
+          )}
+        </figcaption>
+      </figure>
+    </Container>
+  </Section>
+)}

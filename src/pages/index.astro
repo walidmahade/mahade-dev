@@ -1,58 +1,28 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import Section from '@/components/layout/Section.astro';
-import Container from '@/components/layout/Container.astro';
-import Eyebrow from '@/components/layout/Eyebrow.astro';
-import DisplayHeading from '@/components/layout/DisplayHeading.astro';
-import { Button } from '@/components/ui/button';
+import Hero from '@/components/home/Hero.astro';
+import TrustBar from '@/components/home/TrustBar.astro';
+import Services from '@/components/home/Services.astro';
+import FeaturedWork from '@/components/home/FeaturedWork.astro';
+import Process from '@/components/home/Process.astro';
+import Pricing from '@/components/home/Pricing.astro';
+import Testimonial from '@/components/home/Testimonial.astro';
+import Faq from '@/components/home/Faq.astro';
+import FinalCta from '@/components/home/FinalCta.astro';
+import HomeMotion from '@/components/home/HomeMotion';
 ---
 <Layout
-  title="Design system check — Mahade Walid"
-  description="Smoke test for layout primitives, Header, Footer, and tokens. Real home lands in plan 03."
-  noindex={true}
+  title="Webflow Developer — Mahade Walid"
+  description="Professional Webflow development for agencies and teams. Unlimited pages on a flat monthly retainer, or hourly via Upwork."
 >
-  <Section tone="paper" size="hero">
-    <Container>
-      <Eyebrow>Plan 02 · Design system</Eyebrow>
-      <DisplayHeading as="h1" size="xl" class="mt-3 max-w-3xl">
-        Primitives render, Header and Footer are in, tokens hold.
-      </DisplayHeading>
-      <p class="mt-6 max-w-2xl text-body-lg text-ink-muted">
-        This page uses Container, Section, Eyebrow, and DisplayHeading —
-        the real homepage arrives in plan 03.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <Button client:load>Primary</Button>
-        <Button variant="outline" client:load>Outline</Button>
-        <Button variant="ghost" client:load>Ghost</Button>
-      </div>
-    </Container>
-  </Section>
-
-  <Section tone="tint" size="compact">
-    <Container>
-      <Eyebrow>Tone · tint</Eyebrow>
-      <DisplayHeading as="h2" size="lg" class="mt-3">
-        Alternating tones give sections their rhythm.
-      </DisplayHeading>
-      <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="rounded-lg bg-paper p-4 border border-line">
-          <span class="text-eyebrow text-ink-subtle">brand</span>
-          <div class="mt-2 h-10 rounded-md bg-brand"></div>
-        </div>
-        <div class="rounded-lg bg-paper p-4 border border-line">
-          <span class="text-eyebrow text-ink-subtle">ink</span>
-          <div class="mt-2 h-10 rounded-md bg-ink"></div>
-        </div>
-        <div class="rounded-lg bg-paper p-4 border border-line">
-          <span class="text-eyebrow text-ink-subtle">paper-sunken</span>
-          <div class="mt-2 h-10 rounded-md bg-paper-sunken"></div>
-        </div>
-        <div class="rounded-lg bg-paper p-4 border border-line">
-          <span class="text-eyebrow text-ink-subtle">brand-soft</span>
-          <div class="mt-2 h-10 rounded-md bg-brand-soft"></div>
-        </div>
-      </div>
-    </Container>
-  </Section>
+  <Hero />
+  <TrustBar />
+  <Services />
+  <FeaturedWork />
+  <Process />
+  <Pricing />
+  <Testimonial />
+  <Faq />
+  <FinalCta />
+  <HomeMotion client:load />
 </Layout>
