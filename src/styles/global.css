@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+
+@import "./tokens.css";
+@import "./typography.css";
+
+@theme {
+  /* Palette */
+  --color-ink: #0B0D13;
+  --color-ink-muted: #4B5261;
+  --color-ink-subtle: #8A90A0;
+  --color-paper: #FFFFFF;
+  --color-paper-tint: #F7F7F8;
+  --color-paper-sunken: #EEEFF2;
+  --color-line: #E5E7EB;
+  --color-line-strong: #D1D5DB;
+  --color-brand: #4353FF;
+  --color-brand-hover: #3441E0;
+  --color-brand-soft: #EEF0FF;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Fonts */
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* shadcn theme vars mapped to our palette.
+     These make shadcn components render in our design system. */
+  --color-background: #FFFFFF;
+  --color-foreground: #0B0D13;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #0B0D13;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #0B0D13;
+  --color-primary: #0B0D13;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #F7F7F8;
+  --color-secondary-foreground: #0B0D13;
+  --color-muted: #F7F7F8;
+  --color-muted-foreground: #4B5261;
+  --color-accent: #EEF0FF;
+  --color-accent-foreground: #4353FF;
+  --color-destructive: #C8322D;
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: #E5E7EB;
+  --color-input: #E5E7EB;
+  --color-ring: #4353FF;
+}
+
+/* Final-state defaults so reduced-motion users always see content,
+   even if GSAP hasn't run. GSAP overrides during animation. */
+[data-hero-item],
+[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
