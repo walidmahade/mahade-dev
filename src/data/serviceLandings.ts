@@ -1,5 +1,5 @@
 import { site } from './site';
-import type { ServiceIconName } from '../components/site/ServiceIcon.astro';
+import type { ServiceIconName } from '../components/site/serviceIcons';
 
 export type ServiceLanding = {
   slug: string;
