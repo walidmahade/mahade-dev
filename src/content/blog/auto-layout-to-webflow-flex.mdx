@@ -1,0 +1,143 @@
+---
+title: "Auto Layout to Webflow Flex: A Designer's Translation Cheat Sheet"
+description: "Figma Auto Layout doesn't map 1-to-1 to Webflow Flex. Here's the cheat sheet — padding, gap, wrap, alignment — with side-by-side examples."
+pubDate: 2026-05-16
+tags: ["figma", "layout", "agency"]
+heroImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "Figma Auto Layout settings next to Webflow Flex settings"
+cluster: "agency"
+faq:
+  - q: "Does Figma Auto Layout map 1:1 to Webflow Flex?"
+    a: "Almost. 90% of cases translate cleanly: direction, gap, padding, alignment. Where it breaks: fill-container behavior, wrap thresholds, and negative spacing. Those need manual translation, not a direct mapping."
+  - q: "What's the difference between Figma's Fill container and Webflow's flex-grow?"
+    a: "They do the same thing in 80% of cases: expand to available space. But Figma's Fill is a per-item toggle; Webflow's flex-grow is a numeric ratio (0, 1, 2, etc.). For equal-width items: set flex-grow: 1 on each in Webflow."
+  - q: "When should I use Flex vs Grid in Webflow?"
+    a: "Flex for one-dimensional layouts (row or column of items). Grid for two-dimensional layouts (cards in rows × columns, mosaic patterns). If Figma shows it as Auto Layout, use Flex. If it's a 2D grid in Figma, use Grid."
+  - q: "How do Figma breakpoints map to Webflow?"
+    a: "Not directly. Figma breakpoints are designer-defined; Webflow has fixed breakpoints (Desktop 992+, Tablet 768–991, Landscape 479–767, Portrait under 479). Design in Figma for the Webflow breakpoints explicitly — 1440, 992, 768, 375 are safe targets."
+  - q: "What's the gap-in-Figma vs gap-in-Webflow gotcha?"
+    a: "Figma's gap works everywhere. Webflow's gap works in Flex and Grid but NOT in older legacy divs with margin-based spacing. If you're copying from Figma, use Webflow Flex (not plain div blocks) to keep the gap behavior."
+  - q: "Can I export Figma Auto Layout to Webflow automatically?"
+    a: "Partially. Tools like Figma-to-Webflow (by multiple plugins) can translate simple Auto Layout to Flex, but they choke on nested variants, conditional visibility, and complex responsive behavior. Use them as a starter, not a final output."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The figma auto layout webflow translation problem comes up on every single handoff I touch. The answer is: most of it maps cleanly, the 10% that doesn't will ruin your layout if you're not watching for it, and the cheat sheet below covers all of it. If you're still figuring out the broader handoff workflow, start with [Figma to Webflow handoff](/blog/figma-to-webflow-handoff) before coming back here.
+
+This post is a reference, not an introduction. I'm going to go property by property, show you the Figma side and the Webflow side, and flag every gotcha I've hit. [Reach out](/contact) if you need someone to run the translation for you.
+
+## Why the translation isn't 1-to-1
+
+Figma Auto Layout and CSS Flexbox solve the same problem — arrange children along an axis with consistent spacing — but they were built with different models in mind.
+
+Figma Auto Layout is a design-time constraint system. It describes *intent*: "this row of items should space itself evenly, shrink to content, clip overflow." CSS Flex is a rendering system. It describes *behavior* at paint time, and that behavior changes based on available space, viewport width, and sibling constraints that don't exist in Figma's static canvas.
+
+The practical consequence: Figma is optimistic. It shows you the layout at one viewport with one content length. Webflow has to handle every viewport and every possible content length simultaneously. Properties that look identical in Figma produce different browser behavior depending on whether the container has a fixed width, a percentage width, or no width at all.
+
+That gap is where most handoff bugs live. The following sections close it one property at a time.
+
+## Direction: vertical vs horizontal
+
+This one mostly works. The mapping is direct:
+
+| Figma Auto Layout | Webflow Flex | Notes |
+|---|---|---|
+| Horizontal | Display: Flex, Direction: Horizontal | Default row direction |
+| Vertical | Display: Flex, Direction: Vertical | Column direction |
+| Horizontal + Reverse | Display: Flex, Direction: Horizontal Reversed | row-reverse |
+| Vertical + Reverse | Display: Flex, Direction: Vertical Reversed | column-reverse |
+
+Where it gets tricky: Figma lets you mix Auto Layout with absolute-positioned children inside the same frame. Webflow does not — a flex container's children are all flex items. If your Figma frame has some Auto Layout children and some absolutely-positioned overlays, those overlays need to be handled separately in Webflow (position: absolute on the child, position: relative on the parent).
+
+## Gap: simple case, breakpoint case
+
+Gap is the cleanest translation in the entire cheat sheet. Figma calls it "Gap between items." Webflow calls it "Gap." Both resolve to CSS `gap`. They behave identically in almost every case.
+
+<Callout type="warning">
+Webflow's gap property only works on Flex and Grid containers. If you drop a plain Div Block and start adding gap, nothing happens — Webflow will accept the value but not render it. Always confirm your container is set to Display: Flex before expecting gap to work. Older Webflow projects may use margin on children instead of gap; mixing the two produces double spacing that's easy to miss at full-width but breaks at mobile.
+</Callout>
+
+The breakpoint case is where gap gets interesting. In Figma, you'd redesign the frame at each artboard. In Webflow, you change the gap value at each breakpoint in the Style panel. The pattern I use: set gap in rem at desktop, reduce it at tablet, collapse it to 0 or a minimal value at portrait mobile. A 32px desktop gap usually becomes 24px at tablet and 16px at portrait.
+
+One thing Figma can do that Webflow can't natively: different horizontal and vertical gaps in an Auto Layout wrap scenario. Figma exposes separate H and V gap fields. CSS `gap` supports `row-gap` and `column-gap` separately, but Webflow's UI only exposes a single gap field. To set different row and column gaps in Webflow, you need a custom CSS attribute or the Style panel's custom CSS embed.
+
+## Padding: 4-value vs spacing tokens
+
+Figma exposes padding as four independent values (top, right, bottom, left) or a shorthand when all four match. Webflow's Style panel shows the same four fields. Direct translation.
+
+<Callout type="tip">
+If your Figma file uses a spacing system (8, 16, 24, 32, 48, 64), map those values to CSS custom properties in Webflow's Style Manager rather than hardcoding pixel values on each element. In Webflow, you can add a class to the `:root` selector and define `--spacing-md: 24px` etc., then reference them via the custom attribute panel. This is the equivalent of Figma's local variables for spacing — changes propagate everywhere, which saves hours on responsive adjustments.
+</Callout>
+
+The gotcha here isn't padding itself but the interaction between padding and sizing. In Figma, a frame with padding set to 24px and a "Hug contents" height will always show the padding. In Webflow, if you set padding on a flex container with no explicit height, it also hugs contents — but if you set `min-height` or the container has a parent with constrained height, the padding can collapse in unexpected ways. Test at every breakpoint before treating padding as done.
+
+## Alignment: all 9 cases covered
+
+This is the section designers spend the most time on, so let's be exhaustive. Figma's alignment in Auto Layout controls two axes: the main axis (the direction items flow) and the cross axis (perpendicular to flow). Webflow calls these `justify-content` and `align-items`.
+
+| Figma setting | Webflow Flex equivalent | Use case |
+|---|---|---|
+| Main axis: Start | Justify Content: Start | Left-align items in a row |
+| Main axis: Center | Justify Content: Center | Center items horizontally in a row |
+| Main axis: End | Justify Content: End | Right-align items in a row |
+| Main axis: Space between | Justify Content: Space Between | Nav links spread to edges |
+| Cross axis: Start | Align Items: Start | Top-align items in a row |
+| Cross axis: Center | Align Items: Center | Vertically center items in a row |
+| Cross axis: End | Align Items: End | Bottom-align items in a row |
+| Cross axis: Baseline | Align Items: Baseline | Text items aligned to text baseline |
+| Cross axis: Stretch | Align Items: Stretch | Children fill container height |
+
+The most common alignment mistake I see when translating from Figma: forgetting that alignment in a *vertical* flex container swaps the axis semantics. In a column flex container, `justify-content` controls vertical alignment and `align-items` controls horizontal alignment — the opposite of a row. Figma handles this transparently because you set "horizontal" and "vertical" alignment explicitly regardless of direction. Webflow's main/cross axis model requires you to know which axis is which based on direction.
+
+The practical rule: if your flex container is `direction: vertical` and items aren't centering horizontally, you need `align-items: center`, not `justify-content: center`.
+
+## Wrap and fill-container
+
+Wrap and fill-container are where the most handoff bugs appear, and they're related.
+
+| Figma behavior | Webflow equivalent | Notes |
+|---|---|---|
+| No wrap | Flex Wrap: No Wrap | Default; overflows if children exceed container width |
+| Wrap | Flex Wrap: Wrap | Children break to new line when they don't fit |
+| Fill container (child) | flex-grow: 1 on the child | Child expands to fill available space |
+| Hug contents (child) | flex-grow: 0, no fixed width | Child sizes to its content |
+| Fixed width (child) | Explicit width on the child | Child ignores flex sizing |
+
+Fill container is the one that causes the most confusion. In Figma, you toggle "Fill container" on a child and it expands to fill the parent frame. In Webflow, `flex-grow: 1` is the equivalent — but unlike Figma's binary toggle, Webflow's flex-grow is a ratio. If two children both have `flex-grow: 1`, they split the available space equally. If one has `flex-grow: 2` and the other has `flex-grow: 1`, the first gets twice the space. Figma has no concept of this ratio; every filled child gets equal space. Replicate Figma's equal-fill behavior by setting `flex-grow: 1` on each item you want to expand.
+
+Wrap thresholds are another translation challenge. In Figma, wrap just wraps. In CSS, wrapping behavior depends on child widths: if children have `flex-grow: 1` and no minimum width, they never wrap because they always shrink to fit. To force wrapping at a target column count, set a `min-width` on children (e.g. `min-width: 280px` for a 3-up card grid that wraps to 1-up on mobile). This is a decision that doesn't exist in Figma but must be made explicitly in Webflow.
+
+For more complex layout decisions — particularly when to use components for wrapping patterns — the post on [Webflow components vs symbols](/blog/webflow-components-vs-symbols) covers how to structure repeating elements so wrap behavior stays consistent across instances.
+
+## Auto Layout vs Flex vs Grid: when to switch
+
+Everything above assumes you're translating Auto Layout to Flex, which is right for most cases. But there's a decision to make before you start building.
+
+Use Webflow Flex when:
+- The Figma frame uses Auto Layout in a single direction (horizontal or vertical)
+- You're building navbars, button groups, card rows, stacked form fields
+- Alignment and gap are the primary concerns
+- Children have different widths and you don't want a rigid column structure
+
+Use Webflow Grid when:
+- The Figma design shows a two-dimensional layout (rows and columns simultaneously)
+- You're building card grids, data tables, or mosaic image layouts
+- You need items in different rows to align vertically with each other
+- You want explicit column placement that Flex can't enforce
+
+The signal in Figma: if you see nested Auto Layout (a vertical frame containing horizontal frames containing items), you're probably looking at a case that should be Grid in Webflow, not nested Flex. Nested Flex works and is sometimes correct, but if the inner rows need to maintain column alignment across rows, Grid is the right tool. Nested Flex won't enforce that alignment without fixed widths on every child.
+
+The overall principle: translate Auto Layout to Flex first, then audit the result at multiple viewports. If you find yourself fighting the layout to maintain column alignment across rows, switch to Grid. If you find yourself fighting wrap behavior on a simple list of items, check that you're not missing a `min-width` on children.
+
+---
+
+If you're working on agency projects where these handoffs happen at scale, [white-label Webflow development](/blog/white-label-webflow-development) covers how I handle translation for design-to-build pipelines where the designer and developer are different people with different tools.
+
+The short version of everything above: direction maps cleanly, gap maps cleanly, padding maps cleanly, alignment requires understanding which axis is which in flex direction, and fill-container/wrap require explicit decisions that Figma never forced you to make. The 90% that maps directly will take you 10 minutes. The 10% that doesn't will take you as long as it takes to find it — which is why having a cheat sheet beats figuring it out on each project.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
