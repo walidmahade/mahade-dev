@@ -147,7 +147,7 @@ export const serviceLandings: ServiceLanding[] = [
       pricingAnchor: {
         label: 'Fixed-scope audit via Upwork',
         price: 'From $499',
-        cadence: '/ one-off',
+        cadence: '/one-off',
         bullets: [
           '5-business-day turnaround',
           'Loom walkthrough + written PDF',
@@ -225,7 +225,7 @@ export const serviceLandings: ServiceLanding[] = [
       pricingAnchor: {
         label: 'Single-session consultation',
         price: 'From $249',
-        cadence: '/ 60 min',
+        cadence: '/60 min',
         bullets: [
           '60 min ($249) or 90 min ($349)',
           'Pre-read + live session + 24h action plan',
@@ -350,5 +350,11 @@ export const serviceLandings: ServiceLanding[] = [
 export const getServiceLanding = (slug: string): ServiceLanding | undefined =>
   serviceLandings.find((s) => s.slug === slug);
 
-export const getDynamicServiceLandings = (): ServiceLanding[] =>
-  serviceLandings.filter((s) => s.content !== undefined);
+export type ServiceLandingWithContent = ServiceLanding & {
+  content: NonNullable<ServiceLanding['content']>;
+};
+
+export const getDynamicServiceLandings = (): ServiceLandingWithContent[] =>
+  serviceLandings.filter(
+    (s): s is ServiceLandingWithContent => s.content !== undefined,
+  );
