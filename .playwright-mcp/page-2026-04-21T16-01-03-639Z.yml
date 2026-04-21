@@ -1,0 +1,167 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mahade Walid" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - link "Work" [ref=e9] [cursor=pointer]:
+              - /url: /work
+          - listitem [ref=e10]:
+            - link "About" [ref=e11] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e12]:
+            - link "Blog" [ref=e13] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e14]:
+            - link "Contact" [ref=e15] [cursor=pointer]:
+              - /url: /contact
+        - link "Book a call" [ref=e16] [cursor=pointer]:
+          - /url: https://cal.com/mahade/30min
+  - main [ref=e17]:
+    - generic [ref=e19]:
+      - paragraph [ref=e20]: Contact
+      - heading "Let’s talk about your project." [level=1] [ref=e21]
+      - paragraph [ref=e22]: The fastest path is a 30-minute call. If you prefer a written brief first, email works great too.
+    - generic [ref=e25]:
+      - iframe [ref=e33]:
+        - generic [active] [ref=f3e1]:
+          - img
+          - main [ref=f3e3]:
+            - generic [ref=f3e7]:
+              - generic [ref=f3e9]:
+                - list [ref=f3e10]:
+                  - listitem [ref=f3e11]:
+                    - link "Mahade Walid" [ref=f3e12] [cursor=pointer]:
+                      - /url: https://cal.com/mahade?redirect=false
+                      - img "Mahade Walid" [ref=f3e15]
+                - paragraph [ref=f3e16]: Mahade Walid
+                - heading "30 Min Meeting" [level=1] [ref=f3e17]
+                - generic [ref=f3e18]:
+                  - generic [ref=f3e19]:
+                    - img [ref=f3e20]
+                    - generic [ref=f3e22]: 30m
+                  - generic [ref=f3e26]:
+                    - img "Google Meet icon" [ref=f3e27]
+                    - paragraph [ref=f3e28]: Google Meet
+                  - generic [ref=f3e29] [cursor=pointer]:
+                    - img [ref=f3e30]
+                    - generic [ref=f3e38]:
+                      - generic [ref=f3e39]:
+                        - paragraph [ref=f3e41]: Asia/Dhaka
+                        - combobox "Timezone Select" [ref=f3e43]
+                      - img [ref=f3e47]
+              - generic [ref=f3e50]:
+                - generic [ref=f3e51]:
+                  - time [ref=f3e53]:
+                    - strong [ref=f3e54]: April
+                    - text: "2026"
+                  - generic [ref=f3e56]:
+                    - button "View previous month" [disabled] [ref=f3e57]:
+                      - img [ref=f3e58]
+                    - button "View next month" [ref=f3e60] [cursor=pointer]:
+                      - img [ref=f3e61]
+                - generic [ref=f3e63]:
+                  - generic [ref=f3e64]: Sun
+                  - generic [ref=f3e65]: Mon
+                  - generic [ref=f3e66]: Tue
+                  - generic [ref=f3e67]: Wed
+                  - generic [ref=f3e68]: Thu
+                  - generic [ref=f3e69]: Fri
+                  - generic [ref=f3e70]: Sat
+                - generic [ref=f3e71]:
+                  - button [disabled] [ref=f3e76]
+                  - button [disabled] [ref=f3e79]
+                  - button [disabled] [ref=f3e82]
+                  - button [disabled] [ref=f3e85]
+                  - button [disabled] [ref=f3e88]
+                  - button [disabled] [ref=f3e91]
+                  - button [disabled] [ref=f3e94]
+                  - button [disabled] [ref=f3e97]
+                  - button [disabled] [ref=f3e100]
+                  - button [disabled] [ref=f3e103]
+                  - button [disabled] [ref=f3e106]
+                  - button [disabled] [ref=f3e109]
+                  - button [disabled] [ref=f3e112]
+                  - button [disabled] [ref=f3e115]
+                  - button [disabled] [ref=f3e118]
+                  - button [disabled] [ref=f3e121]
+                  - button [disabled] [ref=f3e124]
+                  - button [disabled] [ref=f3e127]
+                  - button [disabled] [ref=f3e130]
+                  - button [disabled] [ref=f3e133]
+                  - button [disabled] [ref=f3e136]
+                  - button [disabled] [ref=f3e139]
+                  - button [disabled] [ref=f3e142]
+                  - button [disabled] [ref=f3e145]
+                  - button [disabled] [ref=f3e148]
+                  - button [disabled] [ref=f3e151]
+                  - button [disabled] [ref=f3e154]
+                  - button [disabled] [ref=f3e157]
+                  - button [disabled] [ref=f3e160]
+                  - button [disabled] [ref=f3e163]
+                  - button [disabled] [ref=f3e166]
+                  - button [disabled] [ref=f3e169]
+            - region "Notifications alt+T"
+          - alert [ref=f3e171]
+          - generic:
+            - region "Notifications"
+          - generic:
+            - region "Notifications"
+      - complementary [ref=e34]:
+        - link "Upwork Hire through Upwork Fixed-scope or hourly engagements with escrow protection. Go to profile" [ref=e35] [cursor=pointer]:
+          - /url: https://www.upwork.com/freelancers/~01ed6a4d8e51dc09fc?mp_source=share
+          - paragraph [ref=e36]: Upwork
+          - paragraph [ref=e37]: Hire through Upwork
+          - paragraph [ref=e38]: Fixed-scope or hourly engagements with escrow protection.
+          - generic [ref=e39]:
+            - text: Go to profile
+            - img [ref=e40]
+        - link "Email walidmahade@gmail.com Direct email. Reply within 24 hours on weekdays. Send email" [ref=e43] [cursor=pointer]:
+          - /url: mailto:walidmahade@gmail.com?subject=Webflow%20project%20inquiry
+          - paragraph [ref=e44]: Email
+          - paragraph [ref=e45]: walidmahade@gmail.com
+          - paragraph [ref=e46]: Direct email. Reply within 24 hours on weekdays.
+          - generic [ref=e47]:
+            - text: Send email
+            - img [ref=e48]
+        - generic [ref=e51]:
+          - paragraph [ref=e52]: Response time
+          - paragraph [ref=e53]:
+            - text: "Weekdays: within 24 hours."
+            - text: "Weekends: Monday morning."
+            - text: "Timezone: Bangladesh (UTC+6)."
+  - contentinfo [ref=e54]:
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: Mahade Walid
+          - paragraph [ref=e59]: Webflow Developer · Bangladesh (remote, works worldwide)
+        - list [ref=e60]:
+          - listitem [ref=e61]:
+            - link "walidmahade@gmail.com" [ref=e62] [cursor=pointer]:
+              - /url: mailto:walidmahade@gmail.com
+          - listitem [ref=e63]:
+            - link "Book a call" [ref=e64] [cursor=pointer]:
+              - /url: https://cal.com/mahade/30min
+          - listitem [ref=e65]:
+            - link "Upwork" [ref=e66] [cursor=pointer]:
+              - /url: https://www.upwork.com/freelancers/~01ed6a4d8e51dc09fc?mp_source=share
+          - listitem [ref=e67]:
+            - link "GitHub" [ref=e68] [cursor=pointer]:
+              - /url: https://github.com/walidmahade
+      - paragraph [ref=e69]: © 2026 Mahade Walid. All rights reserved.
+  - generic [ref=e72]:
+    - button "Menu" [ref=e73]:
+      - img [ref=e75]
+      - generic: Menu
+    - button "Inspect" [ref=e79]:
+      - img [ref=e81]
+      - generic: Inspect
+    - button "Audit" [ref=e83]:
+      - img [ref=e85]
+      - generic: Audit
+    - button "Settings" [ref=e88]:
+      - img [ref=e90]
+      - generic: Settings

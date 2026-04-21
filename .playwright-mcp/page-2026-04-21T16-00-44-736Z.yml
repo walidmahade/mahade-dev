@@ -1,0 +1,89 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "Mahade Walid" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - navigation "Primary" [ref=e6]:
+        - list [ref=e7]:
+          - listitem [ref=e8]:
+            - link "Work" [ref=e9] [cursor=pointer]:
+              - /url: /work
+          - listitem [ref=e10]:
+            - link "About" [ref=e11] [cursor=pointer]:
+              - /url: /about
+          - listitem [ref=e12]:
+            - link "Blog" [ref=e13] [cursor=pointer]:
+              - /url: /blog
+          - listitem [ref=e14]:
+            - link "Contact" [ref=e15] [cursor=pointer]:
+              - /url: /contact
+        - link "Book a call" [ref=e16] [cursor=pointer]:
+          - /url: https://cal.com/mahade/30min
+  - main [ref=e17]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - paragraph [ref=e22]: About
+        - heading "I build Webflow sites that agencies rely on." [level=1] [ref=e23]:
+          - text: I build
+          - emphasis [ref=e24]: Webflow sites
+          - text: that agencies rely on.
+        - paragraph [ref=e25]: Eight years building the web as a frontend developer, the last four specialized in Webflow. I have shipped marketing sites for SaaS founders, agencies, and in-house marketing teams across Europe and North America.
+      - img "Mahade Walid" [ref=e26]
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - heading "Why I specialized in Webflow" [level=2] [ref=e30]
+        - paragraph [ref=e31]: "Most agencies hit the same wall: their designers can design, and their developers can build — but the hand-off between the two is where projects stall. Webflow collapses that seam. I ship sites that look exactly like the Figma, launch in days instead of weeks, and hand off to non-technical marketers who can edit copy without filing a ticket."
+        - heading "What you can expect" [level=2] [ref=e32]
+        - list [ref=e33]:
+          - listitem [ref=e34]:
+            - strong [ref=e35]: Lighthouse 95+
+            - text: on every project. Speed is a feature, not an afterthought.
+          - listitem [ref=e36]:
+            - strong [ref=e37]: SEO baked in
+            - text: ", not bolted on. Semantic markup, schema, meta, sitemaps."
+          - listitem [ref=e38]:
+            - strong [ref=e39]: Async-first
+            - text: via Slack and Loom. Daily staging links. No status meetings.
+          - listitem [ref=e40]:
+            - strong [ref=e41]: No black-box handoff.
+            - text: You get a site your team can edit — not one that requires me to change a headline.
+        - heading "Outside work" [level=2] [ref=e42]
+        - paragraph [ref=e43]: I live in Bangladesh, run long distance, listen to far too many audiobooks, and occasionally build Three.js experiments for fun.
+      - generic [ref=e44]:
+        - link "Book a call" [ref=e45] [cursor=pointer]:
+          - /url: https://cal.com/mahade/30min
+        - link "See the work" [ref=e46] [cursor=pointer]:
+          - /url: /work
+  - contentinfo [ref=e47]:
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - paragraph [ref=e51]: Mahade Walid
+          - paragraph [ref=e52]: Webflow Developer · Bangladesh (remote, works worldwide)
+        - list [ref=e53]:
+          - listitem [ref=e54]:
+            - link "walidmahade@gmail.com" [ref=e55] [cursor=pointer]:
+              - /url: mailto:walidmahade@gmail.com
+          - listitem [ref=e56]:
+            - link "Book a call" [ref=e57] [cursor=pointer]:
+              - /url: https://cal.com/mahade/30min
+          - listitem [ref=e58]:
+            - link "Upwork" [ref=e59] [cursor=pointer]:
+              - /url: https://www.upwork.com/freelancers/~01ed6a4d8e51dc09fc?mp_source=share
+          - listitem [ref=e60]:
+            - link "GitHub" [ref=e61] [cursor=pointer]:
+              - /url: https://github.com/walidmahade
+      - paragraph [ref=e62]: © 2026 Mahade Walid. All rights reserved.
+  - generic [ref=e65]:
+    - button "Menu" [ref=e66]:
+      - img [ref=e68]
+      - generic: Menu
+    - button "Inspect" [ref=e72]:
+      - img [ref=e74]
+      - generic: Inspect
+    - button "Audit" [ref=e76]:
+      - img [ref=e78]
+      - generic: Audit
+    - button "Settings" [ref=e81]:
+      - img [ref=e83]
+      - generic: Settings

@@ -4,8 +4,7 @@
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
-@import "@fontsource/instrument-serif/400.css";
-@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/geist";
 
 @import "./tokens.css";
 @import "./typography.css";
@@ -31,7 +30,7 @@
   --radius-xl: 24px;
 
   /* Fonts */
-  --font-display: "Instrument Serif", Georgia, serif;
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
