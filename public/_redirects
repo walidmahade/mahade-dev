@@ -1,0 +1,3 @@
+# Legacy routes from the old PHP site
+/uses       /about     301
+/index.php  /          301
