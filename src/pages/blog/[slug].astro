@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import Section from '@/components/layout/Section.astro';
 import Container from '@/components/layout/Container.astro';
 import Eyebrow from '@/components/layout/Eyebrow.astro';
+import RelatedPosts from '@/components/blog/RelatedPosts.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { site } from '@/data/site';
 
@@ -32,6 +33,9 @@ const articleSchema = {
   datePublished: post.data.pubDate.toISOString(),
   ...(post.data.updatedDate && {
     dateModified: post.data.updatedDate.toISOString(),
+  }),
+  ...(post.data.heroImage && {
+    image: `${site.url}${post.data.heroImage}`,
   }),
   author: {
     '@type': 'Person',
@@ -64,6 +68,18 @@ const articleSchema = {
           <h1 class="mt-3 text-display-lg text-ink">{post.data.title}</h1>
           <p class="mt-4 text-body-lg text-ink-muted">{post.data.description}</p>
         </div>
+
+        {post.data.heroImage && (
+          <figure class="mt-10">
+            <img
+              src={post.data.heroImage}
+              alt={post.data.heroAlt ?? ''}
+              class="w-full rounded-lg border border-line"
+              loading="eager"
+              decoding="async"
+            />
+          </figure>
+        )}
       </Container>
     </Section>
 
@@ -72,6 +88,7 @@ const articleSchema = {
         <div class="prose-page">
           <Content />
         </div>
+        <RelatedPosts currentSlug={post.id} cluster={post.data.cluster} />
       </Container>
     </Section>
 
