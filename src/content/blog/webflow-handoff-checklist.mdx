@@ -1,0 +1,161 @@
+---
+title: "Webflow Handoff Checklist: What You Should Get When a Project Ships"
+description: "The complete Webflow handoff checklist — admin access, docs, Editor training, backup, SEO verification, and the 14 things your developer should hand over."
+pubDate: 2026-05-11
+tags: ["handoff", "checklist"]
+heroImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Webflow handoff checklist on paper next to a laptop"
+cluster: "hire-hub"
+faq:
+  - q: "What admin access should I get at Webflow project handoff?"
+    a: "At minimum: workspace owner invite, Webflow project transfer to your workspace, hosting plan paid by you (not the developer), and CMS Editor access for your team. Domain DNS should be in your registrar, not the developer's."
+  - q: "What documentation should a Webflow developer provide at handoff?"
+    a: "A Style Guide page (visible only to you), CMS structure doc with collection names and relationships, Editor training recording or doc, list of third-party integrations with credentials, and a known-issues/gotchas file."
+  - q: "What SEO verification should be included?"
+    a: "Search Console ownership transferred to your account, sitemap submitted, robots.txt verified, indexing confirmed for key pages, Lighthouse scores documented, and redirect map (if migrating) delivered as a CSV."
+  - q: "Do I get the Figma file at handoff?"
+    a: "If the developer built from your Figma: no, you already have it. If the developer designed too: yes, ask for a Figma view-only link or full ownership transfer of the file, whichever your contract specified."
+  - q: "What's the biggest handoff mistake clients make?"
+    a: "Not testing the Editor with their own team before sign-off. The client signs off based on a finished site, then a month later discovers their marketing person can't figure out how to publish a blog post. Always do a live Editor walkthrough with the person who'll actually use it."
+  - q: "What ongoing support should be included after handoff?"
+    a: "30 days of bug-fix support is industry standard for fixed-price projects. That covers anything broken, not new features. Everything beyond month 1 is a retainer or hourly work."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The webflow handoff checklist most developers give you is three bullet points in a Notion doc. That's not a handoff — it's a developer protecting their time at your expense. Here's what a complete handoff actually looks like, and the 14 specific things you should demand before you sign off on any project.
+
+If you're still in the hiring phase, read [how to hire a Webflow developer](/blog/hire-webflow-developer-2026) first — the way you structure the contract upstream determines how much leverage you have at handoff. If you already know what you need and want to talk through a project, [get in touch](/contact).
+
+## Why handoff is the phase most projects fail
+
+Most Webflow projects don't fail at design. They don't fail at development. They fail at the six inches between "developer says it's done" and "client can actually operate this thing independently."
+
+The pattern is predictable. A developer ships a beautiful site, walks you through it on a Loom, and considers the job complete. You sign off because it looks right. Then two weeks later your marketing manager needs to update a team member's photo and can't find the CMS collection. Your domain renews and the invoice goes to an account your developer controls. You want to add a new service page and realize no one documented the class structure or which symbol is the section template.
+
+None of this is malicious. Most developers genuinely consider a working, live site to be a complete handoff. The problem is that "working" and "operable by your team without the developer's help" are two very different things.
+
+The projects that go smoothly long-term — the ones I'm proud of in my own [work](/work) — are the ones where handoff is a phase of the project with a real checklist, not an afterthought. Everything below is what I hand over on every engagement, and what you should expect from anyone you [hire for Webflow development services](/blog/webflow-development-services).
+
+## Access and ownership: the 5 things you must have
+
+Before any documentation, training, or SEO check, there is a category of thing that is purely about legal and operational control. If you don't have these five items, you don't own your own website — your developer does.
+
+**1. Workspace ownership.** Your Webflow site should live in a workspace you own and control. The developer should either have built inside your workspace (preferred) or transferred the project to your workspace at handoff. If the site lives in the developer's workspace, they can hold it hostage, accidentally delete it, or lock you out the moment they stop paying their Webflow subscription.
+
+**2. Hosting plan in your name.** The Webflow hosting subscription — Basic, CMS, or Business plan — should be billed to your credit card or your company account. Not the developer's. If a developer insists on keeping the hosting in their account "for convenience," the real reason is usually that the plan is shared across multiple clients at a bulk rate. That's fine for them; it's a liability for you.
+
+**3. Custom domain DNS in your registrar.** Your domain should be registered to you at a registrar you control (Cloudflare, Namecheap, Google Domains, whatever). The Webflow DNS settings — the A record and CNAME — should point from your registrar to Webflow's servers. If the developer registered the domain on your behalf, get it transferred to an account with your email before you sign off.
+
+<Callout type="warning">
+The single biggest ownership mistake clients make: letting the developer hold the domain. A domain registered in a developer's name, or pointed through a registrar account they control, means they own your URL. Even if every line of code is yours, the address is not. Transferring a domain after a relationship sours is painful, slow, and sometimes impossible if the developer is unresponsive. Get this right at day one, not day 365.
+</Callout>
+
+**4. Editor access for your team.** Every person on your team who will touch content — marketing, communications, whoever updates the blog — needs an Editor invite with the right permission level. Do not let "I'll invite them later" slide past handoff. The later never comes, or it comes at a billable rate.
+
+**5. All third-party credentials.** If the project uses Memberstack, Outseta, Zapier, a form backend, a custom SMTP service, or any other third-party integration, you need the login credentials for each one — or those services need to be transferred to an account you own. A list of "we used this tool" is not enough. You need access.
+
+## Documentation you should get
+
+A finished Webflow site without documentation is a car without a manual. You can drive it today, but the moment something unexpected happens you're stuck.
+
+The documentation a professional Webflow developer delivers at handoff has four parts. These are not optional extras — they're a standard deliverable on any fixed-price project.
+
+**Style Guide page.** A hidden page inside the Webflow Designer (set to "exclude from sitemap") that shows every type style, every color swatch, every button variant, and every common section template. When your designer needs to create a new page six months from now, this is how they know what colors are correct without guessing, and what class names to reuse without inventing new ones.
+
+**Class naming document.** A short reference — one to two pages — that explains the naming convention used throughout the project. Webflow's class architecture doesn't have a standard; every developer does it differently. Without documentation, every future developer you hire starts from scratch by reverse-engineering the structure.
+
+**Integration map.** A list of every third-party tool connected to the site: what it does, how it's connected (embed code, Logic workflow, Zapier trigger, direct API), and what breaks if it fails. Zapier workflows especially — these are invisible unless you're logged into the Zapier account. If the workflow breaks, you need to know it exists before you can fix it.
+
+**Known issues and gotchas.** Every site has quirks. Maybe a certain section breaks at a specific viewport width that never showed up in client review. Maybe the CMS editor's rich text field doesn't support inline code. Maybe a third-party script conflicts with a certain interaction. A good developer documents these at handoff rather than hoping you never hit them.
+
+## Editor training for your team
+
+Documentation is not the same as training, and most Webflow projects need both. The Editor — the simplified interface content managers use to update the site — is not intuitive to someone who has never seen it. CMS fields, drafts vs. published states, conditional visibility, rich text limitations: these need to be walked through with a real human, not left to a Google Doc.
+
+<Callout type="tip">
+The most effective Editor training format I've found: a recorded Loom walkthrough (20–30 minutes) plus a live session with the specific person who will manage the site day-to-day. The recording covers the whole picture. The live session covers their specific questions. Both get documented in a shared Notion or Google Doc the team can reference later. If a developer offers only a recording and skips the live session, push back — 30 minutes of real-time questions catches everything a recording misses.
+</Callout>
+
+What the training should cover, at minimum: navigating CMS collections and adding new items, publishing and unpublishing content, editing rich text fields (and what Webflow's rich text editor cannot do), updating images, and understanding which parts of the site are off-limits in the Editor because they live in the Designer only.
+
+A useful test: after the training session, have your content manager try to publish a new blog post from scratch without help. If they can do it in under 10 minutes, the training worked. If they get stuck, that's data about what needs to be covered again before you sign off.
+
+## CMS structure doc and example entries
+
+The CMS is the most opaque part of a Webflow site for non-developers. Collections, fields, reference relationships, multi-reference fields, nested CMS data — these make no intuitive sense to someone who didn't build them. Without documentation, your team will either avoid touching the CMS entirely or break it by adding content in the wrong structure.
+
+The CMS structure doc should include: each collection name and what it represents, a list of every field with its type (plain text, rich text, reference, multi-reference, image, switch, etc.), notes on any relationships between collections (e.g., "blog posts reference the Author collection"), and any field-level constraints to be aware of (character limits, required fields, format expectations).
+
+On top of the doc, the developer should leave two to three populated example items in every collection. Not placeholder "Lorem ipsum" content — real-world examples that demonstrate how the fields work and what the finished output looks like. A blog post collection with three real posts in different states (draft, published, scheduled) tells your team more than a paragraph of instructions.
+
+If there are any CMS fields that don't show up in the live site — fields that were built but aren't currently referenced in a template — those should be documented separately so a future developer doesn't spend two hours wondering what they're for.
+
+## SEO verification
+
+A live site is not a ranking site. Before you sign off on a project, someone needs to verify that the site is actually indexed, not accidentally blocked, and set up for the SEO work you're about to do. This is not a long checklist — but every item on it matters.
+
+For a detailed breakdown of the technical items, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) covers the full on-page and technical audit. For handoff specifically, focus on these:
+
+**Search Console ownership.** Your Google Search Console property needs to be verified against the live domain and owned by your Google account, not the developer's. If the developer set up Search Console during the build (which is good practice), they should transfer property ownership to you at handoff. You'll need this for monitoring indexing errors, submitting the sitemap, and checking performance data.
+
+**Sitemap submitted.** Webflow generates a sitemap automatically. It should be submitted to Search Console — `yourdomain.com/sitemap.xml` — and confirmed as indexed. If you migrated from an existing site, the old sitemap should be removed from Search Console.
+
+**Robots.txt verified.** Webflow's default robots.txt allows all crawlers, which is correct for most sites. If the developer added any custom disallow rules, verify they're intentional and not accidentally blocking important pages.
+
+**Key pages confirmed indexed.** Do a quick `site:yourdomain.com` search in Google to confirm the homepage and one or two other key pages appear. A brand-new site won't show all pages immediately, but the homepage should show within a few days of launch if everything is configured correctly.
+
+**Lighthouse scores documented.** Run Lighthouse on the homepage and your most important template page (blog post, case study, service page — whatever gets traffic). Document the scores at handoff. This creates a baseline so you know if performance degrades over time and have a number to hand a future developer as a minimum threshold.
+
+**Redirect map delivered.** If the project involved migrating from an existing site, you should receive a CSV of every old URL and its corresponding new URL, with 301 redirects confirmed in Webflow's hosting settings. A migration without documented redirects is a migration that silently deleted your SEO history.
+
+## Backup and rollback plan
+
+Webflow does not have a native "export and restore" backup in the traditional sense, but there are practical safeguards a developer should put in place before calling a project done.
+
+**Project duplication.** Before any major launch, the developer should duplicate the Webflow project and keep the duplicate as a pre-launch snapshot. This takes about 30 seconds in Webflow and gives you an immediate rollback point if something goes wrong after publishing.
+
+**Designer version history.** Webflow's Designer maintains a version history under Project Settings. Your developer should show you where this is and how to restore to a previous version. It covers the most common scenario: a content or design change that breaks something.
+
+**CMS content export.** CMS content can be exported as a CSV from the Webflow CMS settings. For a site with meaningful CMS content (hundreds of blog posts, a full product catalog, a large case study library), the developer should export and hand you a CSV of every collection at handoff. This is your content backup that lives entirely outside Webflow.
+
+**Custom code inventory.** If the project uses custom code — embed blocks, global head/body scripts, page-level scripts — these should be listed in a document with what each does and where it lives. Custom code that isn't documented is custom code that will break silently and take hours to diagnose.
+
+## The 14-item Webflow handoff checklist
+
+This is the version I use on my own projects. Print it, send it to your developer, or use it as a sign-off gating list before you make final payment.
+
+1. **Webflow project transferred to your workspace** — site lives in an account you own, not the developer's.
+2. **Webflow hosting plan billed to your account** — Basic, CMS, or Business plan charged to your card.
+3. **Custom domain DNS in your registrar** — A record and CNAME pointing from your registrar to Webflow's servers, with your email on the registration.
+4. **Editor invites sent to every content manager** — not just "I'll send them," but confirmed invites accepted.
+5. **Third-party credentials delivered** — Memberstack, Zapier, form backend, SMTP, Outseta, and any other integration: login details or account transfer confirmed.
+6. **Style Guide page in the Designer** — hidden page with all type styles, colors, button variants, and section templates.
+7. **Class naming document delivered** — one-to-two page reference explaining the naming convention used throughout the project.
+8. **CMS structure doc with all collections and fields** — including field types, relationships, and constraints.
+9. **Two to three example items in every CMS collection** — real content, not placeholder text.
+10. **Editor training recording delivered** — Loom or equivalent, covering CMS, publishing workflow, and rich text limits.
+11. **Live Editor walkthrough completed with the person who will actually manage content** — not just a demo to the project owner.
+12. **Google Search Console property transferred to your account** — with sitemap submitted and indexing confirmed.
+13. **Lighthouse scores documented for homepage and primary template** — baseline performance recorded at launch.
+14. **Read-only Designer link shared for your archive** — so any future developer can inspect the project's class structure without being added as a full collaborator.
+
+If any of these fourteen items is missing at launch, it goes on a punch list with a delivery date before final payment is released. That framing — handoff checklist as a gating condition on payment — is the single most effective way to ensure you actually get everything.
+
+## What ongoing support should cover after handoff
+
+A complete handoff doesn't mean you'll never need the developer again. It means you can operate without them for everything routine — but there will still be things that need professional attention.
+
+Industry standard for fixed-price Webflow projects is 30 days of bug-fix support included after launch. That window covers anything that was broken at launch or breaks as a direct result of the build: interactions that don't fire correctly in a browser you didn't test, a CMS field that renders incorrectly in a specific template, a form that submits without triggering the integration. New features and scope additions are not covered — those go to a new statement of work.
+
+After the 30-day window, support typically takes one of two forms: a retainer for ongoing work (new pages, SEO improvements, CMS updates, A/B testing) or hourly work for one-off requests. Both are legitimate depending on how much you expect to use the site actively. The [retainer vs project breakdown](/blog/webflow-retainer-vs-project) covers how to decide which structure makes more sense for your situation and what to expect from each model.
+
+What ongoing support should never include: the developer holding access as leverage, support "credits" that expire without rollover, or vague retainer agreements with no defined deliverables. If a retainer doesn't specify a monthly hour commitment, a minimum scope, and a defined escalation process for urgent issues, it's not a retainer — it's a subscription to vague availability.
+
+The developers worth keeping on retainer are the ones who documented the project well enough that you could, in theory, take it to someone else. That's not a threat to them — it's the standard that makes long-term relationships actually work.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
