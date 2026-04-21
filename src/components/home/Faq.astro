@@ -1,0 +1,22 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../layout/Eyebrow.astro';
+import DisplayHeading from '../layout/DisplayHeading.astro';
+import FaqAccordion from './FaqAccordion';
+import { faq } from '@/data/faq';
+---
+<Section tone="tint" id="faq">
+  <Container width="prose">
+    <div class="mb-10" data-reveal>
+      <Eyebrow>FAQ</Eyebrow>
+      <DisplayHeading as="h2" size="lg" class="mt-3">
+        Questions I get a lot
+      </DisplayHeading>
+    </div>
+
+    <div data-reveal>
+      <FaqAccordion items={faq} client:visible />
+    </div>
+  </Container>
+</Section>

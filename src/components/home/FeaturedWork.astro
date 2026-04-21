@@ -1,0 +1,61 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../layout/Eyebrow.astro';
+import DisplayHeading from '../layout/DisplayHeading.astro';
+import { projects } from '@/data/projects';
+import { ArrowRight } from 'lucide-react';
+
+const featured = projects.find((p) => p.featured);
+---
+{featured && (
+  <Section tone="tint" id="work">
+    <Container>
+      <div class="flex flex-wrap items-end justify-between gap-6 mb-12" data-reveal>
+        <div class="max-w-2xl">
+          <Eyebrow>Featured work</Eyebrow>
+          <DisplayHeading as="h2" size="lg" class="mt-3">
+            Recent case study
+          </DisplayHeading>
+        </div>
+        <a
+          href="/work"
+          class="text-brand font-medium inline-flex items-center gap-2 hover:gap-3 transition-all"
+        >
+          See all work <ArrowRight size={18} strokeWidth={2} />
+        </a>
+      </div>
+
+      <a
+        href={`/work/${featured.slug}`}
+        class="group block rounded-xl border border-line bg-paper overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+        data-reveal
+      >
+        <div class="aspect-[16/10] overflow-hidden bg-paper-sunken">
+          <img
+            src={featured.heroImage}
+            alt={`${featured.name} case study`}
+            class="h-full w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+            loading="lazy"
+          />
+        </div>
+        <div class="p-8 md:p-10">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            {featured.tags.map((tag) => (
+              <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-medium text-brand">
+                {tag}
+              </span>
+            ))}
+          </div>
+          <h3 class="text-display-md text-ink">{featured.name}</h3>
+          <p class="mt-3 max-w-2xl text-body-lg text-ink-muted">
+            {featured.description}
+          </p>
+          <div class="mt-6 inline-flex items-center gap-2 text-brand font-medium group-hover:gap-3 transition-all">
+            Read case study <ArrowRight size={18} strokeWidth={2} />
+          </div>
+        </div>
+      </a>
+    </Container>
+  </Section>
+)}

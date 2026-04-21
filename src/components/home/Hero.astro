@@ -1,0 +1,58 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../layout/Eyebrow.astro';
+import DisplayHeading from '../layout/DisplayHeading.astro';
+import { site } from '@/data/site';
+---
+<Section size="hero" tone="paper" class="relative overflow-hidden">
+  <div
+    aria-hidden="true"
+    class="absolute inset-x-0 top-0 -z-10 h-[620px] bg-gradient-to-b from-brand-soft via-brand-soft/40 to-transparent opacity-70"
+  ></div>
+  <div
+    aria-hidden="true"
+    class="absolute left-1/2 top-16 -z-10 h-[320px] w-[680px] -translate-x-1/2 rounded-full bg-brand/10 blur-3xl"
+  ></div>
+
+  <Container>
+    <div class="flex flex-col items-center text-center gap-6">
+      <span
+        data-hero-item
+        class="inline-flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1 text-xs font-medium text-ink-muted backdrop-blur"
+      >
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-brand animate-pulse" aria-hidden="true"></span>
+        Available for new projects in {new Date().toLocaleString('en', { month: 'long' })}
+      </span>
+
+      <DisplayHeading as="h1" size="xl" class="max-w-4xl" data-hero-item>
+        Launch faster with <em class="not-italic text-brand">professional Webflow</em> development
+      </DisplayHeading>
+
+      <p class="text-body-lg text-ink-muted max-w-2xl" data-hero-item>
+        Scale your agency without hiring full-time developers. One flat monthly rate for unlimited pages — or hire by the hour through Upwork.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3 pt-2" data-hero-item>
+        <a
+          href={site.links.cal}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex h-12 items-center rounded-[10px] bg-brand px-6 text-base font-medium text-white shadow-sm hover:bg-brand-hover hover:-translate-y-0.5 transition-all"
+        >
+          Book a 30-min call
+        </a>
+        <a
+          href="/work"
+          class="inline-flex h-12 items-center rounded-[10px] border border-line-strong bg-paper px-6 text-base font-medium text-ink hover:bg-paper-tint transition-colors"
+        >
+          View work
+        </a>
+      </div>
+
+      <p class="mt-2 text-body-sm text-ink-subtle" data-hero-item>
+        Trusted by 12+ SaaS companies and agencies worldwide.
+      </p>
+    </div>
+  </Container>
+</Section>
