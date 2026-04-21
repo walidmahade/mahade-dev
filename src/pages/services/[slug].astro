@@ -1,0 +1,192 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Section from '@/components/layout/Section.astro';
+import Container from '@/components/layout/Container.astro';
+import Eyebrow from '@/components/layout/Eyebrow.astro';
+import DisplayHeading from '@/components/layout/DisplayHeading.astro';
+import CtaBanner from '@/components/layout/CtaBanner.astro';
+import FaqAccordion from '@/components/home/FaqAccordion';
+import {
+  getDynamicServiceLandings,
+  type ServiceLandingWithContent,
+} from '@/data/serviceLandings';
+import { site } from '@/data/site';
+import { Check } from 'lucide-react';
+
+export function getStaticPaths() {
+  return getDynamicServiceLandings().map((s) => ({
+    params: { slug: s.slug },
+    props: { service: s },
+  }));
+}
+
+interface Props {
+  service: ServiceLandingWithContent;
+}
+
+const { service } = Astro.props;
+const { content } = service;
+
+const pageTitle = `${service.name} — Mahade Walid`;
+const pageDescription = service.tagline;
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: service.name,
+  description: service.tagline,
+  provider: { '@type': 'Person', name: site.name, url: site.url },
+  areaServed: { '@type': 'Place', name: 'Worldwide' },
+  url: `${site.url}${service.href}`,
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${site.url}/services/${service.slug}` },
+    { '@type': 'ListItem', position: 3, name: service.name, item: `${site.url}${service.href}` },
+  ],
+};
+---
+<Layout title={pageTitle} description={pageDescription}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+
+  <Section size="hero" tone="paper">
+    <Container>
+      <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-ink transition-colors">Home</a>
+        <span aria-hidden="true"> / </span>
+        <span class="text-ink-muted">Services</span>
+        <span aria-hidden="true"> / </span>
+        <span class="text-ink-muted">{service.name}</span>
+      </nav>
+
+      <div class="mt-8 max-w-3xl">
+        <Eyebrow>{content.hero.eyebrow}</Eyebrow>
+        <DisplayHeading as="h1" size="xl" class="mt-3">
+          {content.hero.heading}
+        </DisplayHeading>
+        <p class="mt-6 text-body-lg text-ink-muted">
+          {content.hero.sub}
+        </p>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={site.links.cal}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex h-11 items-center rounded-[10px] bg-brand px-5 font-medium text-white hover:bg-brand-hover transition-colors"
+        >
+          Book a call
+        </a>
+        <a
+          href="/work"
+          class="inline-flex h-11 items-center rounded-[10px] border border-line-strong px-5 font-medium text-ink hover:bg-paper-tint transition-colors"
+        >
+          See the work
+        </a>
+      </div>
+    </Container>
+  </Section>
+
+  <Section tone="tint" size="compact">
+    <Container>
+      <Eyebrow>Who it is for</Eyebrow>
+      <ul class="mt-6 grid gap-4 md:grid-cols-3">
+        {content.whoFor.map((item) => (
+          <li class="rounded-lg border border-line bg-paper p-6 text-ink">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+
+  <Section tone="paper">
+    <Container>
+      <Eyebrow>What you get</Eyebrow>
+      <h2 class="mt-3 text-display-md text-ink max-w-2xl">
+        Everything in scope, nothing upsold.
+      </h2>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {content.deliverables.map((d) => (
+          <div class="rounded-lg border border-line bg-paper p-6 md:p-8">
+            <h3 class="text-heading-md text-ink">{d.title}</h3>
+            <p class="mt-2 text-ink-muted">{d.body}</p>
+          </div>
+        ))}
+      </div>
+    </Container>
+  </Section>
+
+  <Section tone="tint">
+    <Container>
+      <Eyebrow>Process</Eyebrow>
+      <h2 class="mt-3 text-display-md text-ink max-w-2xl">
+        How this actually runs.
+      </h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {content.process.map((step, i) => (
+          <li class="rounded-lg border border-line bg-paper p-6 md:p-8">
+            <span class="text-display-md text-brand font-display block leading-none">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="mt-4 text-heading-md text-ink">{step.step}</h3>
+            <p class="mt-2 text-ink-muted text-body-sm">{step.body}</p>
+          </li>
+        ))}
+      </ol>
+    </Container>
+  </Section>
+
+  <Section tone="paper">
+    <Container>
+      <Eyebrow>Pricing</Eyebrow>
+      <div class="mt-8 max-w-xl rounded-xl border border-line bg-paper p-8 md:p-10">
+        <p class="text-eyebrow text-ink-muted">{content.pricingAnchor.label}</p>
+        <div class="mt-4 flex items-baseline gap-1">
+          <span class="text-display-md font-display text-ink">{content.pricingAnchor.price}</span>
+          <span class="text-ink-muted">{content.pricingAnchor.cadence}</span>
+        </div>
+        <ul class="mt-6 space-y-3">
+          {content.pricingAnchor.bullets.map((b) => (
+            <li class="flex gap-3">
+              <Check size={18} strokeWidth={2.5} className="text-brand flex-shrink-0 mt-0.5" />
+              <span class="text-ink">{b}</span>
+            </li>
+          ))}
+        </ul>
+        <a
+          href={content.pricingAnchor.cta.href}
+          target={content.pricingAnchor.cta.external ? '_blank' : undefined}
+          rel={content.pricingAnchor.cta.external ? 'noopener' : undefined}
+          class="mt-8 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-ink text-paper font-medium hover:-translate-y-0.5 transition-transform"
+        >
+          {content.pricingAnchor.cta.label}
+        </a>
+      </div>
+    </Container>
+  </Section>
+
+  <Section tone="tint">
+    <Container width="prose">
+      <Eyebrow>FAQ</Eyebrow>
+      <DisplayHeading as="h2" size="lg" class="mt-3 mb-8">
+        Questions this service gets
+      </DisplayHeading>
+      <FaqAccordion items={content.faq} client:visible />
+    </Container>
+  </Section>
+
+  <CtaBanner
+    heading={`Ready to start ${service.name.toLowerCase()}?`}
+    primary={{ label: 'Book a call', href: site.links.cal, external: true }}
+    secondary={{ label: 'Hire on Upwork', href: site.links.upwork, external: true }}
+  />
+</Layout>
