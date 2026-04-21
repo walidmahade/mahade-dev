@@ -27,8 +27,20 @@ const crossLinkServices = getDynamicServiceLandings();
 const title = 'Hire me on Upwork — Mahade Walid';
 const description =
   'Top-Rated Webflow developer on Upwork. Escrow-backed hourly engagements with weekly time reports and no minimum commitment.';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${site.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Hire me on Upwork', item: `${site.url}/services/upwork` },
+  ],
+};
 ---
 <Layout title={title} description={description}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
   <Section size="hero" tone="paper">
     <Container>
       <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
