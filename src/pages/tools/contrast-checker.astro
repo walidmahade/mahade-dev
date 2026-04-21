@@ -1,0 +1,37 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import ContrastChecker from '@/components/tools/ContrastChecker';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'contrast-checker')!;
+---
+<ToolLayout tool={tool}>
+  <ContrastChecker client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>WCAG contrast thresholds</h2>
+    <ul>
+      <li><strong>AA Normal text:</strong> ratio ≥ 4.5 (body copy under 18pt / 14pt bold)</li>
+      <li><strong>AA Large text:</strong> ratio ≥ 3 (headings 18pt+ / 14pt bold+)</li>
+      <li><strong>AAA Normal text:</strong> ratio ≥ 7 (stricter, for critical copy)</li>
+      <li><strong>AAA Large text:</strong> ratio ≥ 4.5</li>
+    </ul>
+
+    <h2>When AA is enough vs when to aim for AAA</h2>
+    <p>
+      AA is the industry default and what most accessibility audits measure against. Go AAA
+      for government sites, healthcare, finance, and any product used by older adults or anyone
+      with low vision. For marketing sites, AA body + AAA large is a good compromise.
+    </p>
+
+    <h2>Common mistakes</h2>
+    <ul>
+      <li><strong>Muted grays on white</strong> — <code>#999</code> is ~2.8:1 on white. Fails.</li>
+      <li><strong>Brand color on dark backgrounds</strong> — check both directions.</li>
+      <li><strong>Focus rings that only work in one color theme</strong></li>
+    </ul>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

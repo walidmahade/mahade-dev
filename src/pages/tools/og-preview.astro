@@ -1,0 +1,31 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import OgPreview from '@/components/tools/OgPreview';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'og-preview')!;
+---
+<ToolLayout tool={tool}>
+  <OgPreview client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>OG image best practices</h2>
+    <ul>
+      <li><strong>1200 × 630 pixels.</strong> Matches every major platform's preferred crop.</li>
+      <li><strong>PNG or JPEG.</strong> Some platforms do not render SVG or WebP reliably as OG images.</li>
+      <li><strong>Under 1 MB.</strong> Larger files get skipped on slow networks.</li>
+      <li><strong>Readable at 400px wide.</strong> That is how most feeds display it.</li>
+      <li><strong>Avoid text in the bottom-right.</strong> LinkedIn crops that region on some layouts.</li>
+    </ul>
+
+    <h2>Test after deploy</h2>
+    <p>
+      This preview is approximate. For a final check, paste your URL into each platform's
+      own debugger — Twitter Card Validator, LinkedIn Post Inspector, Facebook Sharing Debugger
+      — so they can re-fetch and cache your latest meta.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

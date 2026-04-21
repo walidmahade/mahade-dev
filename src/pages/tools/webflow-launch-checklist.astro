@@ -1,0 +1,29 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import LaunchChecklist from '@/components/tools/LaunchChecklist';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'webflow-launch-checklist')!;
+---
+<ToolLayout tool={tool}>
+  <LaunchChecklist client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>Why this checklist exists</h2>
+    <p>
+      Every launch I have done has had a "we forgot X" moment. Usually it was a missing 301,
+      a stale Google Search Console verification, or an un-proofed hero. This is the 40-item
+      list I run through on every project before I hand over a staging password.
+    </p>
+
+    <h2>How to use it</h2>
+    <p>
+      Check items off as you finish them. Your progress saves to your browser's local storage —
+      close the tab, come back tomorrow, still there. Nothing is sent to a server, and the list
+      is not linked to your email or account anywhere.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

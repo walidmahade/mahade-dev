@@ -1,0 +1,37 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import RobotsGenerator from '@/components/tools/RobotsGenerator';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'robots-txt-generator')!;
+---
+<ToolLayout tool={tool}>
+  <RobotsGenerator client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>What robots.txt actually does</h2>
+    <p>
+      <code>robots.txt</code> tells well-behaved crawlers what they may and may not fetch.
+      It does not hide pages from Google if those pages are linked from elsewhere —
+      <code>Disallow</code> prevents crawling, not indexing. For the latter, use a
+      <code>noindex</code> meta tag on the page itself.
+    </p>
+
+    <h2>Common pitfalls</h2>
+    <ul>
+      <li><strong>Accidentally blocking everything.</strong> <code>Disallow: /</code> nukes indexing. Check twice before shipping.</li>
+      <li><strong>Blocking CSS or JS.</strong> Google needs to render your page. Leave asset directories crawlable.</li>
+      <li><strong>Forgetting the Sitemap line.</strong> Adding it helps Google discover new content faster.</li>
+    </ul>
+
+    <h2>Webflow-specific note</h2>
+    <p>
+      Webflow auto-generates a <code>robots.txt</code> you can override in Project Settings → SEO.
+      The "Webflow (open)" preset above matches Webflow's default and is the right call for most
+      marketing sites.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

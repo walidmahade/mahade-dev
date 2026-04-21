@@ -1,44 +1,120 @@
 ---
 import Container from '../layout/Container.astro';
 import { site } from '@/data/site';
+import { tools } from '@/data/tools';
 
 const year = new Date().getFullYear();
 
-const links = [
-  { label: site.email, href: `mailto:${site.email}`, external: true },
-  { label: 'Book a call', href: site.links.cal, external: true },
-  { label: 'Upwork', href: site.links.upwork, external: true },
-  { label: 'GitHub', href: site.links.github, external: true },
+const columns: {
+  heading: string;
+  links: { label: string; href: string; external?: boolean }[];
+}[] = [
+  {
+    heading: 'Services',
+    links: [
+      { label: 'Webflow development', href: '/#services' },
+      { label: 'SEO optimization', href: '/#services' },
+      { label: 'Speed optimization', href: '/#services' },
+      { label: 'Maintenance', href: '/#services' },
+      { label: 'Migration', href: '/tools/migration-calculator' },
+      { label: 'Pricing', href: '/#pricing' },
+    ],
+  },
+  {
+    heading: 'Free tools',
+    links: tools.map((t) => ({
+      label: t.name,
+      href: `/tools/${t.slug}`,
+    })),
+  },
+  {
+    heading: 'Work',
+    links: [
+      { label: 'All case studies', href: '/work' },
+      { label: 'Amply (SaaS)', href: '/work/amply' },
+      { label: 'SaaS marketing sites', href: '/work' },
+      { label: 'Agency white-label', href: '/work' },
+      { label: 'Migrations', href: '/work' },
+    ],
+  },
+  {
+    heading: 'Resources',
+    links: [
+      { label: 'Blog', href: '/blog' },
+      { label: 'Process', href: '/#process' },
+      { label: 'FAQ', href: '/#faq' },
+      { label: 'About', href: '/about' },
+      { label: 'Launch checklist', href: '/tools/webflow-launch-checklist' },
+    ],
+  },
+  {
+    heading: 'Compare',
+    links: [
+      { label: 'Webflow vs WordPress', href: '/tools/webflow-vs-wordpress' },
+      { label: 'Webflow cost', href: '/tools/webflow-cost-calculator' },
+      { label: 'Migration cost', href: '/tools/migration-calculator' },
+      { label: 'Meta tag preview', href: '/tools/meta-preview' },
+      { label: 'Schema generator', href: '/tools/schema-generator' },
+    ],
+  },
+  {
+    heading: 'Hire',
+    links: [
+      { label: 'Book a call', href: site.links.cal, external: true },
+      { label: 'Hire on Upwork', href: site.links.upwork, external: true },
+      { label: site.email, href: `mailto:${site.email}` },
+      { label: 'Contact page', href: '/contact' },
+      { label: 'GitHub', href: site.links.github, external: true },
+    ],
+  },
 ];
 ---
-<footer class="border-t border-line bg-paper-tint py-12 mt-auto">
+<footer class="border-t border-line bg-paper-tint">
   <Container>
-    <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-      <div>
-        <p class="font-semibold text-ink">{site.name}</p>
-        <p class="text-body-sm text-ink-muted">
-          {site.title} · {site.location}
-        </p>
-      </div>
+    <div class="py-14 md:py-16">
+      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-6">
+        <div class="lg:col-span-6 xl:col-span-6 mb-4 lg:mb-0 lg:hidden">
+          <p class="font-semibold text-ink">{site.name}</p>
+          <p class="text-body-sm text-ink-muted">{site.title} · {site.location}</p>
+        </div>
 
-      <ul class="flex flex-wrap gap-x-6 gap-y-2 text-body-sm">
-        {links.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              target={link.external ? '_blank' : undefined}
-              rel={link.external ? 'noopener' : undefined}
-              class="text-ink-muted hover:text-ink transition-colors"
-            >
-              {link.label}
-            </a>
-          </li>
+        {columns.map((col) => (
+          <div>
+            <p class="text-eyebrow text-ink-muted">{col.heading}</p>
+            <ul class="mt-4 space-y-2.5">
+              {col.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    target={link.external ? '_blank' : undefined}
+                    rel={link.external ? 'noopener' : undefined}
+                    class="text-body-sm text-ink hover:text-brand transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
 
-    <p class="mt-8 text-body-sm text-ink-subtle">
-      © {year} {site.name}. All rights reserved.
-    </p>
+    <div class="border-t border-line py-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-md bg-brand flex items-center justify-center">
+          <span class="text-paper font-bold text-body-sm">M</span>
+        </div>
+        <div>
+          <p class="font-semibold text-ink text-body-sm">{site.name}</p>
+          <p class="text-body-sm text-ink-muted">{site.title} · {site.location}</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 text-body-sm text-ink-muted">
+        <span>© {year} {site.name}. All rights reserved.</span>
+        <span aria-hidden="true" class="hidden md:inline">·</span>
+        <span>Built with Astro on Cloudflare Pages.</span>
+      </div>
+    </div>
   </Container>
 </footer>
