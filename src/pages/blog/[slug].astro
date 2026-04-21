@@ -54,7 +54,7 @@ const articleSchema = {
   </Fragment>
 
   <article>
-    <Section size="hero" tone="paper">
+    <Section size="page-head" tone="paper">
       <Container width="prose">
         <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
           <a href="/" class="hover:text-ink transition-colors">Home</a>
@@ -62,14 +62,14 @@ const articleSchema = {
           <a href="/blog" class="hover:text-ink transition-colors">Blog</a>
         </nav>
 
-        <div class="mt-8">
+        <div class="mt-5">
           <Eyebrow>
             <time datetime={post.data.pubDate.toISOString()}>
               {formatDate(post.data.pubDate)}
             </time>
           </Eyebrow>
-          <h1 class="mt-3 text-display-lg text-ink">{post.data.title}</h1>
-          <p class="mt-4 text-body-lg text-ink-muted">{post.data.description}</p>
+          <h1 class="mt-2 text-display-sm text-ink">{post.data.title}</h1>
+          <p class="mt-3 text-ink-muted">{post.data.description}</p>
         </div>
       </Container>
     </Section>
