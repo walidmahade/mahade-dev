@@ -1,0 +1,31 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import MetaPreview from '@/components/tools/MetaPreview';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'meta-preview')!;
+---
+<ToolLayout tool={tool}>
+  <MetaPreview client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>How Google measures your title and description</h2>
+    <p>
+      Google does not truncate by character count — it truncates by pixel width. Wide characters
+      like <code>W</code> and <code>M</code> eat more budget than narrow ones like <code>i</code>
+      and <code>l</code>. This preview measures your text in the exact font Google uses (Arial
+      at 20px for titles, 14px for descriptions), so you see the real truncation point.
+    </p>
+
+    <h2>Rules of thumb</h2>
+    <ul>
+      <li><strong>Title:</strong> aim for ~580px. Under 50 chars usually fits.</li>
+      <li><strong>Description:</strong> aim for ~990px. 140–155 chars usually fits.</li>
+      <li><strong>Lead with the keyword.</strong> If Google rewrites your title, they tend to keep the first 50 chars.</li>
+      <li><strong>Brand at the end.</strong> "Primary keyword — Brand name" tends to outperform the reverse.</li>
+    </ul>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

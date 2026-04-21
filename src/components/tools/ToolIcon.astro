@@ -1,0 +1,39 @@
+---
+import {
+  Calculator,
+  GitCompare,
+  ArrowRightLeft,
+  Search,
+  Image as ImageIcon,
+  FileCode,
+  Gauge,
+  Bot,
+  CheckSquare,
+  Contrast,
+} from 'lucide-react';
+import type { Tool } from '@/data/tools';
+
+interface Props {
+  icon: Tool['icon'];
+  size?: number;
+  class?: string;
+}
+
+const { icon, size = 20, class: className = '' } = Astro.props;
+
+const iconMap = {
+  calculator: Calculator,
+  gitCompare: GitCompare,
+  arrowRightLeft: ArrowRightLeft,
+  search: Search,
+  image: ImageIcon,
+  fileCode: FileCode,
+  gauge: Gauge,
+  bot: Bot,
+  checkSquare: CheckSquare,
+  contrast: Contrast,
+};
+
+const Icon = iconMap[icon];
+---
+<Icon size={size} strokeWidth={1.75} className={className} />

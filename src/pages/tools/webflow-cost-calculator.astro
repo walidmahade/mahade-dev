@@ -1,0 +1,43 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import CostCalculator from '@/components/tools/CostCalculator';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'webflow-cost-calculator')!;
+---
+<ToolLayout tool={tool}>
+  <CostCalculator client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>How this calculator estimates Webflow cost</h2>
+    <p>
+      Webflow projects split across four variables that move the price more than anything else:
+      the number of pages, whether you need a CMS and how complex, whether you're migrating
+      from another platform, and the SEO depth you want baked in at launch.
+    </p>
+    <p>
+      The estimate above blends agency rates ($150–$250/hour) with freelance rates ($60–$100/hour)
+      across those four variables. It lands on a range rather than a single number because the
+      real cost depends on designer handoff quality, how many reviews you need, and whether
+      copy is final at kickoff.
+    </p>
+
+    <h2>Typical Webflow project costs</h2>
+    <ul>
+      <li><strong>Landing page (1–3 pages):</strong> $800 – $2,500</li>
+      <li><strong>Marketing site (5–12 pages):</strong> $2,500 – $8,000</li>
+      <li><strong>Marketing site with CMS (12–25 pages):</strong> $6,000 – $15,000</li>
+      <li><strong>Multi-language / multi-collection build:</strong> $15,000+</li>
+    </ul>
+
+    <h2>When a monthly retainer beats per-project pricing</h2>
+    <p>
+      If you are shipping more than three changes a month or constantly adding pages, a flat
+      $1,999/month retainer tends to beat per-project billing once you account for scoping time,
+      context-switching, and back-and-forth.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

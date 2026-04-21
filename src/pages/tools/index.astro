@@ -1,0 +1,62 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Section from '@/components/layout/Section.astro';
+import Container from '@/components/layout/Container.astro';
+import Eyebrow from '@/components/layout/Eyebrow.astro';
+import DisplayHeading from '@/components/layout/DisplayHeading.astro';
+import ToolIcon from '@/components/tools/ToolIcon.astro';
+import { tools } from '@/data/tools';
+
+const categories = [...new Set(tools.map((t) => t.category))];
+---
+<Layout
+  title="Free Webflow & SEO Tools — Mahade Walid"
+  description="Ten free tools for Webflow developers, agencies, and in-house marketers: cost calculators, meta preview, schema generator, launch checklist, and more."
+>
+  <Section size="hero" tone="paper">
+    <Container>
+      <Eyebrow>Free tools</Eyebrow>
+      <DisplayHeading as="h1" size="xl" class="mt-3 max-w-3xl">
+        Free tools for people shipping Webflow sites.
+      </DisplayHeading>
+      <p class="mt-6 max-w-2xl text-body-lg text-ink-muted">
+        Calculators, generators, and checkers I actually use with clients. No sign-ups, no email capture — everything runs in your browser.
+      </p>
+    </Container>
+  </Section>
+
+  {categories.map((cat) => {
+    const list = tools.filter((t) => t.category === cat);
+    return (
+      <Section tone={cat === categories[0] ? 'tint' : categories.indexOf(cat) % 2 === 0 ? 'tint' : 'paper'}>
+        <Container>
+          <Eyebrow>{cat}</Eyebrow>
+          <h2 class="mt-3 text-display-md text-ink">
+            {cat === 'Pricing' && 'Price your project before reaching out.'}
+            {cat === 'SEO' && 'Ship with SEO in the DNA.'}
+            {cat === 'Performance' && 'Keep Core Web Vitals green.'}
+            {cat === 'Launch' && 'Ship clean.'}
+            {cat === 'Design' && 'Make it accessible.'}
+          </h2>
+          <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {list.map((tool) => (
+              <a
+                href={`/tools/${tool.slug}`}
+                class="group rounded-xl border border-line bg-paper p-6 hover:border-line-strong hover:-translate-y-0.5 transition-all"
+              >
+                <div class="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                  <ToolIcon icon={tool.icon} size={22} />
+                </div>
+                <h3 class="mt-5 text-heading-md text-ink">{tool.name}</h3>
+                <p class="mt-2 text-ink-muted">{tool.tagline}</p>
+                <span class="mt-4 inline-flex items-center gap-2 text-brand font-medium group-hover:gap-3 transition-all">
+                  Open tool <span aria-hidden="true">→</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    );
+  })}
+</Layout>

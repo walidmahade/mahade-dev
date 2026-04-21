@@ -1,0 +1,31 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import CoreWebVitals from '@/components/tools/CoreWebVitals';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'core-web-vitals')!;
+---
+<ToolLayout tool={tool}>
+  <CoreWebVitals client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>What the numbers mean</h2>
+    <ul>
+      <li><strong>LCP (Largest Contentful Paint):</strong> how fast the largest visible element renders. Target &lt; 2.5s.</li>
+      <li><strong>INP (Interaction to Next Paint):</strong> how responsive the page feels when you click or tap. Target &lt; 200ms.</li>
+      <li><strong>CLS (Cumulative Layout Shift):</strong> how much content jumps around while loading. Target &lt; 0.1.</li>
+      <li><strong>FCP (First Contentful Paint):</strong> how fast the first pixel lands. Target &lt; 1.8s.</li>
+      <li><strong>TTFB (Time to First Byte):</strong> how fast your server responds. Target &lt; 800ms.</li>
+    </ul>
+
+    <h2>Top three Webflow performance fixes</h2>
+    <ol>
+      <li><strong>Compress hero images.</strong> Export at 2x the display size max, WebP format, under 200 KB.</li>
+      <li><strong>Defer non-critical scripts.</strong> Move chat widgets, analytics, and pixel trackers to run after load.</li>
+      <li><strong>Reserve space for images.</strong> Set width/height or aspect-ratio to eliminate CLS.</li>
+    </ol>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

@@ -1,0 +1,38 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import ComparisonCalculator from '@/components/tools/ComparisonCalculator';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'webflow-vs-wordpress')!;
+---
+<ToolLayout tool={tool}>
+  <ComparisonCalculator client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>Webflow vs WordPress — the real cost difference</h2>
+    <p>
+      On paper, WordPress looks cheaper. The software is free. Hosting can start at $5/month.
+      Most of the sticker shock shows up in places that don't appear on your invoice: the time
+      spent on plugin updates, the security incidents that eat a Friday afternoon, and the
+      marketer who can't change a headline without filing a ticket.
+    </p>
+
+    <h2>Where Webflow wins</h2>
+    <ul>
+      <li><strong>Updates are fast.</strong> 20 minutes vs 45+ for the same change on WordPress.</li>
+      <li><strong>No plugin stack to maintain.</strong> No Gutenberg vs Bricks vs Elementor drift.</li>
+      <li><strong>Non-technical editors.</strong> A CMO can update the hero on mobile, from a plane.</li>
+      <li><strong>Built-in CDN + SSL.</strong> Hosting costs are predictable.</li>
+    </ul>
+
+    <h2>Where WordPress still wins</h2>
+    <ul>
+      <li>Highly customized ecommerce (WooCommerce + custom dev)</li>
+      <li>Sites that need 500+ CMS items with deep relationships</li>
+      <li>Teams that already run a multi-site WordPress network</li>
+    </ul>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

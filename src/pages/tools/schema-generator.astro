@@ -1,0 +1,39 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import SchemaGenerator from '@/components/tools/SchemaGenerator';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'schema-generator')!;
+---
+<ToolLayout tool={tool}>
+  <SchemaGenerator client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>Why JSON-LD matters</h2>
+    <p>
+      Structured data tells search engines exactly what your page is about. Done well, it unlocks
+      rich results — star ratings, FAQ dropdowns, sitelink boxes, product cards — that take up
+      more SERP real estate and significantly improve click-through rates.
+    </p>
+
+    <h2>Where to paste the generated code</h2>
+    <p>
+      In Webflow, paste the generated <code>&lt;script&gt;</code> block into the Custom Code
+      section of the page (Page Settings → Custom Code → Inside <code>&lt;head&gt;</code> tag).
+      For site-wide schemas like Person or Organization, paste it in the Project Settings Custom
+      Code field instead.
+    </p>
+
+    <h2>Validate before you ship</h2>
+    <p>
+      After pasting, check the page with Google's
+      <a href="https://validator.schema.org/" target="_blank" rel="noopener">Schema Markup Validator</a>
+      and the
+      <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener">Rich Results Test</a>.
+      Both are free and catch the small errors that break eligibility.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

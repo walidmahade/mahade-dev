@@ -1,0 +1,38 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import MigrationCalculator from '@/components/tools/MigrationCalculator';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'migration-calculator')!;
+---
+<ToolLayout tool={tool}>
+  <MigrationCalculator client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>What a realistic Webflow migration looks like</h2>
+    <p>
+      Most migrations fall into one of two camps: rebuild (take the design and rewrite everything
+      in Webflow from scratch) or mirror (match the existing design pixel-for-pixel). Rebuilds
+      take longer but leave you with a cleaner site; mirrors ship faster but preserve design debt.
+    </p>
+
+    <h2>Preserving SEO during migration</h2>
+    <p>
+      The biggest migration risk is losing organic rankings. A clean migration includes a full
+      redirect map (301 from every old URL to its closest Webflow equivalent), preserved meta
+      titles and descriptions, preserved structured data, and a sitemap resubmission on launch
+      day. Skipping any of these is where "we migrated and traffic dropped 40%" comes from.
+    </p>
+
+    <h2>Source platforms, ordered by difficulty</h2>
+    <ul>
+      <li><strong>Framer:</strong> Easiest — similar component-based model.</li>
+      <li><strong>Squarespace:</strong> Medium — CMS export is manual.</li>
+      <li><strong>WordPress:</strong> Harder — plugin-specific data needs manual mapping.</li>
+      <li><strong>Custom / hand-coded:</strong> Hardest — no structured export.</li>
+    </ul>
+
+    <ToolCta />
+  </div>
+</ToolLayout>
