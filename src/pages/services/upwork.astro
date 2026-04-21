@@ -1,0 +1,144 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Section from '@/components/layout/Section.astro';
+import Container from '@/components/layout/Container.astro';
+import Eyebrow from '@/components/layout/Eyebrow.astro';
+import DisplayHeading from '@/components/layout/DisplayHeading.astro';
+import CtaBanner from '@/components/layout/CtaBanner.astro';
+import ServiceIcon from '@/components/site/ServiceIcon.astro';
+import { site } from '@/data/site';
+import { testimonials } from '@/data/testimonials';
+import { getDynamicServiceLandings } from '@/data/serviceLandings';
+import { ArrowUpRight } from 'lucide-react';
+
+// TODO: fill from Upwork profile before launch.
+const stats = [
+  { label: 'Jobs completed', value: 'TBD' },
+  { label: 'Hours worked', value: 'TBD' },
+  { label: 'Total earnings', value: 'TBD' },
+  { label: 'Job Success Score', value: 'TBD' },
+];
+
+const badges = ['Top-Rated', 'Job Success', 'Rising Talent'];
+
+const upworkReviews = testimonials.filter((t) => t.upwork);
+const crossLinkServices = getDynamicServiceLandings();
+
+const title = 'Hire me on Upwork — Mahade Walid';
+const description =
+  'Top-Rated Webflow developer on Upwork. Escrow-backed hourly engagements with weekly time reports and no minimum commitment.';
+---
+<Layout title={title} description={description}>
+  <Section size="hero" tone="paper">
+    <Container>
+      <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-ink transition-colors">Home</a>
+        <span aria-hidden="true"> / </span>
+        <span class="text-ink-muted">Services</span>
+        <span aria-hidden="true"> / </span>
+        <span class="text-ink-muted">Upwork</span>
+      </nav>
+
+      <div class="mt-8 max-w-3xl">
+        <Eyebrow>Hire me on Upwork</Eyebrow>
+        <DisplayHeading as="h1" size="xl" class="mt-3">
+          Escrow-backed Webflow work, through a Top-Rated profile.
+        </DisplayHeading>
+        <p class="mt-6 text-body-lg text-ink-muted">
+          If you prefer to engage through Upwork — whether for procurement, escrow, or just the comfort of a platform you already use — my Top-Rated profile is open to scoped engagements at an hourly rate.
+        </p>
+      </div>
+
+      <div class="mt-8 flex flex-wrap gap-2">
+        {badges.map((b) => (
+          <span class="rounded-full bg-brand-soft px-3 py-1 text-xs font-medium text-brand">
+            {b}
+          </span>
+        ))}
+      </div>
+
+      <a
+        href={site.links.upwork}
+        target="_blank"
+        rel="noopener"
+        class="mt-8 inline-flex h-11 items-center gap-2 rounded-[10px] bg-ink px-5 font-medium text-paper hover:-translate-y-0.5 transition-transform"
+      >
+        View Upwork profile
+        <ArrowUpRight size={18} strokeWidth={2} />
+      </a>
+    </Container>
+  </Section>
+
+  <Section tone="tint" size="compact">
+    <Container>
+      <Eyebrow>Upwork track record</Eyebrow>
+      <dl class="mt-6 grid gap-8 md:grid-cols-4">
+        {stats.map((s) => (
+          <div>
+            <dt class="text-body-sm text-ink-muted">{s.label}</dt>
+            <dd class="mt-1 text-display-md text-ink font-display">{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </Container>
+  </Section>
+
+  {upworkReviews.length > 0 && (
+    <Section tone="paper">
+      <Container>
+        <Eyebrow>Selected reviews</Eyebrow>
+        <DisplayHeading as="h2" size="lg" class="mt-3">
+          What Upwork clients say
+        </DisplayHeading>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          {upworkReviews.map((r) => (
+            <figure class="rounded-lg border border-line bg-paper p-6 md:p-8">
+              <blockquote class="text-body-lg text-ink">
+                &ldquo;{r.quote}&rdquo;
+              </blockquote>
+              <figcaption class="mt-4 text-body-sm text-ink-muted">
+                <span class="font-medium text-ink">{r.author}</span>
+                <span aria-hidden="true"> · </span>
+                {r.role}{r.company ? `, ${r.company}` : ''}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <Section tone="tint">
+    <Container>
+      <Eyebrow>What you can hire me for</Eyebrow>
+      <DisplayHeading as="h2" size="lg" class="mt-3">
+        Four common Upwork engagements
+      </DisplayHeading>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {crossLinkServices.map((svc) => (
+          <a
+            href={svc.href}
+            class="group flex items-start gap-5 rounded-lg border border-line bg-paper p-6 md:p-8 hover:border-line-strong transition-colors"
+          >
+            <span class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand">
+              <ServiceIcon name={svc.icon} size={24} />
+            </span>
+            <span>
+              <h3 class="text-heading-md text-ink">{svc.name}</h3>
+              <p class="mt-2 text-ink-muted">{svc.tagline}</p>
+              <span class="mt-4 inline-flex items-center gap-2 text-brand font-medium group-hover:gap-3 transition-all">
+                Read more <span aria-hidden="true">→</span>
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </Container>
+  </Section>
+
+  <CtaBanner
+    heading="Ready to start on Upwork?"
+    primary={{ label: 'View Upwork profile', href: site.links.upwork, external: true }}
+    secondary={{ label: 'Book a call first', href: site.links.cal, external: true }}
+  />
+</Layout>
