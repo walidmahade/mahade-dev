@@ -1,0 +1,169 @@
+---
+title: "Webflow Sitemap, Robots.txt, and Canonical Tags: The Complete Guide"
+description: "Every Webflow site needs a correct sitemap, robots.txt, and canonical setup. Here's exactly how to configure all three."
+pubDate: 2026-04-30
+tags: ["seo", "technical-seo"]
+heroImage: "https://images.unsplash.com/photo-1562408590-e32931084e23?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "Webflow SEO settings showing sitemap and robots options"
+cluster: "seo-hub"
+faq:
+  - q: "Does Webflow auto-generate a sitemap?"
+    a: "Yes. Go to Project Settings > SEO > Sitemap and toggle 'Auto-generate sitemap' on. Webflow will publish /sitemap.xml with all live pages and CMS items. Works for 95% of cases."
+  - q: "When should I use a custom sitemap in Webflow?"
+    a: "When you need to exclude specific pages (draft blog collection, utility/redirect pages), set lastmod explicitly, or split into sitemap-blog.xml and sitemap-products.xml for organization. Otherwise, auto-generate."
+  - q: "How do I edit robots.txt in Webflow?"
+    a: "Project Settings > SEO > Robots.txt. Paste your rules. Webflow serves the file at yourdomain.com/robots.txt automatically. Default is wide open (allow everything) which is correct for most sites."
+  - q: "What should I put in my Webflow robots.txt?"
+    a: "For a standard marketing site: 'User-agent: *' / 'Allow: /' / 'Sitemap: https://yourdomain.com/sitemap.xml'. Don't block anything unless you're excluding a staging folder or admin URLs."
+  - q: "Why do my Webflow pages have duplicate content issues?"
+    a: "Usually the Webflow staging subdomain (project-name.webflow.io) is being indexed alongside your live domain. Disable indexing of the webflow.io subdomain in Project Settings > SEO > Subdomain Indexing."
+  - q: "Does Webflow handle canonical tags automatically?"
+    a: "Yes, Webflow adds self-referential canonical tags to every page. You only need to override manually if you have duplicate pages for different purposes (landing page variants pointing to a master URL)."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The Webflow sitemap, robots.txt, and canonical tags are not optional extras — they are the foundation that determines whether Google indexes your site correctly or quietly ignores half of it. Get these three things right and you give your content a fair chance to rank. Get them wrong and you can spend months wondering why your SEO isn't moving.
+
+The short answer: turn on Webflow's auto-generated sitemap, write a lean robots.txt that points to it, and leave canonicals alone unless you have a specific reason to override them. That handles 95% of sites. The remaining 5% — migrations, multi-template builds, CMS-heavy sites with lots of utility pages — is where this guide earns its keep.
+
+Before diving in, make sure your baseline technical SEO is solid. I covered the full checklist in the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026). If you want to talk through your setup directly, [get in touch](/contact).
+
+## Auto-generated sitemap vs custom sitemap in Webflow
+
+Webflow's auto-generated sitemap is turned off by default. That is the first thing to check on any project. Go to Project Settings > SEO > Sitemap and confirm the toggle is on. Once enabled, Webflow generates `/sitemap.xml` automatically and updates it on every publish — every static page, every CMS collection item, all handled without any code.
+
+For most marketing sites, that is all you need. The auto-generated sitemap includes every published page and collection item, respects the "exclude from sitemap" toggle on individual pages, and updates immediately when you publish. There is no manual step.
+
+Here is when it stops being enough:
+
+| Feature | Auto-sitemap | Custom sitemap |
+|---|---|---|
+| Includes all published pages | Yes | You manage it |
+| Excludes pages via page settings | Yes | You control the logic |
+| Sets custom `lastmod` per URL | No | Yes |
+| Splits by content type (blog vs. products) | No | Yes |
+| Removes utility/redirect pages automatically | No | Yes, explicitly |
+| Requires maintenance | No | Yes |
+
+Custom sitemaps make sense for two scenarios. First: you have utility pages (redirect destinations, form thank-you pages, password-reset pages) that should exist for users but not be offered to Google as indexable URLs. Second: you are working at a scale where you want to split the sitemap by content type — `sitemap-blog.xml` and `sitemap-pages.xml` as separate entries in a sitemap index — which makes diagnosing indexing gaps by category easier in Search Console.
+
+For everything else, auto-generate and move on.
+
+## What to exclude from the sitemap
+
+Not every published Webflow page should be in the sitemap. The default behavior includes everything that isn't marked no-index — which is correct but requires you to actively review what gets marked.
+
+Pages worth excluding:
+
+**Utility pages.** Form confirmation pages, redirect hubs, "link in bio" pages that don't have real content. These exist to serve users who have already arrived, not to attract organic traffic. Including them in the sitemap sends Google to dead-end pages with no link equity and no real content, which dilutes the sitemap's signal quality over time.
+
+**CMS staging pages.** If you have a collection with draft items that are still published (just not linked anywhere), they land in the sitemap. Review your CMS collections and unpublish or set individual items to "exclude from sitemap" before you go live.
+
+**Search result or filter pages.** Webflow doesn't generate faceted URLs the way WordPress + WooCommerce does, so this rarely applies — but if you have JavaScript-driven filtering that produces shareable URLs, those are not in the sitemap anyway since Webflow can't see them at publish time.
+
+To exclude a specific page: open it in the Designer, go to Page Settings (the gear icon), and toggle "Exclude this page from the sitemap." For CMS collection items, the same toggle lives in the CMS item's settings.
+
+The rule of thumb: if you would feel comfortable with that page ranking in Google for its exact content, include it. If you'd never send traffic to it deliberately, exclude it.
+
+## Submitting the sitemap to Google Search Console
+
+Once your sitemap is live, submit it to Google Search Console to accelerate discovery. Webflow's auto-generated sitemap URL is always `https://yourdomain.com/sitemap.xml`.
+
+In Search Console: go to Sitemaps in the left navigation, paste the URL, and click Submit. That's it. You'll see a status update within a few hours showing how many URLs were discovered vs. how many are indexed.
+
+<Callout type="tip">
+After a migration or a major rebuild, resubmit the sitemap manually even if it was already registered. This signals to Google that the site has changed significantly and that it should recrawl the entire URL set rather than working from its cached crawl schedule. It doesn't guarantee faster indexing, but it moves the queue.
+</Callout>
+
+Check the sitemap report in Search Console weekly for the first month after launch. The two numbers to watch are "Discovered" and "Indexed." A large gap between them — say, 80 discovered but only 30 indexed — means Google is finding the pages but choosing not to index them. That's a content quality signal, not a technical error, and it won't be fixed by adjusting the sitemap.
+
+If you are coming from WordPress, this step is especially important. I covered the full indexing resubmission workflow in the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration) — the post-migration Search Console steps alone are worth reading before you cut over DNS.
+
+For structured data on indexed pages, the [Webflow schema markup guide](/blog/webflow-schema-markup) covers how to add JSON-LD that gives Google richer signals beyond just the URL.
+
+## Robots.txt: Webflow's default vs when you need custom
+
+Webflow's default robots.txt allows everything. If you have never touched it, your site is serving this:
+
+```txt
+User-agent: *
+Allow: /
+```
+
+That is correct for the vast majority of marketing sites. Do not touch it unless you have a specific reason to block something.
+
+The only useful additions for a standard Webflow site are pointing to your sitemap and, in rare cases, blocking a staging subdirectory or a page you don't want crawled for crawl budget reasons.
+
+A complete, correct robots.txt for a typical Webflow marketing site looks like this:
+
+```txt
+User-agent: *
+Allow: /
+
+Sitemap: https://yourdomain.com/sitemap.xml
+```
+
+That's it. The Sitemap directive tells any crawler that respects robots.txt where to find the index of your content. Most SEO tools and bots will pick this up automatically.
+
+Where custom rules make sense:
+
+**You have a staging path you forgot to password-protect.** If you have a `/staging/` folder or a preview URL that somehow lives on the production domain, block it here. The correct fix is to remove it, but blocking the crawler while you sort it out is a reasonable interim step.
+
+**You want to block specific bots.** If you are seeing your crawl budget being eaten by AI scrapers or irrelevant bots, you can add a named `User-agent` block. This is a rabbit hole — most bots that ignore `robots.txt` will keep ignoring it — so tread carefully and don't over-engineer it.
+
+**Never block CSS, JavaScript, or image directories.** Googlebot needs to render your pages to understand them. Blocking assets files in robots.txt is a common mistake inherited from old-school SEO thinking and it actively hurts your ability to rank.
+
+To edit: Project Settings > SEO > Robots.txt. Paste your rules and publish.
+
+## Canonical tags: why Webflow's automatic ones break
+
+Webflow adds a self-referential canonical tag to every page by default. For a standard site with no duplicated content, this is exactly right — it signals that the page is the authoritative version of itself, which prevents any accidental duplication from pagination, session parameters, or tracking codes from muddying the indexing signal.
+
+The canonical tag Webflow generates looks like this on your homepage:
+
+```html
+<link rel="canonical" href="https://yourdomain.com/" />
+```
+
+The trouble starts in two situations. First: you have landing page variants. If you're running A/B tests or have slug-variant pages (say, `/pricing-v2/`) that contain the same content as a primary page (`/pricing/`), Webflow's auto-canonical will point each page to itself — creating two indexed URLs with identical content, each claiming to be the canonical. You need to override the canonical on the variant page to point to the primary.
+
+Second: you have pages set to no-index but did not also remove them from the sitemap or the internal link structure. A no-indexed page with an auto-canonical is not an error — it just means you're simultaneously telling Google "this is the real version" and "don't index it." That's fine if intentional, confusing if not.
+
+To manually set a canonical in Webflow: open the page in the Designer, go to Page Settings > SEO Settings, and enter the canonical URL in the "Canonical Tag" field. Whatever you enter there overrides the auto-generated one.
+
+## Self-referential canonicals and the subdomain trap
+
+This is where the most common Webflow duplicate content problem lives, and it catches people who have done everything else correctly.
+
+When you first create a Webflow project, it lives on a Webflow subdomain: `your-project-name.webflow.io`. When you publish to a custom domain, both URLs serve live content — the `.webflow.io` subdomain stays active and accessible. If Googlebot finds your `.webflow.io` subdomain (via a backlink, a cached old URL, or just organic discovery), it will see your site content without a canonical pointing to your primary domain.
+
+<Callout type="warning">
+The `.webflow.io` subdomain is indexed by default. This means Google can find two versions of your entire site — your real domain and your staging subdomain — with each page canonicalizing to itself rather than to the primary domain. This is a live duplicate content problem on every project that hasn't explicitly disabled subdomain indexing.
+</Callout>
+
+The fix is one setting: Project Settings > SEO > Subdomain Indexing. Set it to "No index." This tells Webflow to add a `noindex` header to all pages served from the `.webflow.io` subdomain. It does not break your staging subdomain for internal review — it just tells Google not to index those URLs.
+
+Do this before you launch. On existing sites, do it now and resubmit your sitemap so Google recrawls your primary domain as the sole indexed version.
+
+## Common sitemap mistakes
+
+**Forgetting to turn it on.** The toggle is off by default. Every Webflow project I've inherited as part of a [migration or audit engagement](/contact) has had this off. Check it first, before anything else.
+
+**Not resubmitting after a migration.** If your URL structure changed — old site had `/blog/post-title`, new site has `/blog/post-title/` with a trailing slash, or paths changed completely — the old URLs are still in Google's index. A sitemap resubmission combined with 301 redirects is how you collapse the old index down to the new one. Without it, the transition takes much longer than it needs to. See the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration) for the full redirect and reindex workflow.
+
+**Including CMS items that are thin or draft-quality.** More URLs is not better. A sitemap with 200 published CMS items that are three sentences each is worse than a sitemap with 80 items that are genuinely useful. Google uses sitemap signals to understand site quality — a long list of thin pages trains it to undervalue the whole domain. Publish complete, useful CMS items before including them.
+
+**Setting robots.txt to block assets.** I've seen this on migrated sites where the original developer copied an old-school robots.txt that blocked `/wp-content/` and similar paths, then adapted it loosely for Webflow. Blocking asset paths breaks Googlebot's ability to render pages and will damage your rankings. The right robots.txt is simple, as shown in the section above.
+
+**Relying on the sitemap to fix indexing problems.** A sitemap tells Google where to look. It does not guarantee indexing. If pages are not being indexed, the problem is almost always content quality, internal linking, or a no-index flag — not a missing sitemap entry. The [Webflow schema markup guide](/blog/webflow-schema-markup) is worth reading alongside this one: structured data gives Google contextual signals that improve indexing confidence for content pages.
+
+---
+
+The three things that matter: turn on the auto-sitemap, write a lean robots.txt with your sitemap URL in it, and disable `.webflow.io` subdomain indexing before you launch. Everything else in this guide is for edge cases. Get those three right and your technical SEO foundation is solid.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
