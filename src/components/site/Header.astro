@@ -1,0 +1,53 @@
+---
+import Container from '../layout/Container.astro';
+import { site } from '@/data/site';
+
+const nav = [
+  { label: 'Work', href: '/work' },
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Contact', href: '/contact' },
+];
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname.startsWith(href);
+---
+<header class="sticky top-0 z-40 bg-paper/80 backdrop-blur border-b border-line">
+  <Container>
+    <div class="flex h-16 items-center justify-between">
+      <a href="/" class="font-semibold tracking-tight text-ink hover:text-brand transition-colors">
+        {site.name}
+      </a>
+
+      <nav class="flex items-center gap-6 md:gap-8" aria-label="Primary">
+        <ul class="hidden md:flex items-center gap-8">
+          {nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'text-sm transition-colors',
+                  isActive(item.href)
+                    ? 'text-ink font-medium'
+                    : 'text-ink-muted hover:text-ink',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={site.links.cal}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex h-9 items-center rounded-[10px] bg-brand px-4 text-sm font-medium text-white hover:bg-brand-hover transition-colors"
+        >
+          Book a call
+        </a>
+      </nav>
+    </div>
+  </Container>
+</header>
