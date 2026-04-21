@@ -30,7 +30,14 @@ export default function HomeMotion() {
         }
 
         const revealItems = gsap.utils.toArray<HTMLElement>("[data-reveal]");
+        const viewportH = window.innerHeight;
         revealItems.forEach((el) => {
+          // Skip animation for items already in the viewport on load.
+          // CSS defaults keep them visible. This prevents blank sections
+          // if ScrollTrigger hasn't initialized yet (e.g. during
+          // pre-render screenshots or slow first paint).
+          if (el.getBoundingClientRect().top < viewportH * 0.9) return;
+
           gsap.from(el, {
             y: 16,
             opacity: 0,

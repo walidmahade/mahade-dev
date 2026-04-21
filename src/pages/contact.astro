@@ -27,7 +27,7 @@ import { ArrowUpRight, Mail } from 'lucide-react';
   <Section tone="tint">
     <Container>
       <div class="grid gap-8 lg:grid-cols-[2fr_1fr]">
-        <div class="rounded-xl border border-line bg-paper p-2 md:p-4 shadow-sm overflow-hidden">
+        <div class="rounded-xl border border-line bg-paper p-2 md:p-4 overflow-hidden">
           <CalEmbed />
         </div>
 
@@ -36,7 +36,7 @@ import { ArrowUpRight, Mail } from 'lucide-react';
             href={site.links.upwork}
             target="_blank"
             rel="noopener"
-            class="group block rounded-xl border border-line bg-paper p-6 hover:shadow-md transition-shadow"
+            class="group block rounded-xl border border-line bg-paper p-6 hover:border-line-strong transition-colors"
           >
             <Eyebrow>Upwork</Eyebrow>
             <p class="mt-2 text-heading-md text-ink">Hire through Upwork</p>
@@ -50,7 +50,7 @@ import { ArrowUpRight, Mail } from 'lucide-react';
 
           <a
             href={`mailto:${site.email}?subject=Webflow%20project%20inquiry`}
-            class="group block rounded-xl border border-line bg-paper p-6 hover:shadow-md transition-shadow"
+            class="group block rounded-xl border border-line bg-paper p-6 hover:border-line-strong transition-colors"
           >
             <Eyebrow>Email</Eyebrow>
             <p class="mt-2 text-heading-md text-ink break-all">{site.email}</p>
