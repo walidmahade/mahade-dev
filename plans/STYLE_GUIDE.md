@@ -23,7 +23,7 @@ Light mode only. No dark-mode variants.
   /* Ink (near-black, used for body + headings) */
   --color-ink:          #0B0D13;
   --color-ink-muted:    #4B5261;
-  --color-ink-subtle:   #8A90A0;
+  --color-ink-subtle:   #6B7280;
 
   /* Paper (backgrounds) */
   --color-paper:        #FFFFFF;

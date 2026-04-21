@@ -1,0 +1,39 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Section from '@/components/layout/Section.astro';
+import Container from '@/components/layout/Container.astro';
+import DisplayHeading from '@/components/layout/DisplayHeading.astro';
+---
+<Layout
+  title="Page not found — Mahade Walid"
+  description="The page you are looking for does not exist."
+  noindex={true}
+>
+  <Section size="hero" tone="paper">
+    <Container>
+      <div class="text-center max-w-xl mx-auto">
+        <p class="text-display-xl font-display text-brand leading-none">404</p>
+        <DisplayHeading as="h1" size="lg" class="mt-2">
+          Page not found
+        </DisplayHeading>
+        <p class="mt-4 text-body-lg text-ink-muted">
+          The page you are looking for moved, never existed, or took the rest of the week off.
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a
+            href="/"
+            class="inline-flex h-11 items-center rounded-[10px] bg-brand px-5 font-medium text-white hover:bg-brand-hover hover:-translate-y-0.5 transition-all"
+          >
+            Back home
+          </a>
+          <a
+            href="/work"
+            class="inline-flex h-11 items-center rounded-[10px] border border-line-strong px-5 font-medium text-ink hover:bg-paper-tint transition-colors"
+          >
+            See the work
+          </a>
+        </div>
+      </div>
+    </Container>
+  </Section>
+</Layout>
