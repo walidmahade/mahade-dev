@@ -1,0 +1,28 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  start?: number;
+}
+const { id, title, start } = Astro.props;
+const startParam = start ? `&start=${start}` : '';
+const src = `https://www.youtube-nocookie.com/embed/${id}?rel=0${startParam}`;
+const poster = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+---
+<div class="my-8">
+  <div
+    class="relative w-full overflow-hidden rounded-lg border border-line bg-paper-tint"
+    style="aspect-ratio: 16 / 9;"
+  >
+    <iframe
+      src={src}
+      title={title}
+      loading="lazy"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      class="absolute inset-0 h-full w-full"
+      style={`background-image: url(${poster}); background-size: cover; background-position: center;`}
+    ></iframe>
+  </div>
+  <p class="mt-2 text-body-sm text-ink-subtle">{title}</p>
+</div>
