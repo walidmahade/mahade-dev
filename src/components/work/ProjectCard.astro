@@ -1,0 +1,35 @@
+---
+import type { Project } from '@/data/projects';
+import { ArrowRight } from 'lucide-react';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+<a
+  href={`/work/${project.slug}`}
+  class="group block rounded-xl border border-line bg-paper overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all"
+>
+  <div class="aspect-[16/10] overflow-hidden bg-paper-sunken">
+    <img
+      src={project.heroImage}
+      alt={`${project.name} site preview`}
+      class="h-full w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+      loading="lazy"
+    />
+  </div>
+  <div class="p-6 md:p-8">
+    <div class="flex items-center gap-3 text-body-sm text-ink-subtle">
+      <span>{project.industry}</span>
+      <span aria-hidden="true">·</span>
+      <span>{project.year}</span>
+    </div>
+    <h3 class="mt-2 text-heading-lg text-ink">{project.name}</h3>
+    <p class="mt-2 text-ink-muted">{project.description}</p>
+    <div class="mt-5 inline-flex items-center gap-2 text-brand font-medium group-hover:gap-3 transition-all">
+      Read case study <ArrowRight size={18} strokeWidth={2} />
+    </div>
+  </div>
+</a>
