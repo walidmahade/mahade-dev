@@ -31,25 +31,37 @@ const formatDate = (d: Date) =>
   </Section>
 
   <Section tone="tint">
-    <Container width="prose">
+    <Container>
       {posts.length === 0 ? (
-        <p class="text-ink-muted">No posts yet — the first one lands soon.</p>
+        <p class="text-center text-ink-muted">No posts yet — the first one lands soon.</p>
       ) : (
-        <ul class="space-y-6">
+        <ul class="grid gap-6 md:grid-cols-2">
           {posts.map((post) => (
             <li>
               <a
                 href={`/blog/${post.id}`}
-                class="group block rounded-lg border border-line bg-paper p-6 md:p-8 hover:border-line-strong hover:-translate-y-0.5 transition-all"
+                class="group block overflow-hidden rounded-xl border border-line bg-paper hover:border-line-strong hover:-translate-y-0.5 transition-all h-full flex flex-col"
               >
-                <time datetime={post.data.pubDate.toISOString()} class="text-body-sm text-ink-subtle">
-                  {formatDate(post.data.pubDate)}
-                </time>
-                <h2 class="mt-2 text-heading-lg text-ink">{post.data.title}</h2>
-                <p class="mt-2 text-ink-muted">{post.data.description}</p>
-                <span class="mt-4 inline-flex items-center gap-2 text-brand font-medium group-hover:gap-3 transition-all">
-                  Read <ArrowRight size={18} strokeWidth={2} />
-                </span>
+                {post.data.heroImage && (
+                  <div class="aspect-[1200/630] overflow-hidden bg-paper-sunken border-b border-line">
+                    <img
+                      src={post.data.heroImage}
+                      alt={post.data.heroImageAlt ?? ''}
+                      class="h-full w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div class="p-6 md:p-7 flex-1 flex flex-col">
+                  <time datetime={post.data.pubDate.toISOString()} class="text-body-sm text-ink-subtle">
+                    {formatDate(post.data.pubDate)}
+                  </time>
+                  <h2 class="mt-2 text-heading-lg text-ink">{post.data.title}</h2>
+                  <p class="mt-2 text-ink-muted flex-1">{post.data.description}</p>
+                  <span class="mt-4 inline-flex items-center gap-2 text-brand font-medium group-hover:gap-3 transition-all">
+                    Read <ArrowRight size={18} strokeWidth={2} />
+                  </span>
+                </div>
               </a>
             </li>
           ))}
