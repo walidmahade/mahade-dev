@@ -1,0 +1,175 @@
+---
+title: "Why Your Webflow Site Is Slow (and the 7 Fixes I Run on Every Site)"
+description: "Every slow Webflow site I've seen has the same 7 problems. Here's how to diagnose each and the exact fix — with Lighthouse screenshots."
+pubDate: 2026-04-24
+tags: ["performance", "pillar"]
+heroImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A slow Lighthouse report next to a fast one"
+cluster: "perf-hub"
+faq:
+  - q: "Why is my Webflow site slow?"
+    a: "9 times out of 10: oversized hero images or too many third-party scripts. Fix the hero image first (compress to WebP at 82 quality, size to 1600px max). That alone takes most sites from 60 to 85 Lighthouse."
+  - q: "How do I test Webflow site speed?"
+    a: "PageSpeed Insights (pagespeed.web.dev) for real-user + lab metrics. GTmetrix for waterfall diagnostics. Webflow's own speed score is too coarse to act on. Test 3 page types: home, CMS template, and form/checkout page."
+  - q: "Are Webflow Interactions bad for performance?"
+    a: "Large ones, yes. A homepage with 15+ scroll interactions and 3 Lotties will tax mobile. Keep heavy interactions above-the-fold only, and audit which ones actually move engagement. Most 'cool' animations cost more than they earn."
+  - q: "Does Webflow hosting slow my site down?"
+    a: "Webflow's hosting (on AWS CloudFront) is fast — easily top-quartile globally. If your site is slow, it's almost never the hosting. Blame images, scripts, or custom code first."
+  - q: "How much does speed actually affect Webflow SEO?"
+    a: "Directly: Core Web Vitals are a Google ranking signal, though a minor one. Indirectly: a slow mobile site has higher bounce rates, which correlates with worse rankings. Both are real, but the indirect effect is bigger."
+  - q: "Can I fix Webflow speed without a developer?"
+    a: "Yes, for the biggest wins. Compress hero images (use Squoosh), remove unused third-party scripts from Page/Project Settings, enable lazy loading on below-the-fold images. The remaining 20% of optimization is developer territory."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+If your Webflow site is slow, I can tell you right now what's causing it. After auditing dozens of sites, the culprits are always the same: an overweight hero image, a pile of third-party scripts loading synchronously, and occasionally a Lottie animation that renders beautifully on a MacBook Pro and destroys mobile performance everywhere else.
+
+The good news is that fixing a slow Webflow site is mostly mechanical. You don't need to rearchitect anything. You need to run through a checklist in the right order. This post is that checklist — the exact sequence I use on every site audit, with the tools, thresholds, and real-world impact for each fix.
+
+Before you touch anything, get a baseline reading. Run your homepage through [PageSpeed Insights](https://pagespeed.web.dev) in a fresh incognito window and note your mobile score. That number is your starting point. I'll also reference [Webflow Core Web Vitals](/blog/webflow-core-web-vitals) more deeply if you want to understand what each metric means for SEO — this post is about fixing them, not explaining them. For the SEO implications of the whole performance picture, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) is the companion read. Once you have your baseline, [reach out](/contact) if you want an expert audit rather than a DIY run-through.
+
+## The 7-fix sequence (run in this order)
+
+The order matters. The biggest wins come first, and later fixes become easier once the earlier ones are done. Running these out of order wastes time — fixing your Interactions before your 4MB hero image is still loaded doesn't move your score.
+
+| Fix | Impact | Effort | Who can do it |
+|---|---|---|---|
+| 1. Image weight | Very high — typically 15–30 point gain | Low | Anyone |
+| 2. Font loading | Medium — 5–10 point gain | Low | Anyone |
+| 3. Lottie and video autoplay | High on mobile — 10–20 point gain | Low–Medium | Anyone |
+| 4. Third-party scripts | High — 10–20 point gain | Low | Anyone |
+| 5. CMS pagination and filter JS | Medium — 5–15 point gain | Medium | Developer |
+| 6. Interactions 2.0 bloat | Medium — 5–15 point gain | Medium | Developer |
+| 7. Hosting and caching | Low–Medium — 3–8 point gain | Low | Anyone |
+
+The first four fixes are non-technical. You don't need Webflow access or development skills. You need an image compressor and the confidence to delete scripts you don't use. Fixes 5 and 6 are developer work. Fix 7 is mostly verification that things are already set correctly.
+
+## Fix 1: image weight (the biggest win)
+
+This is the single most common reason a Webflow site is slow and the single most impactful fix. A hero image uploaded directly from a camera or a stock site is typically 3–8MB. A properly prepared hero image is 120–250kB. That difference accounts for most of the gap between a 55 Lighthouse score and an 85.
+
+Webflow does apply some automatic image optimization when you use the native Image element — it serves WebP where the browser supports it and applies responsive sizes at certain breakpoints. But Webflow's automatic optimization has limits. If you upload a 5MB PNG as your hero background via CSS or as an inline style, Webflow's optimization pipeline doesn't touch it. If you upload a huge source file, the auto-optimized output is still larger than a properly prepared source.
+
+The target for a hero image: WebP format, maximum 1600px wide, quality setting around 82, file size between 120kB and 250kB. Background images on sections below the fold should be smaller still — 80–150kB is achievable and appropriate.
+
+Here's what image weight improvement typically looks like in practice:
+
+| Source | Format | Dimensions | File size |
+|---|---|---|---|
+| Original (stock download) | JPEG | 4000 × 2667px | 4.2 MB |
+| After Squoosh (WebP, q82) | WebP | 1600 × 1067px | 187 kB |
+| Savings | — | — | ~96% reduction |
+
+For [Webflow image optimization](/blog/webflow-image-optimization) in detail — compression settings, when to use the native image element vs. CSS background, and how Webflow's srcset generation works — that post covers the full picture. For [Webflow lazy loading](/blog/webflow-lazy-loading), there's an equally important companion step: images below the fold should not load at all until the user scrolls toward them.
+
+<Callout type="tip">
+The fastest non-developer workflow for hero images: open [Squoosh](https://squoosh.app) in your browser (it's free, no account needed), drag in your original image, switch the output format to WebP, set quality to 82, resize to 1600px width, download. The whole process takes 90 seconds and the result is a file your browser downloads in under a second on a 4G connection. Do this for every hero and section background on the site before touching anything else.
+</Callout>
+
+One thing developers miss: hero images set as CSS background on Section elements are not automatically lazy-loaded by the browser, because the browser can't know whether the section is above or below the fold at parse time. Any section that's below the fold — including sections two, three, four on a long homepage — should have its background image loaded via JavaScript intersection observer, or that background should be set conditionally. This is developer territory, but knowing it exists tells you where to look when your Lighthouse still shows LCP or render-blocking issues after compressing images.
+
+## Fix 2: fonts (self-hosted vs Google Fonts)
+
+The font request is the second most reliable performance tax on a Webflow site. Webflow's default behavior when you add Google Fonts is to load them from Google's CDN — which means a DNS lookup, a TCP connection, and an SSL handshake to a third-party server before the font arrives. On a fast connection this adds 100–300ms. On mobile in a low-signal area, it can add 800ms or more to your First Contentful Paint.
+
+The fix is self-hosting. In Webflow, you can upload custom font files (WOFF2 format) directly to your project under Site Settings → Fonts. Self-hosted fonts don't trigger a third-party DNS lookup, they're served from Webflow's CDN alongside your other assets, and you control cache headers. This is the same approach this site uses — Inter and Geist are loaded from the same origin, never from Google Fonts.
+
+If you can't self-host (the font license doesn't allow it, or the procurement process is slow), add `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>` to your site's custom code head. This hints to the browser to establish the connection before it's needed, shaving most of the DNS + TCP latency. It's not as good as self-hosting, but it closes most of the gap.
+
+The other font variable: how many weights and styles you're loading. Every weight is a separate file. Loading four weights of a display font plus two weights of a body font is six network requests and potentially 400–600kB of font data. Most sites need two body weights (regular and semibold or bold) and one or two display weights. Audit what's actually used before you publish — Webflow's Designer shows which styles are applied to text elements, but it won't flag styles that are loaded but unused.
+
+Finally, make sure `font-display: swap` is set on all custom fonts. This tells the browser to render text with a fallback font immediately and swap in the web font when it loads, rather than hiding text until the font is available. FOUT (flash of unstyled text) is mildly annoying. FOIT (flash of invisible text) is a Lighthouse LCP penalty.
+
+## Fix 3: Lottie and video autoplay
+
+Lottie animations are a genuine performance trap. A single Lottie JSON file from a motion designer can be 800kB to 2MB. The Lottie player itself is another 200–300kB of JavaScript that has to parse and execute before the animation runs. On a flagship MacBook Pro connected to fiber, this is invisible. On a mid-range Android phone on 4G, this is a multi-second blank or jank period that drives users away and tanks your mobile Lighthouse score.
+
+The rule I apply: no more than one Lottie per page, above the fold only, and the JSON file must be under 300kB. If a Lottie is decorative and below the fold, it gets replaced with a static image or a CSS animation. If the designer insists on keeping it, it gets lazy-loaded — the Lottie player script doesn't initialize until the element enters the viewport.
+
+<Callout type="warning">
+Autoplaying video in a background section is the silent killer of mobile Lighthouse scores. Browsers on mobile typically pause autoplay video and substitute the poster image, but the video file is still requested and partially downloaded before the browser makes that call — often 500kB to 2MB of wasted transfer. If you have a Section with `video` set as the background type, either replace it with a well-compressed static image or set a high-quality poster image and accept that mobile users see the still. The video autoplay is almost never noticed by users enough to justify the performance cost.
+</Callout>
+
+For video that genuinely needs to play, consider hosting it on a provider that streams adaptively (Mux, Cloudflare Stream) rather than serving a raw MP4 from Webflow's asset CDN. An adaptive stream sends only the resolution the connection can handle; a raw MP4 sends the whole file regardless of connection quality.
+
+## Fix 4: third-party scripts (chat, analytics, A/B)
+
+Every script tag you add to Webflow's Project Settings → Custom Code is a synchronous or near-synchronous request that the browser has to resolve before it can finish rendering. A typical marketing site accumulates these without realizing it: a live chat widget, Google Analytics, a Hotjar or Microsoft Clarity session recorder, an A/B testing script, a cookie consent banner, and maybe an affiliate attribution script. Each is small on its own. Together they can add 400–900ms to Time to Interactive.
+
+| Script | Typical size (kB) | Lazy-load? |
+|---|---|---|
+| Intercom chat widget | 280–400 kB | Yes — defer until user interaction |
+| Hotjar session recorder | 60–120 kB | Yes — defer until scroll or click |
+| Google Tag Manager container | 30–80 kB + payloads | Partially — GTM itself loads fast, what's inside doesn't |
+| HubSpot tracking | 120–180 kB | Yes — defer with `type="module"` |
+| A/B testing (VWO, Optimizely) | 100–200 kB | No — must load synchronously to avoid flicker |
+| Cookie consent banner | 40–80 kB | Partially |
+
+The first question to ask: is this script actually being used? I find unused scripts on about 70% of the sites I audit. The previous developer added Drift chat, the client switched to Intercom, nobody removed Drift. The marketing team added both Hotjar and Clarity and forgot to turn one off. Google Tag Manager is installed but half the tags in the container fire on every page with no trigger conditions. Open Project Settings and read the list of scripts in head and body. Delete anything that isn't actively serving a purpose.
+
+The second question: does it need to load immediately? Chat widgets don't need to appear until after the page is interactive — load them after a user gesture (first scroll, first click) rather than at document load. Hotjar doesn't need to start recording during the critical page render window — defer it with a 3–5 second timeout or an intersection observer trigger. The live chat badge appearing 2 seconds after load instead of 0.3 seconds after load is not something users notice. A 500ms faster Time to Interactive is something Google's CrUX data absolutely notices.
+
+For A/B testing scripts: these are the hardest to optimize because they genuinely need to run before paint to avoid content flicker. If you're running active A/B tests, accept the tradeoff and focus your performance gains elsewhere. If you're not actively running tests, turn the script off — there's no such thing as "we'll need it eventually" when it comes to render-blocking JavaScript.
+
+## Fix 5: CMS pagination and filter JS
+
+Webflow's Finsweet CMS Filter and CMS Load (infinite scroll / load-more) libraries are the standard solution for dynamic CMS filtering and pagination without Webflow Enterprise pricing. They're well-built and they work. They're also 50–120kB of JavaScript that loads synchronously and executes immediately — including on pages where filtering isn't visible until the user scrolls down.
+
+The fix: move these scripts to the end of the body tag rather than the head, and add `defer` where the library supports it. Finsweet's attributes library (`fs-attributes`) fully supports deferred loading. Loading it in the body with `defer` means the browser parses and renders the page's HTML before it downloads and executes the filtering logic — on most pages, this brings the Time to Interactive down by 300–600ms.
+
+The subtler fix: scope the script to only the pages that need it. If CMS Filter only applies to your `/work` listing page, load it only on that page via Webflow's Page Settings custom code (not Project Settings, which loads on every page). This is one of the most commonly missed optimizations on Webflow sites — a script loaded globally that only benefits one or two routes.
+
+For large CMS collections (200+ items), the bigger performance concern is the render time of the DOM, not just the script download. A filtered list rendering 200 cards simultaneously on a mobile viewport is a layout and paint problem, not a network problem. Pagination (showing 12 items at a time) solves this, and it's worth the UX tradeoff on large collections.
+
+## Fix 6: Interactions 2.0 bloat
+
+Webflow Interactions are powerful and, beyond a certain number, they become a meaningful performance liability. The Interactions 2.0 runtime (IX2) is loaded on every Webflow-published page — it's baked into the Webflow.js bundle. The question isn't whether IX2 loads; it's how much work it has to do at parse time and on scroll.
+
+<Callout type="note">
+The heaviest Interactions patterns I consistently find on slow sites: scroll-triggered opacity and transform animations on every section element (a homepage might have 40–60 individual elements all watching the scroll position simultaneously), mouse parallax effects that recalculate on every `mousemove` event, and multi-step page load sequences that block the browser's ability to mark the page as interactive. Page load sequences are particularly bad — they prevent FCP from registering until the animation completes, which inflates your Largest Contentful Paint.
+</Callout>
+
+The audit process for Interactions: open the Interactions panel in Webflow's Designer and count how many triggers exist. More than 20 on a single page is a red flag. More than 40 is almost always causing a measurable problem on mobile. Start by deleting interactions that are purely cosmetic — a subtle opacity fade on every card as it enters the viewport looks nice in a portfolio demo and is invisible to users actually on the page at normal scroll speed. Kill it. Then look for interactions that fire continuously rather than once: scroll progress bars, parallax offsets, sticky elements with transform-based position updates. Each of these runs JavaScript on every scroll frame. Replace them with CSS scroll-snap or position:sticky where possible — CSS animations are handled by the browser's compositor thread and don't block JavaScript execution.
+
+The last category: Interactions that were built for a previous design that's since changed. A nav that animates in on page load from a design where the nav was initially hidden — but then the design changed and the nav is now always visible. The interaction still runs, it just doesn't do anything visible. Open each interaction and check that it's still attached to elements that exist and behaviors that still apply. Dead interactions are nearly as expensive as live ones because IX2 still initializes them.
+
+## Fix 7: hosting + caching (Webflow edge)
+
+Webflow's hosting infrastructure sits on AWS CloudFront — a global CDN with edge nodes in most major cities. For almost all sites, this means sub-100ms TTFB (Time to First Byte) for visitors in North America and Western Europe, and sub-200ms in most of Asia-Pacific and Latin America. If someone tells you their Webflow site is slow because of Webflow's hosting, they're almost certainly wrong. In my experience, the hosting is rarely the problem.
+
+That said, there are a few hosting-layer things worth verifying. First, check that your site is published on a custom domain, not just the `.webflow.io` staging URL. Custom domains on Webflow get the full CloudFront treatment; staging URLs are sometimes routed differently. Second, confirm SSL is active and redirecting HTTP to HTTPS — an HTTP-to-HTTPS redirect adds a round-trip, and some Webflow projects have this misconfigured if they were set up before Webflow's one-click SSL was the default.
+
+The comparison point worth mentioning: this is an area where Webflow's hosting genuinely outperforms self-managed WordPress on shared or VPS hosting, and is broadly comparable to managed WordPress platforms like WP Engine or Kinsta. If you're evaluating platforms, the [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026) comparison breaks down hosting, performance defaults, and what each platform requires from a developer to reach competitive Lighthouse scores.
+
+One caching consideration specific to Webflow: Webflow's CDN caches HTML pages at the edge after first request. This means the first visitor to a newly published page gets a slightly slower response (origin fetch) and subsequent visitors get the cached version. For sites with frequent publishing, this is worth knowing — don't run a Lighthouse test immediately after publishing. Wait 2–3 minutes for the cache to warm, then test.
+
+Static assets (images, fonts, JS, CSS) are cached with long TTLs automatically. You don't need to configure this. What you should verify is that custom JavaScript files you upload to Webflow's assets are being served with cache headers — run a network waterfall in GTmetrix and check that your custom JS files show a `Cache-Control` header with a max-age of at least a day.
+
+## Before/after: a case study from 42 to 94 Lighthouse
+
+Here's what this sequence looks like applied to a real site. The client came to me with a 7-page marketing site built by a previous developer. Mobile Lighthouse score: 42. The site was well-designed. The content was strong. It was just objectively slow.
+
+The audit took 45 minutes. The fixes took about 6 hours of work spread across two days. No redesign. No architecture changes. The same Webflow project, the same pages, the same CMS structure — just the performance layer rebuilt from scratch.
+
+| Metric | Before | After | Fix applied |
+|---|---|---|---|
+| Lighthouse (mobile) | 42 | 94 | All 7 fixes |
+| LCP | 8.4s | 1.9s | Hero image compression + preload hint |
+| TBT (Total Blocking Time) | 1,240ms | 180ms | Script deferral + Lottie removal |
+| CLS | 0.28 | 0.02 | Font display:swap + image dimensions |
+| FCP | 4.1s | 1.1s | Image compression + script cleanup |
+| Page weight (homepage) | 9.2 MB | 1.1 MB | Images + removed 3 unused scripts |
+| Third-party scripts | 7 | 4 | Removed Drift, duplicate analytics, dead A/B tag |
+
+The biggest single gain came from the hero image: a 6.8MB JPEG background set via inline CSS became a 211kB WebP served as a native image element. That one change moved LCP from 8.4s to 3.1s. Every other fix layered on top of that foundation.
+
+The LCP gain alone was enough to move the site from below-average to top-quartile Core Web Vitals in Google Search Console within about 6 weeks of the fixes going live. The ranking improvement was modest but measurable — roughly 8–12 positions on the terms the client cared about most. The more direct benefit was a 31% drop in mobile bounce rate, which is the metric that actually moves pipeline.
+
+Slow Webflow sites are 90% images and scripts. Fix those and you'll beat 95% of marketing sites on the web. The remaining optimization — Interactions, CMS architecture, hosting configuration — is meaningful, but it's the second 20% of gains, not the first 80%. If your site is at a 42 and you want to get to 85 fast, start with Squoosh and your Project Settings script list. You'll be most of the way there before you need a developer.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
