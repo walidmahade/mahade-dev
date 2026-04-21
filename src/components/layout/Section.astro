@@ -1,0 +1,30 @@
+---
+interface Props {
+  tone?: 'paper' | 'tint' | 'sunken';
+  size?: 'standard' | 'compact' | 'hero';
+  id?: string;
+  class?: string;
+}
+
+const {
+  tone = 'paper',
+  size = 'standard',
+  id,
+  class: className = '',
+} = Astro.props;
+
+const toneMap = {
+  paper: 'bg-paper',
+  tint: 'bg-paper-tint',
+  sunken: 'bg-paper-sunken',
+};
+
+const sizeMap = {
+  hero: 'py-24 md:py-32 lg:py-40',
+  standard: 'py-20 md:py-28',
+  compact: 'py-16 md:py-20',
+};
+---
+<section id={id} class={`${toneMap[tone]} ${sizeMap[size]} ${className}`}>
+  <slot />
+</section>
