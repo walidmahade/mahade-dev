@@ -1,9 +1,11 @@
 ---
 import Container from '../layout/Container.astro';
+import ServicesMenu from './ServicesMenu.astro';
 import { site } from '@/data/site';
 
 const nav = [
   { label: 'Work', href: '/work' },
+  // Services is rendered as a megamenu, not a plain link — inserted below.
   { label: 'Tools', href: '/tools' },
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },
@@ -23,21 +25,37 @@ const isActive = (href: string) =>
 
       <nav class="flex items-center gap-6 md:gap-8" aria-label="Primary">
         <ul class="hidden md:flex items-center gap-8">
-          {nav.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class:list={[
-                  'text-sm transition-colors',
-                  isActive(item.href)
-                    ? 'text-ink font-medium'
-                    : 'text-ink-muted hover:text-ink',
-                ]}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+          <li>
+            <a
+              href="/work"
+              class:list={[
+                'text-sm transition-colors',
+                isActive('/work')
+                  ? 'text-ink font-medium'
+                  : 'text-ink-muted hover:text-ink',
+              ]}
+            >
+              Work
+            </a>
+          </li>
+          <li><ServicesMenu /></li>
+          {nav
+            .filter((item) => item.label !== 'Work')
+            .map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={[
+                    'text-sm transition-colors',
+                    isActive(item.href)
+                      ? 'text-ink font-medium'
+                      : 'text-ink-muted hover:text-ink',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
         </ul>
 
         <a
