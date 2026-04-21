@@ -28,6 +28,21 @@ const title = 'Hire me on Upwork — Mahade Walid';
 const description =
   'Top-Rated Webflow developer on Upwork. Escrow-backed hourly engagements with weekly time reports and no minimum commitment.';
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Hire me on Upwork',
+  description,
+  provider: { '@type': 'Person', name: site.name, url: site.url },
+  areaServed: { '@type': 'Place', name: 'Worldwide' },
+  url: `${site.url}/services/upwork`,
+  offers: {
+    '@type': 'Offer',
+    availability: 'https://schema.org/InStock',
+    url: site.links.upwork,
+  },
+};
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -39,6 +54,7 @@ const breadcrumbSchema = {
 ---
 <Layout title={title} description={description}>
   <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   </Fragment>
   <Section size="hero" tone="paper">
@@ -46,9 +62,7 @@ const breadcrumbSchema = {
       <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
         <a href="/" class="hover:text-ink transition-colors">Home</a>
         <span aria-hidden="true"> / </span>
-        <span class="text-ink-muted">Services</span>
-        <span aria-hidden="true"> / </span>
-        <span class="text-ink-muted">Upwork</span>
+        <span class="text-ink-muted">Hire me on Upwork</span>
       </nav>
 
       <div class="mt-8 max-w-3xl">

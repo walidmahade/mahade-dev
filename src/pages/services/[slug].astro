@@ -38,6 +38,7 @@ const serviceSchema = {
   provider: { '@type': 'Person', name: site.name, url: site.url },
   areaServed: { '@type': 'Place', name: 'Worldwide' },
   url: `${site.url}${service.href}`,
+  keywords: content.keywords.join(', '),
 };
 
 const breadcrumbSchema = {
@@ -59,8 +60,6 @@ const breadcrumbSchema = {
     <Container>
       <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
         <a href="/" class="hover:text-ink transition-colors">Home</a>
-        <span aria-hidden="true"> / </span>
-        <span class="text-ink-muted">Services</span>
         <span aria-hidden="true"> / </span>
         <span class="text-ink-muted">{service.name}</span>
       </nav>
@@ -184,7 +183,7 @@ const breadcrumbSchema = {
   </Section>
 
   <CtaBanner
-    heading={`Ready to start ${service.name.toLowerCase()}?`}
+    heading="Ready to get started?"
     primary={{ label: 'Book a call', href: site.links.cal, external: true }}
     secondary={{ label: 'Hire on Upwork', href: site.links.upwork, external: true }}
   />

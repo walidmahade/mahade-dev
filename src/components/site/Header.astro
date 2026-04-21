@@ -3,9 +3,8 @@ import Container from '../layout/Container.astro';
 import ServicesMenu from './ServicesMenu.astro';
 import { site } from '@/data/site';
 
-const nav = [
-  { label: 'Work', href: '/work' },
-  // Services is rendered as a megamenu, not a plain link — inserted below.
+// Services is rendered as a <ServicesMenu /> megamenu between Work and Tools.
+const trailingNav = [
   { label: 'Tools', href: '/tools' },
   { label: 'About', href: '/about' },
   { label: 'Blog', href: '/blog' },
@@ -39,23 +38,21 @@ const isActive = (href: string) =>
             </a>
           </li>
           <li><ServicesMenu /></li>
-          {nav
-            .filter((item) => item.label !== 'Work')
-            .map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  class:list={[
-                    'text-sm transition-colors',
-                    isActive(item.href)
-                      ? 'text-ink font-medium'
-                      : 'text-ink-muted hover:text-ink',
-                  ]}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
+          {trailingNav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={[
+                  'text-sm transition-colors',
+                  isActive(item.href)
+                    ? 'text-ink font-medium'
+                    : 'text-ink-muted hover:text-ink',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
         </ul>
 
         <a
