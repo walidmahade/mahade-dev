@@ -1,7 +1,7 @@
 ---
 interface Props {
   tone?: 'paper' | 'tint' | 'sunken';
-  size?: 'standard' | 'compact' | 'hero';
+  size?: 'standard' | 'compact' | 'hero' | 'page-head';
   id?: string;
   class?: string;
 }
@@ -23,6 +23,7 @@ const sizeMap = {
   hero: 'py-24 md:py-32 lg:py-40',
   standard: 'py-20 md:py-28',
   compact: 'py-16 md:py-20',
+  'page-head': 'pt-10 pb-6 md:pt-14 md:pb-8',
 };
 ---
 <section id={id} class={`${toneMap[tone]} ${sizeMap[size]} ${className}`}>
