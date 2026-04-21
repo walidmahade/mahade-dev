@@ -1,0 +1,41 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Button } from '@/components/ui/button';
+---
+<Layout
+  title="Scaffold OK — Mahade Walid"
+  description="Scaffold smoke-test page. Real home lands in plan 03."
+  noindex={true}
+>
+  <main class="min-h-screen flex items-center justify-center px-6 py-24 bg-paper-tint">
+    <div class="max-w-2xl text-center">
+      <p class="text-eyebrow text-ink-muted">Plan 01 · Scaffold</p>
+      <h1 class="mt-4 text-display-lg text-ink">
+        Astro + Tailwind v4 + shadcn <em class="not-italic text-brand">ready.</em>
+      </h1>
+      <p class="mt-6 text-body-lg text-ink-muted">
+        This page is a smoke test. Tokens render, fonts load, shadcn components work.
+        The real homepage arrives in plan 03.
+      </p>
+      <div class="mt-8 flex items-center justify-center gap-3">
+        <Button client:load>Primary</Button>
+        <Button variant="outline" client:load>Outline</Button>
+        <Button variant="ghost" client:load>Ghost</Button>
+      </div>
+      <div class="mt-10 grid grid-cols-3 gap-3 text-left">
+        <div class="rounded-lg bg-paper p-4 border border-line">
+          <span class="text-eyebrow text-ink-subtle">brand</span>
+          <div class="mt-2 h-10 rounded-md bg-brand"></div>
+        </div>
+        <div class="rounded-lg bg-paper p-4 border border-line">
+          <span class="text-eyebrow text-ink-subtle">ink</span>
+          <div class="mt-2 h-10 rounded-md bg-ink"></div>
+        </div>
+        <div class="rounded-lg bg-paper p-4 border border-line">
+          <span class="text-eyebrow text-ink-subtle">paper-sunken</span>
+          <div class="mt-2 h-10 rounded-md bg-paper-sunken"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
