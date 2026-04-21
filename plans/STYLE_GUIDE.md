@@ -10,6 +10,7 @@ This is the single source of truth for visual design. Every plan file references
 3. **Color is used sparingly** — one primary accent. Everything else is monochrome ink on paper.
 4. **Motion is restrained** — subtle fades, small translations, slow easings. Nothing springy or playful. Homepage only.
 5. **Credibility > cleverness** — we are selling above-average rates. Every choice should read as precise and premium, not experimental.
+6. **No shadows, anywhere** — hierarchy comes from borders, tone contrast, and whitespace. Never `box-shadow` or Tailwind's `shadow-*` utilities. This applies to cards, buttons, floating elements, images — everything. If something needs to feel lifted, use a border, a tone shift (`bg-paper-tint` → `bg-paper`), or a ring. Shadow tokens do not exist in `tokens.css`.
 
 ---
 
@@ -115,18 +116,13 @@ Horizontal gutters: `px-6 md:px-8` — all content sits inside a `Container` com
 
 ## Shadows
 
-Shadows are soft and low-contrast. No hard drop shadows.
+**None.** No `box-shadow` or Tailwind `shadow-*` utilities anywhere. Elevation cues come from:
 
-```css
---shadow-xs: 0 1px 2px rgba(11, 13, 19, 0.04);
---shadow-sm: 0 2px 8px rgba(11, 13, 19, 0.05);
---shadow-md: 0 8px 24px rgba(11, 13, 19, 0.06);
---shadow-lg: 0 20px 40px rgba(11, 13, 19, 0.08);
-```
+- **Borders** — default `border-line` → emphasis `border-line-strong` on hover
+- **Tone contrast** — a card on `bg-paper-tint` reads as a surface sitting on `bg-paper-sunken` without any shadow
+- **Ring** — `ring-1 ring-ink` on the featured pricing tier to set it apart
 
-- Cards at rest: `--shadow-sm`
-- Cards on hover: `--shadow-md` (transition 200ms)
-- Floating elements (sticky CTA, modals): `--shadow-lg`
+Shadow tokens do not exist in `tokens.css`. If a design mock calls for a shadow, use one of the patterns above instead.
 
 ---
 
@@ -147,13 +143,13 @@ These are the only primitives. Everything else composes from them.
 - Sizes: `sm` (h-9 px-3 text-sm), `md` (h-11 px-5 text-base, default), `lg` (h-12 px-6 text-base)
 - Radius: `--radius-md`
 - Transition: `transform 150ms, background-color 150ms`
-- Hover: `translate-y-[-1px]` + shadow bump (primary only)
+- Hover: `translate-y-[-1px]` (primary only) — no shadow
 
 ### Card
 - Background: `--color-paper`
-- Border: `1px solid --color-line`
+- Border: `1px solid --color-line` → `--color-line-strong` on hover
 - Radius: `--radius-lg`
-- Shadow: `--shadow-sm` → `--shadow-md` on hover
+- No shadow. Ever.
 - Padding: `p-6 md:p-8`
 
 ### Input / Textarea
@@ -228,7 +224,7 @@ These are the only primitives. Everything else composes from them.
 ## File locations
 
 When implementing, these tokens live at:
-- Colors/radius/shadow CSS vars: `src/styles/tokens.css` (imported in root layout)
+- Colors/radius CSS vars: `src/styles/tokens.css` (imported in root layout)
 - Tailwind theme extension: `tailwind.config.ts` (maps vars to utilities like `bg-paper`, `text-ink`, `rounded-lg`)
 - Typography styles: `src/styles/typography.css`
 - Font imports: `src/styles/global.css`

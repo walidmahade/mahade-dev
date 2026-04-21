@@ -84,18 +84,26 @@
   margin-bottom: 0.75rem;
 }
 
-.prose-page ul {
+.prose-page ul,
+.prose-page ol {
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding-left: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.prose-page ul {
   list-style: disc;
 }
 
-.prose-page ul li {
+.prose-page ol {
+  list-style: decimal;
+}
+
+.prose-page li {
   margin-top: 0.5rem;
 }
 
-.prose-page ul li::marker {
+.prose-page li::marker {
   color: var(--color-brand);
 }
 
