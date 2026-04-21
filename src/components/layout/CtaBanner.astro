@@ -1,0 +1,49 @@
+---
+import Section from './Section.astro';
+import Container from './Container.astro';
+import DisplayHeading from './DisplayHeading.astro';
+
+interface Cta {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface Props {
+  heading: string;
+  primary: Cta;
+  secondary?: Cta;
+  tone?: 'paper' | 'tint';
+}
+
+const { heading, primary, secondary, tone = 'paper' } = Astro.props;
+---
+<Section tone={tone} size="compact">
+  <Container>
+    <div class="rounded-xl bg-ink text-paper p-10 md:p-14 text-center">
+      <DisplayHeading as="h2" size="md" class="text-paper">
+        {heading}
+      </DisplayHeading>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href={primary.href}
+          target={primary.external ? '_blank' : undefined}
+          rel={primary.external ? 'noopener' : undefined}
+          class="inline-flex h-11 items-center rounded-[10px] bg-brand px-5 font-medium text-white hover:bg-brand-hover transition-colors"
+        >
+          {primary.label}
+        </a>
+        {secondary && (
+          <a
+            href={secondary.href}
+            target={secondary.external ? '_blank' : undefined}
+            rel={secondary.external ? 'noopener' : undefined}
+            class="inline-flex h-11 items-center rounded-[10px] border border-paper/40 px-5 font-medium text-paper hover:bg-paper/10 transition-colors"
+          >
+            {secondary.label}
+          </a>
+        )}
+      </div>
+    </div>
+  </Container>
+</Section>
