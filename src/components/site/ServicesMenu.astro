@@ -102,27 +102,37 @@ const isActive = pathname.startsWith('/services');
   const menus = document.querySelectorAll<HTMLElement>('[data-services-menu]');
   menus.forEach((menu) => {
     const trigger = menu.querySelector<HTMLButtonElement>('.services-menu__trigger');
-    if (!trigger) return;
+    const panel = menu.querySelector<HTMLElement>('.services-menu__panel');
+    if (!trigger || !panel) return;
+
+    const isVisible = () => panel.offsetParent !== null;
+    const syncExpanded = () => {
+      trigger.setAttribute('aria-expanded', isVisible() ? 'true' : 'false');
+    };
 
     const close = () => {
       menu.classList.remove('is-open');
-      trigger.setAttribute('aria-expanded', 'false');
+      syncExpanded();
     };
 
-    const toggle = (e: MouseEvent) => {
-      e.preventDefault();
-      const open = menu.classList.toggle('is-open');
-      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    };
+    trigger.addEventListener('click', () => {
+      menu.classList.toggle('is-open');
+      syncExpanded();
+    });
 
-    trigger.addEventListener('click', toggle);
+    menu.addEventListener('mouseenter', syncExpanded);
+    menu.addEventListener('mouseleave', syncExpanded);
+    menu.addEventListener('focusin', syncExpanded);
+    menu.addEventListener('focusout', () => {
+      requestAnimationFrame(syncExpanded);
+    });
 
     document.addEventListener('click', (e) => {
       if (!menu.contains(e.target as Node)) close();
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && isVisible()) {
         close();
         trigger.focus();
       }
