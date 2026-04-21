@@ -6,7 +6,7 @@ This is the single source of truth for visual design. Every plan file references
 
 **Guiding principles**
 1. **Whitespace is a feature** — section padding is aggressive; don't fear empty space.
-2. **Type does the heavy lifting** — big display text with a serif counterpoint earns the visual hierarchy. Almost nothing else is needed for impact.
+2. **Type does the heavy lifting** — big display text in Geist earns the visual hierarchy. Almost nothing else is needed for impact.
 3. **Color is used sparingly** — one primary accent. Everything else is monochrome ink on paper.
 4. **Motion is restrained** — subtle fades, small translations, slow easings. Nothing springy or playful. Homepage only.
 5. **Credibility > cleverness** — we are selling above-average rates. Every choice should read as precise and premium, not experimental.
@@ -57,18 +57,18 @@ Light mode only. No dark-mode variants.
 ## Typography
 
 **Families**
-- **Display / headings:** `"Instrument Serif", "Iowan Old Style", Georgia, serif` — used for hero H1 and large section openers to give warmth against the sans body
+- **Display / headings:** `"Geist Variable", ui-sans-serif, system-ui, sans-serif` — geometric, modern, used for hero H1 and large section openers
 - **UI / body:** `"Inter", ui-sans-serif, system-ui, sans-serif` — default for everything else
 - **Mono (rare):** `"JetBrains Mono", ui-monospace, SFMono-Regular, monospace` — only inside code blocks or metadata labels
 
-Load via `@fontsource/inter` (400, 500, 600, 700) and `@fontsource/instrument-serif` (400, 400i). Self-host; no Google Fonts CDN.
+Load via `@fontsource/inter` (400, 500, 600, 700) and `@fontsource-variable/geist`. Self-host; no Google Fonts CDN.
 
 **Scale** (fluid via `clamp()`; mobile → desktop)
 
 | Token | Size (clamp) | Line height | Weight | Use |
 |---|---|---|---|---|
-| `display-xl` | clamp(3rem, 2rem + 4vw, 5.5rem) | 1.02 | 400 (serif) | Hero H1 |
-| `display-lg` | clamp(2.25rem, 1.5rem + 3vw, 4rem) | 1.05 | 400 (serif) | Section openers |
+| `display-xl` | clamp(3rem, 2rem + 4vw, 5.5rem) | 1.02 | 500 (Geist) | Hero H1 |
+| `display-lg` | clamp(2.25rem, 1.5rem + 3vw, 4rem) | 1.05 | 500 (Geist) | Section openers |
 | `display-md` | clamp(1.875rem, 1.5rem + 1.5vw, 2.75rem) | 1.1 | 500 (sans) | Sub-section H2 |
 | `heading-lg` | 1.5rem | 1.25 | 600 (sans) | Card titles |
 | `heading-md` | 1.25rem | 1.3 | 600 (sans) | Small titles |
