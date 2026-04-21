@@ -115,14 +115,16 @@
   color: var(--color-brand);
 }
 
-.prose-page a {
+/* :where() keeps specificity at 0 so Tailwind utilities on nested
+   components (buttons, cards, callouts) always win over prose link styling. */
+.prose-page :where(a) {
   color: var(--color-brand);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
 }
 
-.prose-page a:hover {
+.prose-page :where(a):hover {
   text-decoration-thickness: 2px;
 }
 
