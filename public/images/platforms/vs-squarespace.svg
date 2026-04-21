@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Webflow vs Squarespace comparison">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F7F7F8"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="leftG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4353FF" stop-opacity="1"/>
+      <stop offset="1" stop-color="#4353FF" stop-opacity="0.85"/>
+    </linearGradient>
+    <linearGradient id="rightG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111111" stop-opacity="1"/>
+      <stop offset="1" stop-color="#111111" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="60" y="60" width="510" height="510" rx="24" fill="url(#leftG)"/>
+  <rect x="630" y="60" width="510" height="510" rx="24" fill="url(#rightG)"/>
+  <text x="315" y="345" text-anchor="middle" fill="#FFFFFF" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="500" font-size="86" letter-spacing="-2">Webflow</text>
+  <text x="885" y="345" text-anchor="middle" fill="#FFFFFF" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="500" font-size="86" letter-spacing="-2">Squarespace</text>
+  <circle cx="600" cy="315" r="56" fill="#FFFFFF" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="600" y="332" text-anchor="middle" fill="#0B0D13" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="600" font-size="28" letter-spacing="-1">vs</text>
+  <text x="600" y="610" text-anchor="middle" fill="#8A90A0" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="500" font-size="18" letter-spacing="2">MAHADE.DEV · COMPARISON</text>
+</svg>

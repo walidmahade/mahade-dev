@@ -33,6 +33,9 @@ const articleSchema = {
   ...(post.data.updatedDate && {
     dateModified: post.data.updatedDate.toISOString(),
   }),
+  ...(post.data.heroImage && {
+    image: `${site.url}${post.data.heroImage}`,
+  }),
   author: {
     '@type': 'Person',
     name: site.name,
@@ -41,7 +44,11 @@ const articleSchema = {
   url: `${site.url}/blog/${post.id}`,
 };
 ---
-<Layout title={`${post.data.title} | Mahade Walid`} description={post.data.description}>
+<Layout
+  title={`${post.data.title} | Mahade Walid`}
+  description={post.data.description}
+  ogImage={post.data.heroImage}
+>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   </Fragment>
@@ -66,6 +73,18 @@ const articleSchema = {
         </div>
       </Container>
     </Section>
+
+    {post.data.heroImage && (
+      <Section tone="tint" size="compact">
+        <Container>
+          <img
+            src={post.data.heroImage}
+            alt={post.data.heroImageAlt ?? ''}
+            class="mx-auto w-full max-w-[1080px] rounded-xl border border-line"
+          />
+        </Container>
+      </Section>
+    )}
 
     <Section tone="paper" size="compact">
       <Container width="prose">

@@ -139,3 +139,57 @@
   color: var(--color-ink-muted);
   font-style: italic;
 }
+
+.prose-page table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin: 1.75rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  overflow: hidden;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose-page thead {
+  background: var(--color-paper-tint);
+}
+
+.prose-page th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--color-ink);
+  border-bottom: 1px solid var(--color-line);
+  white-space: nowrap;
+}
+
+.prose-page td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+  color: var(--color-ink);
+}
+
+.prose-page tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.prose-page tbody tr:hover {
+  background: var(--color-paper-tint);
+}
+
+.prose-page hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin: 2.5rem 0;
+}
+
+.prose-page img {
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  margin: 1.5rem 0;
+}
