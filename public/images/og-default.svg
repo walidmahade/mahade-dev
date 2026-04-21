@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Mahade Walid — Webflow Developer">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEF0FF"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.8" cy="0.2" r="0.6">
+      <stop offset="0" stop-color="#4353FF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#4353FF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <circle cx="90" cy="90" r="10" fill="#4353FF"/>
+  <text x="120" y="98" fill="#0B0D13" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="600" font-size="22">Mahade Walid</text>
+  <text x="90" y="310" fill="#0B0D13" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="500" font-size="84" letter-spacing="-2">Webflow Developer</text>
+  <text x="90" y="380" fill="#4353FF" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="500" font-size="56" letter-spacing="-1">for agencies that ship.</text>
+  <text x="90" y="480" fill="#4B5261" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="400" font-size="28">Unlimited pages. Flat monthly rate. Hourly on Upwork.</text>
+  <text x="90" y="570" fill="#8A90A0" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="500" font-size="20" letter-spacing="2">MAHADE.DEV</text>
+</svg>
