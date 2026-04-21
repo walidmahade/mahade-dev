@@ -1,0 +1,160 @@
+---
+title: "Webflow Core Web Vitals: Fixing LCP, CLS, and INP in 2026"
+description: "Concrete fixes for Webflow Core Web Vitals — LCP, CLS, INP — with before/after screenshots and the exact changes I run on every site."
+pubDate: 2026-04-25
+tags: ["seo", "performance"]
+heroImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "Lighthouse Core Web Vitals report showing performance metrics"
+cluster: "seo-hub"
+faq:
+  - q: "What are good Core Web Vitals targets in 2026?"
+    a: "LCP under 2.5s (ideally 1.8s). CLS under 0.1. INP under 200ms. Hit all three on mobile and desktop and Google Search Console will mark you as 'Good' for the URL."
+  - q: "Why is my Webflow LCP bad?"
+    a: "90% of the time: an unoptimized hero image. The LCP element is usually the largest above-the-fold image. Compress to WebP at quality 82, size to 1920px max, and set fetchpriority='high' on the <img> tag."
+  - q: "How do I fix CLS on a Webflow site?"
+    a: "Set explicit width and height on every above-the-fold image (Webflow does this automatically on Image elements), reserve space for any conditionally-rendered elements (banners, cookie notices), and don't insert content above existing content after page load."
+  - q: "What causes high INP in Webflow?"
+    a: "Usually third-party scripts: chat widgets, session replay, A/B testing tools. Webflow's own interactions are lightweight. Load third-party scripts with 'defer', move non-critical tracking below the fold, and consolidate to 2–3 essential scripts max."
+  - q: "Do Lighthouse scores match real user Core Web Vitals?"
+    a: "No, not directly. Lighthouse simulates a slow mobile device in a lab. Real-user Core Web Vitals in Search Console come from Chrome field data. Use Lighthouse to diagnose; trust Search Console for the actual Google-ranking signal."
+  - q: "How long until Core Web Vitals changes show up in Search Console?"
+    a: "28 days minimum. Search Console uses a 28-day rolling window of real-user data. Fix an issue today and you won't see the 'Good' status in Console until 4 weeks of passing data accumulates."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+If your Webflow Core Web Vitals are failing, the answer is almost always one of three things: an unoptimized hero image killing your LCP, a third-party script causing layout shift or interaction delay, or fonts loading in a way that shifts content. Fix those three and you move from red to green on every URL. The rest of this guide gives you the exact steps.
+
+I run these diagnostics and fixes on every client site before handoff. A Webflow site that looks great but scores 54 on mobile PageSpeed is a liability, not an asset — it ranks worse, loads slower for real users on real networks, and undermines every SEO dollar you spend. If you are starting a new Webflow project and want to get performance right from the beginning, check the full [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) first so performance and SEO decisions are made together. Or [get in touch](/contact) if you want someone to audit your existing site.
+
+## What Google actually measures in 2026 (LCP, CLS, INP)
+
+Google's Core Web Vitals ranking signal uses three metrics, all measured from real Chrome users visiting your pages. They are not Lighthouse scores — they are field data, collected passively from actual visits and aggregated into a 28-day rolling window in Search Console.
+
+| Metric | Good | Needs improvement | Poor |
+|---|---|---|---|
+| LCP (Largest Contentful Paint) | ≤ 2.5s | 2.5s – 4.0s | > 4.0s |
+| CLS (Cumulative Layout Shift) | ≤ 0.1 | 0.1 – 0.25 | > 0.25 |
+| INP (Interaction to Next Paint) | ≤ 200ms | 200ms – 500ms | > 500ms |
+
+A URL only gets the "Good" Core Web Vitals status if it passes all three thresholds. Passing two out of three still means a failing assessment in Search Console.
+
+INP replaced FID (First Input Delay) as an official Core Web Vital in March 2024. FID only measured the delay before the browser started processing an event; INP measures the full visual response — from when a user taps or clicks to when the next frame paints. It's a harder bar, and Webflow sites with heavy third-party scripts routinely fail it.
+
+The schema layer matters here too: once your vitals are passing, structured data helps Google understand what's on the page. If you haven't set up [Webflow schema markup](/blog/webflow-schema-markup), do that after you sort the performance foundation — they compound.
+
+## LCP: fixing the largest contentful paint
+
+LCP is the time from navigation start to when the largest above-the-fold element finishes rendering. On most Webflow sites, that element is the hero image or a large hero heading. The heading case is rare and usually fast. The image case is almost always the problem.
+
+<Callout type="warning">
+The single biggest LCP killer on Webflow sites is a hero image that was uploaded at full resolution without format conversion. A 4.2MB JPEG uploaded via the Webflow asset manager is served as-is to every visitor. On a mid-range Android device on a 4G connection, that image alone can push LCP past 6 seconds. Always compress to WebP at quality 80–85 and size to 1920px wide maximum before uploading.
+</Callout>
+
+Here is the fix sequence for a slow LCP hero image:
+
+**Step 1: Identify the LCP element.** Open Chrome DevTools, run a Lighthouse audit, and look at the LCP screenshot. It will tell you exactly which element is the LCP candidate — usually the `img` inside your hero section, occasionally a background-image div.
+
+**Step 2: Compress and convert the image.** Export or download the original hero image. Convert to WebP at quality 82 using Squoosh, Cloudflare Images, or any image optimization pipeline. Size to 1920px wide — Webflow's responsive image srcset will handle the smaller breakpoints. The file should be under 200KB for a hero image; under 100KB is achievable for most photography.
+
+**Step 3: Re-upload and set fetchpriority.** Upload the optimized file to Webflow's asset manager and confirm the alt text. Then add a custom attribute on the image: `fetchpriority` = `high`. This tells the browser to prioritize fetching this image above other resources. Webflow Image elements support custom attributes in the Designer — click the element, go to Element Settings, scroll to Custom Attributes.
+
+**Step 4: Disable lazy loading on the hero.** Webflow applies lazy loading to images by default in many templates. The hero image should never be lazy loaded — it is above the fold and the browser needs it immediately. In the Image element settings, confirm lazy loading is off for this specific image.
+
+For a deeper breakdown of image compression workflows for Webflow, [Webflow image optimization](/blog/webflow-image-optimization) covers the full pipeline including responsive images, CDN delivery, and background images (which require a different approach since `fetchpriority` doesn't apply to CSS backgrounds).
+
+The `preload` tag is another lever for LCP. If your LCP element is a background image set via CSS — which happens with full-bleed hero sections using a background-image embed — you need to add a `<link rel="preload" as="image" href="...">` in the `<head>` via a custom code embed in Webflow's page settings. Webflow can't add this automatically for CSS backgrounds, so it has to be done manually.
+
+For below-the-fold images, the opposite applies: [Webflow lazy loading](/blog/webflow-lazy-loading) explains how to ensure proper lazy load behavior for images lower on the page, which reduces the total bytes the browser downloads on first load and indirectly helps LCP by reducing network competition.
+
+## CLS: eliminating layout shift on Webflow pages
+
+Cumulative Layout Shift measures unexpected movement of visible page content. A score of 0 means nothing moved. A score above 0.1 means Google considers it a problem. The typical causes on Webflow sites are font loading, images without explicit dimensions, and dynamically injected content.
+
+**Font loading shift.** When Webflow loads a custom font, the browser first renders with a fallback system font, then swaps in the custom font once it downloads. If the fallback differs in weight or character width, the reflow causes a shift. Use `font-display: optional` (no swap — use the custom font only if it loads before first render) or `font-display: swap` with a well-matched fallback. For headline fonts, `swap` is usually right; for body text, `optional` is better.
+
+In Webflow, set this via the custom font settings or, for third-party font imports, via a `<style>` block in the custom code head. `@fontsource` packages already include the correct `font-display` declarations.
+
+**Images without explicit dimensions.** When the browser starts rendering a page and encounters an `<img>` tag without explicit `width` and `height` attributes, it doesn't know how much space to reserve. It renders the surrounding content, then jumps when the image loads and claims its space. Webflow's Image element automatically adds `width` and `height` attributes based on the uploaded asset dimensions — this is one of the things Webflow gets right by default. The problem arises with custom code embeds: if you're embedding images via HTML embed blocks, make sure to include explicit `width` and `height` attributes.
+
+**Dynamically injected content.** Cookie notices, chat widget launchers, and promotional banners that inject above existing content after page load are classic CLS generators. The fix is to reserve space for them before they load. A chat widget button that appears in the bottom-right corner has no CLS impact because it's not pushing other content. A cookie banner that slides in from the top, above the hero section, shifts everything below it. Reserve the height via a placeholder element and make it visually invisible until the banner injects, rather than having the banner insert new space.
+
+**Webflow interactions that animate layout properties.** If you have Webflow animations that change `height`, `width`, `top`, `left`, `margin`, or `padding` on elements, and those animations trigger on page load or scroll, they can contribute to CLS. Prefer CSS transform animations (`translateY`, `scale`) which don't affect layout and therefore don't contribute to CLS. In Webflow Interactions, the Move action uses transform; the Size action modifies actual dimensions and can affect CLS.
+
+## INP: making interactions feel instant
+
+INP (Interaction to Next Paint) measures how long it takes for a page to visually respond after a user taps, clicks, or types. Under 200ms feels instant. Over 500ms feels broken.
+
+Webflow's own codebase is lightweight — the Webflow.js runtime that handles interactions and the Webflow CMS is well-optimized and rarely the source of INP problems. The culprit is almost always third-party scripts: analytics suites that inject event listeners on every DOM interaction, chat widgets that run in the main thread, session replay tools that record every click.
+
+Every third-party script that runs in the main thread competes with your interaction handler. When a user clicks a button, the browser needs to run your click handler and paint the result. If the main thread is blocked by a 500ms analytics task, the response to the user's click is delayed by however long that task is running — regardless of how fast your handler code is.
+
+**Audit your third-party scripts.** Open Chrome DevTools, go to Performance, record a 10-second interaction, and look at the "Long tasks" flame chart. Anything over 50ms in the main thread shows up as a red block. Hover each block to see which script is responsible. Most Webflow sites with INP problems have 4–7 third-party scripts, and one or two of them account for 80% of the main-thread blocking time.
+
+**Defer non-critical scripts.** Any script that doesn't need to run before the page is interactive should have a `defer` attribute. In Webflow's page settings custom code, you can add script tags with `defer`. Google Analytics 4, if loaded via the native Webflow integration, is already deferred appropriately. Chat widgets, session replay, and heatmap tools often are not.
+
+**Load below the fold.** Use an Intersection Observer to delay loading heavy third-party scripts until a below-the-fold element enters the viewport. This pushes the main-thread work past the point where the user is already interacting with the top of the page. For tools like Intercom or Drift, there's typically no UX impact — the user won't reach the trigger point before the script loads.
+
+**Consolidate.** If you have three analytics tools, two A/B testing platforms, and a session replay tool running simultaneously, the compounding main-thread cost is unavoidable. Pick one analytics tool, one A/B testing tool, and one session replay tool — or none, if you can't demonstrate ROI from the data. Every script is a tradeoff.
+
+## The 7 fixes I run on every Webflow site
+
+These are the changes I make before handing off any Webflow build. Some are minutes of work; a few require thirty minutes of careful testing. Together they reliably push a Webflow site from the 55–70 Lighthouse range into the 85–95 range on mobile.
+
+1. **Optimize and re-upload all hero and above-the-fold images as WebP.** Convert everything in the first viewport to WebP at quality 82, sized to 1920px max width. Set `fetchpriority="high"` on the primary hero image via a custom attribute. This single change accounts for the majority of LCP improvement on almost every site I've worked on. Detailed workflow at [Webflow site slow](/blog/webflow-site-slow).
+
+2. **Disable lazy loading on above-the-fold images.** Webflow applies lazy loading broadly. Any image visible on first load without scrolling should have lazy loading disabled. Images below the fold should have it enabled. Check every breakpoint — an image that's below the fold on desktop may be above the fold on mobile.
+
+3. **Add preload hints for web fonts.** In Webflow's page settings under custom code, add a `<link rel="preload" as="font" href="..." crossorigin>` tag for each font file that renders above the fold. Self-hosted fonts via fontsource already serve from the same origin; the preload hint just gets them fetched earlier in the waterfall.
+
+4. **Set explicit width and height on all image embeds.** Every `<img>` in a custom HTML embed block needs `width` and `height` attributes. Webflow Image elements handle this automatically; raw HTML embeds don't. An image with unknown dimensions reserves no space and causes CLS on load.
+
+5. **Defer all third-party scripts.** Audit every script in the page's custom code. Everything that isn't render-critical gets a `defer` attribute. Most analytics, chat, and tracking scripts should be deferred. This reduces main-thread blocking time and improves both INP and TBT (Total Blocking Time, which correlates to INP).
+
+6. **Remove unused Webflow interactions.** Every interaction you define in Webflow adds to the payload parsed by Webflow.js on load. Remove any interactions that were built for testing, are duplicated, or aren't visible on the live site. In the Webflow Designer, go to the Interactions panel and delete anything not in active use. On a site with a long build history, I regularly find 10–15 unused interaction definitions.
+
+7. **Audit and minimize CMS embed code.** Webflow CMS collection pages often accumulate JavaScript embeds in Rich Text fields or collection item custom code blocks — added over time by content editors who didn't realize the performance cost. Check every CMS template page's rendered source for unexpected `<script>` tags. One client's blog template had four different social share widget scripts embedded in the rich text, added by different team members across six months. Removing them cut their blog post LCP by 1.4 seconds.
+
+## How to diagnose in PageSpeed Insights
+
+PageSpeed Insights (PSI) is the fastest way to get actionable data without setting up DevTools. Run it at [pagespeed.web.dev](https://pagespeed.web.dev) — it shows both lab data (Lighthouse) and field data (real user CrUX data) in one view.
+
+The lab diagnostics are the useful part for debugging. Here's how to read the most common ones:
+
+| PageSpeed Insights diagnostic | What it means | Typical Webflow fix |
+|---|---|---|
+| Largest Contentful Paint image was not preloaded | The LCP image is discovered late in the waterfall, after CSS and scripts have been parsed | Add `fetchpriority="high"` on the hero image element; add a `<link rel="preload">` for CSS background images |
+| Eliminate render-blocking resources | One or more scripts or stylesheets are blocking first paint | Add `defer` to non-critical scripts; move non-critical CSS to load after first paint |
+| Serve images in next-gen formats | Images are being served as JPEG or PNG | Re-upload hero and key images as WebP; Webflow will serve the WebP you upload |
+| Avoid large layout shifts | CLS is above the threshold with specific shift sources identified | Look at which elements are shifting — font swap, unsized images, or injected banners are the usual sources |
+| Reduce JavaScript execution time | Script parsing and execution is blocking the main thread | Defer or remove third-party scripts; remove unused Webflow interactions |
+
+The "Opportunities" and "Diagnostics" sections beneath the score are the most actionable parts. The score itself is less useful for debugging — it's a weighted composite, and moving from 72 to 78 might mean your LCP improved by 800ms even if the score change looks small.
+
+## Why Lighthouse scores lie (and what to trust instead)
+
+Lighthouse simulates a slow mid-range device on a throttled connection (4x CPU slowdown, 10Mbps network). Your actual users are not all on that device. A developer testing on a MacBook Pro with Lighthouse enabled will see different numbers than a mid-range Android user in a real network environment, and different numbers again from the Chrome field data in Search Console.
+
+This matters for two reasons.
+
+First, a Webflow site that scores 62 on Lighthouse mobile might have "Good" Core Web Vitals in Search Console, because your real users are on faster devices and networks than Lighthouse simulates. The inverse is also true — a site scoring 78 on Lighthouse might have poor field data because your specific user base skews toward lower-end devices or slower markets.
+
+Second, Lighthouse is a point-in-time lab measurement. It runs a single simulated load. Field data in Search Console is an aggregate of thousands of real visits over 28 days. A slow day, a misbehaving CDN edge, or a spike in visitors from a slow-network region can affect the rolling average in ways that a Lighthouse run won't capture.
+
+<Callout type="tip">
+Use Lighthouse for diagnosis: it identifies what to fix and gives you a fast feedback loop during development. Use Search Console Core Web Vitals for the actual signal that affects rankings. When they disagree, trust Search Console. A Lighthouse score of 68 with "Good" field data in Search Console means your real users are having a good experience — that is what Google measures.
+</Callout>
+
+For the ranking signal, the URL-level Core Web Vitals report in Google Search Console is the authoritative view. It groups your URLs into "Good," "Needs improvement," and "Poor" buckets and tells you which metric is failing. Fix Poor URLs first — they carry the steepest ranking penalty. Then work through Needs improvement. Don't chase Lighthouse scores in isolation.
+
+The practical workflow: run Lighthouse to identify the specific issue, implement the fix in Webflow, verify the Lighthouse numbers improve, then wait 28 days for Search Console field data to update. That lag is real — there is no way to accelerate it. Don't re-fix things already fixed just because Search Console hasn't caught up.
+
+Getting Core Web Vitals passing is a prerequisite for the rest of Webflow SEO working as intended. If you have the fundamentals in place — title tags, meta descriptions, structured data, internal linking — and rankings are still flat, failing vitals are often the remaining blocker.
+
+The path is straightforward: identify the LCP element and make it load fast, eliminate layout shifts from fonts and images, and audit third-party scripts until main-thread blocking time drops below 300ms. Most Webflow sites I audit can reach all three "Good" thresholds in a single focused sprint.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
