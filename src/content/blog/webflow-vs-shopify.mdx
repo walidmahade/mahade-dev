@@ -1,0 +1,102 @@
+---
+title: "Webflow vs Shopify: when to stop trying to do both"
+description: "Webflow is a great marketing site with ecommerce bolted on. Shopify is a great store with marketing bolted on. Here is how to choose — and when to run both."
+pubDate: 2026-04-12
+tags: ["comparison", "webflow", "shopify", "ecommerce"]
+heroImage: /images/platforms/vs-shopify.svg
+heroImageAlt: Webflow vs Shopify comparison
+---
+
+Nine times out of ten when a client asks "Webflow vs Shopify" the answer is "both" — a Webflow marketing site in front of a Shopify backend. That setup runs the best-of-both for most direct-to-consumer brands. The tenth time, there is a real decision to make. Here is how to read your situation.
+
+## At a glance
+
+| | **Webflow** | **Shopify** |
+|---|---|---|
+| Primary strength | Marketing site | Commerce backend |
+| Checkout | Native, basic | Native, best-in-class |
+| Payment providers | Stripe, PayPal, a few more | Dozens, native Shop Pay |
+| Inventory mgmt | Simple | Enterprise-grade |
+| Product variants | Limited | Flexible, deep |
+| Multi-currency | Limited | Native Markets |
+| App ecosystem | Small | Enormous |
+| Design freedom | Very high | Medium (theme-bounded) |
+| CMS | Yes, strong | Yes (Metaobjects) |
+| Best for | Brand-led sites under 50 SKUs | Real stores at any scale |
+
+## The real question: what is the *primary* job of the site?
+
+If the main job is **to sell**, pick Shopify. Every inch of Shopify is optimized for moving from product page to confirmed order. Cart abandonment recovery, multi-channel selling, international tax, shipping zones, and the Shop Pay one-click checkout — all native.
+
+If the main job is **to market and convert leads** (and selling is occasional or low-SKU), Webflow makes more sense. You get full design control, a proper CMS for editorial content, and the option to bolt on Webflow Ecommerce or embed Shopify Buy Buttons.
+
+## Design freedom
+
+Webflow is a visual development platform; design freedom is the whole point. Shopify themes have come a long way, and Shopify's Online Store 2.0 with Liquid + app blocks now allows real customization — but you are customizing *within a theme*, not building up from HTML/CSS.
+
+For brand-led sites where the design language is distinctive, Webflow is the more comfortable canvas.
+
+## The hybrid model (and why it works)
+
+The pattern I recommend most often:
+
+1. **Webflow handles the marketing site.** Home, about, editorial content, case studies, campaigns — everything designed with full freedom and managed in Webflow CMS.
+2. **Shopify handles the store.** Product pages, cart, checkout, inventory, fulfillment.
+3. **Connect them** with a subdomain (shop.yourbrand.com) pointing at Shopify, or embed the Buy Button SDK in Webflow, or use the Shopify Hydrogen approach for fully custom product pages.
+
+This plays to each platform's strengths. The designer gets the control they want. The commerce team gets the backend they need. The customer gets a seamless branded experience.
+
+## SEO
+
+Both platforms emit clean HTML, support per-page meta, handle sitemaps, and let you customize robots. Shopify's product schema is automatic and excellent. Webflow's editorial schema is better suited to long-form content.
+
+For a marketing-heavy site, Webflow's SEO surface wins. For product-heavy SEO (product schema, review aggregation, in-stock indicators), Shopify's defaults are hard to beat.
+
+## Pricing
+
+Not directly comparable:
+
+- **Webflow** charges per site for hosting + CMS + Ecommerce plan.
+- **Shopify** charges per store for the subscription + per-transaction fees on non-Shopify-payment gateways.
+
+For a low-SKU brand, Webflow Ecommerce can be the same order of magnitude as Shopify Lite. For a real DTC brand, Shopify's per-transaction structure pays for itself in checkout conversion alone.
+
+## Who should pick which
+
+**Pick Webflow (standalone) if:**
+- You sell fewer than 50 products
+- The site is primarily a brand or marketing site
+- Design freedom outranks commerce features
+- You want one CMS for both editorial and products
+
+**Pick Shopify (standalone) if:**
+- You sell more than 100 products
+- International checkout matters
+- You need the app ecosystem (subscriptions, POS, shipping)
+- The store *is* the site
+
+**Pick both if:**
+- You are a DTC brand that also publishes editorial content
+- Your designer wants full control over marketing pages
+- You are scaling past the early-stage store
+
+## My take
+
+I build Webflow sites for a living, and I still recommend Shopify the moment a client sells more than 50 SKUs or ships internationally. Trying to bend Webflow into a real storefront when Shopify exists is a false economy.
+
+The hybrid model — Webflow front, Shopify back — is the right pattern for most brands over $500k in annual revenue. The setup is not free, but it pays back within the first holiday season.
+
+## FAQ
+
+**Can Webflow and Shopify share a domain?**
+Yes. Host the marketing site on yoursite.com (Webflow) and the store on shop.yoursite.com (Shopify), or use Shopify headless with a Webflow front end and custom product pages.
+
+**Does the hybrid model hurt SEO?**
+No, if you plan it. Subdomain vs subdirectory is a live debate, but both rank fine. Just make sure internal linking is sensible and canonical tags are set.
+
+**What about Webflow Ecommerce for a real store?**
+It is capable for low-SKU brands. For serious ecommerce, Shopify's checkout is measurably better at conversion. That measurement will pay for every dollar of the migration.
+
+---
+
+**Building a brand site that connects to Shopify?** That is a project I take on regularly. <a href="https://cal.com/mahade/30min" target="_blank" rel="noopener">Book a call</a> to scope the integration.

@@ -1,0 +1,98 @@
+---
+title: "Webflow vs WordPress: the total cost nobody talks about"
+description: "WordPress is free. Webflow is a subscription. One of those lines on your invoice is honest. Here is the real 5-year TCO for both."
+pubDate: 2026-04-08
+tags: ["comparison", "webflow", "wordpress"]
+heroImage: /images/platforms/vs-wordpress.svg
+heroImageAlt: Webflow vs WordPress comparison
+---
+
+WordPress runs 43% of the web. It is free, open source, and has a plugin for anything you can imagine. Webflow is a paid subscription, closed source, and does less out of the box. So why does anyone pick Webflow?
+
+The answer is that the number on the invoice is not the number that matters.
+
+## At a glance
+
+| | **Webflow** | **WordPress (self-hosted)** |
+|---|---|---|
+| Software cost | Subscription | Free |
+| Hosting | Included | You provide |
+| Updates | Automatic, invisible | Manual, ongoing |
+| Plugin stack | Native features | 58,000+ plugins |
+| Security | Platform-managed | Your responsibility |
+| Non-technical editing | Excellent | OK with the right setup |
+| Design freedom | Very high | Depends on theme / builder |
+| Developer handoff | Clean | Varies wildly |
+
+## The hidden cost of "free"
+
+WordPress is free if your time is free. For anyone billing above $25/hour, the real cost of a WordPress site is the ongoing maintenance: plugin updates, compatibility fixes, hosting management, security patches, and the occasional Saturday afternoon spent figuring out why the block editor broke the hero.
+
+I modeled this properly in the <a href="/tools/webflow-vs-wordpress">5-year TCO calculator</a>. With 4 updates per month and a $75/hour developer rate, Webflow saves most businesses several thousand dollars over five years — before counting the security incidents that WordPress sites inevitably have.
+
+## Where WordPress still wins
+
+To be fair to WordPress, there are real cases where it is the right answer:
+
+1. **You already run WordPress.** A multi-site network, an existing plugin you cannot move off, a team that knows WP — switching has a cost that is often larger than the savings.
+2. **Extreme customization.** The plugin and code ecosystem is wider than Webflow's. If your site needs a behavior that does not exist on either platform, someone has probably already written it for WordPress.
+3. **Very large CMS.** 10,000+ posts, complex custom post types, advanced taxonomies — WordPress handles this with less friction than Webflow's static-site model.
+4. **You control hosting already.** If you are on managed WP Engine or Kinsta, the ops overhead drops dramatically.
+
+## Where Webflow wins
+
+1. **No plugin stack.** The single biggest source of WordPress breakage is not in your code — it is in the interaction between 20 third-party plugins. Webflow has no plugins.
+2. **No maintenance ticket cycle.** Marketers can update copy, add pages, and publish posts without pinging a developer.
+3. **Designer-to-production in hours.** Matching a Figma design is faster on Webflow. No theme wrangling.
+4. **No security patch treadmill.** Webflow patches its platform; you do not own the vulnerability surface.
+5. **Predictable hosting.** You do not wake up at 3am because your site went viral.
+
+## Performance
+
+Both can be fast. Neither is fast by default.
+
+Webflow ships static HTML with optimized images from a CDN. A well-tuned Webflow site hits Lighthouse 95+ on mobile routinely. The main risk is third-party scripts (chat widgets, analytics, pixel trackers) you bolt on later.
+
+WordPress can be equally fast with the right stack: managed hosting + caching plugin + CDN + careful plugin diet. The risk is higher because every plugin you add can regress performance, and most WordPress sites accumulate plugins over years.
+
+## SEO
+
+Both are SEO-capable. WordPress has a longer history and more specialized plugins (Yoast, Rank Math, All in One SEO). Webflow has a cleaner default surface with no configuration required.
+
+For a site that will have a dedicated SEO person, WordPress's ecosystem slightly edges out. For a site where SEO needs to be competent but not obsessed-over, Webflow's defaults are more than enough.
+
+## Who should pick which
+
+**Pick Webflow if:**
+- You are building a marketing site for a SaaS, agency, or consultancy
+- You do not have a developer on staff
+- You want predictable monthly cost with no surprises
+- Your content team should edit without filing tickets
+- You prefer to own the design, not the platform
+
+**Pick WordPress if:**
+- You already have a WordPress team
+- You need a very large CMS (10,000+ posts)
+- You need specific plugins that exist nowhere else
+- You are running a media property, not a marketing site
+
+## My take
+
+For the specific client profile I serve most — founders, agencies, and SaaS marketing teams — Webflow wins almost every time. The lower maintenance overhead, cleaner handoff, and predictable cost are worth the slightly higher subscription.
+
+For a news site, a 50-author blog, or a WooCommerce-anchored business, WordPress remains the pragmatic choice. Use the right tool.
+
+## FAQ
+
+**Is Webflow more expensive than WordPress?**
+On the invoice, yes. In total cost over five years, usually no. Run the numbers yourself in the <a href="/tools/webflow-vs-wordpress">TCO calculator</a>.
+
+**Can I migrate from WordPress to Webflow?**
+Yes. This is my single most common migration. Budget 2–4 weeks for a typical marketing site with under 100 posts. I preserve SEO, map 301s, and rebuild the CMS. <a href="/tools/migration-calculator">Estimate the hours here</a>.
+
+**Does Webflow support WooCommerce-style features?**
+Not to the same depth. For serious ecommerce, pair Webflow with Shopify (covered in <a href="/blog/webflow-vs-shopify">Webflow vs Shopify</a>).
+
+---
+
+**Ready to move off WordPress?** Migration is what I do, and SEO preservation is non-negotiable. <a href="https://cal.com/mahade/30min" target="_blank" rel="noopener">Book a 30-minute scoping call</a>.
