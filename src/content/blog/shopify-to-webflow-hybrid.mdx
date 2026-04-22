@@ -1,0 +1,159 @@
+---
+title: "Webflow + Shopify Hybrid: Why and How"
+description: "Why many ecommerce brands move the marketing site to Webflow but keep Shopify for checkout — and how to wire the two cleanly."
+pubDate: 2026-07-03
+tags: ["migration", "shopify", "ecommerce"]
+heroImage: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Webflow marketing site hooked into a Shopify checkout"
+cluster: "migration"
+faq:
+  - q: "Why not just build the whole ecommerce site on Webflow?"
+    a: "Because Webflow Ecommerce hits ceilings past 100 SKUs, doesn't do subscriptions natively, and lacks Shopify's app ecosystem. Hybrid gives you Webflow's design freedom and Shopify's commerce depth."
+  - q: "How does the Webflow + Shopify hybrid actually work?"
+    a: "Webflow hosts the marketing site (home, blog, product landing pages). Shopify hosts /shop/ and checkout. Product data syncs from Shopify to Webflow CMS via API. Links from Webflow product pages route to Shopify for checkout."
+  - q: "Should the hybrid use subdomain or subfolder?"
+    a: "Subfolder if possible (example.com/shop lives on Shopify via reverse proxy). Subdomain (shop.example.com) is easier to set up but splits domain authority. For SEO-serious brands, spend the extra day configuring reverse proxy."
+  - q: "How do product pages stay synced between Webflow and Shopify?"
+    a: "Two patterns. (1) Shopify is source of truth; webhook fires to a Zapier/Make flow that updates Webflow CMS. (2) Periodic sync script (Webflow Logic or Cloudflare Worker) pulls from Shopify API every 15 minutes."
+  - q: "What's the SEO cost of splitting across two platforms?"
+    a: "Minimal if you handle canonical tags and cross-linking correctly. The risk is duplicate content (same product text on both sides) and weak internal linking across the boundary. Both are solvable with 1 day of setup."
+  - q: "When does the hybrid NOT make sense?"
+    a: "Sub-$1M revenue stores with under 50 SKUs — the complexity isn't worth it; pick one platform. Stores doing subscriptions or heavy B2B — go pure Shopify Plus. Stores with custom checkouts — skip this and build headless on Next.js + Shopify."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The **Webflow Shopify hybrid** works like this: Webflow owns the marketing surface — homepage, blog, campaign landing pages, and rich product story pages — while Shopify owns the transactional surface: inventory, cart, and checkout. The split is deliberate and profitable when executed well. Webflow's design flexibility is unmatched for building the pages that convert browsers into intent-driven visitors. Shopify's commerce infrastructure is unmatched for converting those visitors into paying customers. Neither platform does both things well on its own at scale, which is exactly why the hybrid exists.
+
+I've set up this architecture for several brands that outgrew Webflow Ecommerce without wanting to bet their entire marketing site on Shopify's templating constraints. I've also seen it botched — duplicate content penalties, broken attribution, and sync jobs that fall over silently while the Webflow CMS shows stale products. This post is about doing it right.
+
+If you're still deciding whether to stay on one platform or go hybrid, the [Webflow Ecommerce vs Shopify](/blog/webflow-ecommerce-vs-shopify) and [Webflow vs Shopify](/blog/webflow-vs-shopify) comparisons will give you the fuller picture before you commit to the added complexity here. If you already know the hybrid is your answer and want someone to wire it up, [get in touch](/contact).
+
+## The hybrid pattern in one paragraph
+
+Webflow is published to your root domain (example.com). Shopify is published to either a subfolder (example.com/shop) or a subdomain (shop.example.com), depending on how you configure the DNS. Product listing and checkout live in Shopify. Product story pages — the SEO-optimized, richly designed pages that explain what a product is and why someone should buy it — live in Webflow as CMS collection items. Those pages link out to Shopify's cart for the actual add-to-cart action. Shopify webhooks or a scheduled sync script keep the Webflow CMS current with Shopify's product catalog. The visitor never sees the seam.
+
+## When it pays off
+
+The hybrid earns its setup cost under specific conditions. Not all of them — pick one and it's enough — but they tend to cluster together.
+
+**You're above the Webflow Ecommerce ceiling.** Webflow Ecommerce caps at 3,000 SKUs on the Business plan and lacks native subscription billing, B2B pricing tiers, and the app ecosystem that powers modern ecommerce operations (loyalty programs, review aggregators, inventory forecasting). If you've been hacking around these limits, you already know the ceiling.
+
+**Your marketing site is doing real SEO work.** Shopify's templating isn't bad, but it is constraining. Blog posts are limited to one template. Collection pages are hard to customize meaningfully. If content marketing drives a significant share of your acquisition — long-form product guides, comparison pages, category content — Webflow's CMS and design freedom pays back quickly.
+
+**You have a distinct product story that lives outside the cart.** Some products need 2,000 words and a scroll-triggered animation to explain. Others need comparison tables, FAQs, and embedded social proof before someone is ready to click "add to cart." Shopify's product pages are built for the moment of purchase, not the moment of persuasion. Webflow handles the persuasion layer far better.
+
+**You're migrating off Webflow Ecommerce, not starting from zero.** If you already have a Webflow site with real SEO equity — backlinks, ranked pages, traffic — rebuilding the whole thing on Shopify to get better commerce tooling is a painful tradeoff. The hybrid lets you keep the Webflow investment and layer in Shopify underneath the checkout.
+
+When it does not pay off: a sub-$1M revenue store with fewer than 50 SKUs has no business taking on this complexity. Pick one platform and run hard on it. Stores with subscription-heavy catalogs should go pure Shopify Plus. Stores that need completely custom checkout experiences should skip the hybrid and look at headless (Next.js or Nuxt + Shopify Storefront API).
+
+## Architecture: subdomain vs subfolder
+
+The first technical decision that matters is where Shopify lives in your URL structure. This decision has real SEO and user experience consequences, and it's easier to get right at the start than to migrate later.
+
+| Approach | Setup lift | SEO outcome | Best for |
+|---|---|---|---|
+| Subfolder via reverse proxy (example.com/shop) | High (2–3 days, Cloudflare Workers or edge config) | Best — all traffic and links accumulate on one domain | SEO-serious brands with developer resources |
+| Subdomain (shop.example.com) | Low (30 minutes of DNS changes) | Weaker — subdomain is treated as separate domain by most crawlers | Brands prioritizing speed-to-launch over SEO |
+| Different domains (example.com + shopexample.com) | Lowest (no DNS coordination needed) | Worst — completely split domain authority, two separate crawl budgets | Almost never the right call |
+
+The subfolder approach preserves domain authority. Every backlink to example.com/blog/product-guide or example.com/shop/product-name accrues to the same domain, the same crawl budget, and the same trust signals. The subdomain approach is a shortcut that most SEO-conscious brands regret within a year.
+
+<Callout type="tip">
+For reverse proxy on Cloudflare: set up a Worker that routes requests matching `/shop/*` to your Shopify store's `.myshopify.com` domain, passing the host header correctly. The worker adds maybe 5ms of latency. Shopify's custom domain settings need to allow the proxied hostname. The tricky part is getting Shopify's session cookies and CSRF tokens to behave under the proxy — test cart persistence and checkout flow end-to-end before going live.
+</Callout>
+
+Both Webflow and Shopify need canonical tags configured correctly (more on that in the SEO section). The URL architecture decision upstream makes canonical configuration either straightforward or messy.
+
+## Product data: Shopify API + Webflow CMS sync
+
+The most brittle part of any hybrid implementation is the sync layer. When a product's price changes in Shopify, the Webflow CMS product page needs to know. When a product goes out of stock, the "add to cart" CTA on the Webflow page should reflect that. When new products are added to Shopify, Webflow CMS items need to be created. None of this happens automatically without deliberate infrastructure.
+
+Two patterns handle this reliably:
+
+| Approach | Latency | Dev lift | Maintenance |
+|---|---|---|---|
+| Shopify webhooks → Zapier/Make → Webflow CMS API | Near-real-time (under 1 minute) | Low (no custom code, visual workflow builder) | Medium (monitor for failed webhook deliveries) |
+| Scheduled sync script via Cloudflare Worker or Webflow Logic | 5–15 minutes | Medium (custom code, API credentials management) | Low (set and forget, add alerting on error responses) |
+
+The webhook approach fires on every relevant Shopify event: `products/update`, `products/create`, `inventory_levels/update`. The Zapier or Make workflow receives the payload, maps fields to the Webflow CMS collection schema, and calls the Webflow Data API to update or create the corresponding CMS item. The latency is good. The failure mode is silent: if a webhook delivery fails and Zapier doesn't retry, the Webflow CMS drifts. Add a monitoring step that alerts on failure.
+
+The scheduled sync approach pulls from the Shopify Admin API every 15 minutes, compares against what's in the Webflow CMS, and patches differences. It's less real-time but more resilient — if a single run fails, the next one catches up. The implementation is more code (call Shopify API, diff against Webflow API, batch write changes) but it's auditable and testable. For most brands, 15-minute latency on price and inventory data is acceptable.
+
+What the sync should cover at minimum: product title, description, price, compare-at price, featured image, Shopify product URL (for the "buy now" link), and availability status. Stock count is optional depending on whether you surface it in the Webflow UI.
+
+What the sync should not try to do: manage the cart or initiate checkout. That always stays in Shopify. The Webflow CMS is a read-only mirror of product data, not a transactional layer.
+
+## Product pages on Webflow, cart on Shopify
+
+The Webflow product page is a CMS collection item. It gets its data from the sync — product name, description, images, price. Its primary job is to persuade. That means it can use Webflow's full design and interaction toolkit: scroll animations, comparison sections, embedded video, testimonials specific to that product, detailed specs, FAQ accordions. Shopify's product page template cannot do most of this without custom Liquid development.
+
+The CTA on the Webflow product page is a link, not a form. It points to the Shopify product page for that item — either directly to the Shopify cart with a pre-filled variant ID, or to the Shopify product page to let the customer select variants. Both approaches work; the pre-filled cart link gives a shorter path to checkout but requires variant ID mapping in the CMS.
+
+For variant selection, you have three options:
+
+**Option A — Link to Shopify product page for variant selection.** Simplest. The visitor lands on the Webflow product story page, gets convinced, clicks "buy now," lands on the Shopify product page to pick size/color/quantity, then proceeds to checkout. Two-step process, one CMS field to maintain (the Shopify product page URL).
+
+**Option B — Shopify Buy Button embed on the Webflow page.** Shopify's Buy Button SDK renders a variant selector and "add to cart" widget that you can embed on any page via a script tag. The cart flyout and checkout are entirely Shopify-hosted. The widget is limited in styling but it's functional and keeps the purchase flow on one page. This is the fastest integration path.
+
+**Option C — Custom JavaScript calling the Storefront API.** For brands that need full design control over the variant selector and cart experience, the Shopify Storefront API lets you build a completely custom UI. Cart state lives in Shopify's session. The implementation is heavier — a few hundred lines of JS — but the result looks native to the Webflow design. Worth it for flagship product pages.
+
+Most hybrid implementations I've seen start with option A (fastest to ship), move to option B once they confirm the pattern works, and consider option C only for hero product pages where conversion matters most.
+
+## SEO across the boundary
+
+The hybrid creates three SEO risks that need active management. Ignore any of them and you'll pay for it in rankings.
+
+**Duplicate content.** Webflow's product pages and Shopify's product pages describe the same products. If they share body copy — which they will, unless you deliberately write separate content for each — Google sees two nearly identical pages on (potentially) two separate domains or subfolders. The solution is canonical tags. Webflow product pages should include a `<link rel="canonical">` pointing to the Webflow URL. Shopify product pages should include a `<link rel="canonical">` pointing to the Webflow URL if the Webflow page is the primary SEO surface, or to the Shopify URL if Shopify is. Be consistent. Pick one and stick to it. Webflow as the canonical is usually right if the Webflow page has the richer content and you want the SEO credit to land there.
+
+For a detailed walkthrough of canonical tag configuration in Webflow, the [sitemap, robots, and canonical guide](/blog/webflow-sitemap-robots-canonical) covers the implementation specifics.
+
+<Callout type="warning">
+The most common SEO mistake in hybrid setups: the Shopify product pages end up indexed because Shopify's default robots.txt doesn't block them and no canonical tag points away from them. You end up with two indexed versions of every product — one on Webflow, one on Shopify — competing against each other. Google's crawler doesn't pick the one you intended. Always audit Shopify's indexation after launch with a Search Console coverage report filtered to the Shopify domain or subfolder.
+</Callout>
+
+**Internal linking across the boundary.** A Webflow blog post about skincare ingredients that mentions a specific product should link to the Webflow product page, not the Shopify page. A Webflow collection page listing products should link to Webflow product pages. The Webflow product page is the one you want ranked. The Shopify product page is the one you want people to buy from. Internal linking should flow through the Webflow side, with the Shopify side reserved for transactional traffic.
+
+**Crawl budget on the Shopify side.** If you're running the subfolder architecture via reverse proxy, Googlebot may crawl `/shop/` pages and discover the Shopify-side product URLs. Use `robots.txt` on the Shopify side to disallow crawling of product pages you're canonicalizing to Webflow. This is one of those configurations that's easy to overlook and expensive to fix retroactively.
+
+## Analytics and attribution
+
+The hybrid creates an attribution gap. A visitor lands on a Webflow product page from a Google search, reads the full story, clicks "buy now," and completes checkout in Shopify. By default, Google Analytics 4 on the Webflow side sees a session that ends at the outbound link. GA4 on the Shopify side sees a direct session or a session attributed to Shopify's referral. The actual conversion — organic search → product story page → purchase — appears nowhere in either property.
+
+Fixing this requires cross-domain tracking and consistent GA4 configuration on both sides.
+
+For a detailed walkthrough of setting up GA4 across domains and managing the Webflow analytics integration, the [Webflow analytics and GA4 setup guide](/blog/webflow-analytics-ga4-plausible) covers the implementation.
+
+The key steps specific to the hybrid:
+
+**Shared GA4 property.** Both the Webflow site and the Shopify store should send events to the same GA4 measurement ID. Webflow supports GA4 via its project settings or a custom embed. Shopify's Google & YouTube app handles GA4 natively.
+
+**Cross-domain measurement.** In GA4's data stream settings, add both domains (or both the root domain and the Shopify subdomain) to the "Configure your domains" list for cross-domain measurement. GA4 will carry session identity across the domain boundary in the `_gl` query parameter, preserving the original attribution source through checkout.
+
+**Shopify's checkout tracking.** Shopify Plus supports adding GA4 event tracking directly to checkout steps. For non-Plus plans, you can add scripts to the order status page (the "thank you" page) to fire GA4 purchase events. Make sure the `transaction_id` and revenue data are surfaced correctly — this is where the actual conversion value lives.
+
+**Webflow outbound link events.** Add an event listener in Webflow that fires a GA4 `click` event (or a custom `add_to_cart_intent` event) whenever a visitor clicks the "buy now" CTA on a Webflow product page. This gives you visibility into the handoff point even before you complete cross-domain setup.
+
+Without these steps, your Shopify reports will show a high percentage of direct traffic that is actually organic search traffic that entered through Webflow. Your marketing team will make wrong decisions about channel allocation. It's worth spending the day getting attribution right.
+
+## Maintenance cost over time
+
+The hybrid has ongoing maintenance costs that a single-platform setup doesn't. Being honest about them upfront means you build the right infrastructure from day one.
+
+**Sync monitoring.** The Shopify-to-Webflow sync needs someone watching it. A product's price changes in Shopify, the webhook fires, the Make scenario fails because the Webflow API rate limit was hit, and the Webflow product page shows the wrong price. Silent failures are the norm with event-driven sync. Build alerting in from the start — a Slack notification on failed Make scenarios covers most of it.
+
+**CMS schema evolution.** When Shopify gets new metafields or your team adds product attributes, the Webflow CMS schema needs updating to match. Plan for this to happen a few times per year.
+
+**Cross-platform QA after Shopify updates.** Shopify deploys platform updates regularly. Occasionally those updates affect how the Buy Button SDK renders, how checkout URLs are structured, or how the Storefront API behaves. After any significant Shopify update, do a manual QA pass on the handoff points — the "buy now" CTA, the cart embed, and the checkout flow.
+
+**Content updates in two places.** A product description change needs to land in Shopify (source of truth) and propagate to the Webflow CMS via the sync. If your team edits Webflow CMS directly for product content, the sync will overwrite those changes. Enforce the source-of-truth rule explicitly — in writing, in your editorial process.
+
+The total maintenance overhead for a well-built hybrid runs two to four hours per month for a mid-size catalog. That's reasonable if the architectural benefits are real. It's not if you're running 30 SKUs and could stay on one platform.
+
+The hybrid is a deliberate architectural choice with real tradeoffs. When the conditions are right — established SEO equity, content-driven acquisition, catalog depth that Webflow Ecommerce can't handle — it compounds over time as both the Webflow content engine and the Shopify commerce stack mature independently.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
