@@ -1,0 +1,153 @@
+---
+title: "Webflow Localization (Native) vs Weglot vs Linguana: Which to Pick"
+description: "A working-dev comparison of the three real ways to translate a Webflow site — cost, SEO, maintenance, and the gotchas."
+pubDate: 2026-06-24
+tags: ["localization", "i18n"]
+heroImage: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A multi-language Webflow site with locale switcher"
+cluster: "vs"
+faq:
+  - q: "Does Webflow's native Localization support SEO-friendly translated URLs?"
+    a: "Yes. Webflow Localization publishes translated pages at proper subfolder or subdomain URLs with hreflang tags. Google indexes them as independent pages per language — exactly what international SEO requires."
+  - q: "Is Weglot still worth it now that Webflow has native Localization?"
+    a: "Fewer situations than before. Native Webflow Localization handles most marketing-site cases. Weglot wins when you need rapid translation across many languages, glossary management, or a translator-friendly workflow the native tool lacks."
+  - q: "Does Linguana work differently from Weglot?"
+    a: "Yes. Linguana duplicates your CMS and statically renders translated content — so each language is its own rebuilt site behind the scenes. That's better for SEO and performance than Weglot's JS-injection model, but limited to CMS-heavy sites."
+  - q: "What's the cheapest way to translate a Webflow site?"
+    a: "Native Webflow Localization on Business plan — $14/mo per added locale. Weglot starts at $17/mo but scales up fast. Linguana's pricing is custom but typically $50–$200/mo depending on site size."
+  - q: "How long does it take to translate a 20-page Webflow site?"
+    a: "With machine translation only: 2–4 hours of setup. With human review (recommended): 2–3 weeks per language pair. Budget the human time; machine-only translations read obviously translated and hurt credibility."
+  - q: "Can I mix Webflow native Localization with Weglot?"
+    a: "Don't. Pick one. Running both creates URL conflicts, duplicate content signals to Google, and confused visitor routing. If you're switching tools, do a clean migration with redirects."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+If you need to add multiple languages to a Webflow site, you have three real options in 2026: Webflow's own native Localization feature, Weglot, or Linguana. The right answer depends on your site type, SEO requirements, translator workflow, and how long you plan to maintain the translations. This guide breaks down all three from the perspective of someone who has set them up on real client sites — not a comparison chart written from a product page.
+
+The short version: **native Webflow Localization for most marketing sites, Weglot for multi-language speed at scale, Linguana for CMS-heavy sites where performance and SEO matter more than anything else.** Everything below explains why and when those rules break down. If you already know what you need and want help implementing it, [reach out](/contact).
+
+## The three options in one table
+
+Before going deep on each tool, here is the comparison across the dimensions that actually matter when you're making the decision:
+
+| Feature | Webflow Native | Weglot | Linguana |
+|---|---|---|---|
+| Translation method | In-Designer editor + machine/manual | JS injection over live site | CMS duplication + static rebuild |
+| SEO-friendly URLs | Yes (`/fr/`, subdomain) | Yes (subfolder or subdomain) | Yes (per-locale static pages) |
+| hreflang tags | Automatic | Automatic | Automatic |
+| CMS content translation | Yes (collection items) | Yes (dynamic page text) | Yes (core differentiator) |
+| Translator workflow | Built-in panel + export | Dashboard + TM, glossaries | Dashboard + glossary |
+| Machine translation | Yes (DeepL/Google built in) | Yes (DeepL/Google) | Yes (DeepL) |
+| Performance impact | None (native publish) | Small JS overhead (~20ms) | None (static per locale) |
+| Pricing entry point | $14/mo per locale (Business plan) | ~$17/mo (2 languages, 10k words) | Custom (~$50–$200/mo) |
+
+Eight rows, and the columns already tell a story. Webflow Native and Linguana both avoid the JS overhead that Weglot introduces. Linguana's CMS duplication approach is the strongest technically, but it requires a CMS-heavy site to be worth the complexity. Weglot sits in the middle: fast to set up, works on any Webflow plan, but you're paying a tax in both dollars and page-weight as your word count and language count grow.
+
+## Webflow native Localization: what it includes
+
+Webflow's built-in Localization shipped in 2023 and has matured steadily since. It works entirely inside the Designer: you switch to a secondary locale and edit text, images, and styles inline. Translated content publishes as part of the same Webflow project, so there is no third-party script involved and no API calls at runtime.
+
+The locale routing options are subfolder (`yourdomain.com/fr/page`) or subdomain (`fr.yourdomain.com`). Both generate the correct hreflang tags automatically — Webflow writes them into the `<head>` at build time without you touching the embed code. For SEO, this is the cleanest possible implementation.
+
+CMS collections translate at the item level. You open a blog post, switch locale, and edit the translated fields. This is more work than Weglot's automated approach, but it produces higher-quality output because a human is reviewing the content explicitly rather than running it through machine translation with no checkpoint.
+
+What native Localization does not do well: it does not have a standalone translator portal where a non-Webflow user can log in and edit translations. Translators need Designer or Editor access, which is friction for agencies managing external teams. The workflow is Webflow-centric, and that is both its strength and its limit.
+
+Native Localization requires Business plan or above. For a site on a Core plan, you either upgrade or use a third-party tool. At $14/mo per locale added to the Business plan, the math is favorable for sites with one or two secondary languages.
+
+## Weglot: JS-injection translation
+
+Weglot works differently from the other two. It loads a JavaScript snippet on your Webflow site, intercepts the rendered HTML, detects text strings, translates them (machine first, then human-reviewed), and swaps them in before the user sees the page. From the visitor's perspective, the page appears in their language with a locale switcher available. The mechanism is a proxy layer, not a native rebuild.
+
+The advantage is speed. You can go from a monolingual Webflow site to three translated languages in an afternoon, even without touching Webflow's publishing pipeline. Weglot handles URL routing, hreflang injection, and the translator dashboard independently. It works on any Webflow hosting plan because it does not require Webflow's native Localization feature.
+
+Weglot's translator dashboard is genuinely well-designed. Translation Memory means repeated strings are only translated once. Glossary entries enforce consistent terminology — product names, brand terms — across all pages. Translators get a clean interface that does not require Webflow access at all. For an agency managing a team of professional translators, this is a real workflow advantage over native Localization.
+
+<Callout type="note">
+The JS-injection model creates a small but real SEO risk: Googlebot must execute JavaScript to see translated content. Weglot's subfolder routing does serve translated HTML for crawlers, but this relies on correct server-side rendering in their proxy. Rendering failures — even rare ones — mean Googlebot may index the default language on translated URLs until the next crawl. Native Webflow Localization and Linguana avoid this entirely because translated content exists as static HTML at build time.
+</Callout>
+
+The pricing model is Weglot's most significant downside. The entry tier ($17/mo) covers two languages and 10,000 translated words. A typical 20-page marketing site with a modest blog easily exceeds 10,000 words once you count headings, body copy, button labels, form placeholders, and CMS content. Once you cross that threshold, the next tier jumps to $50/mo or higher depending on word count and language count. Over two years, that stacks up faster than the comparison table makes obvious — which is why I cover this in the TCO section.
+
+## Linguana: a CMS-duplication approach
+
+Linguana takes the most technically ambitious approach of the three. Instead of injecting translations on top of your existing site or editing them inline in the Designer, Linguana duplicates your Webflow CMS into separate locale collections and triggers a full site rebuild for each language. The result is a separate set of statically rendered pages per language — each with its own URL, its own HTML, and no runtime overhead.
+
+This model has clear technical wins. There is no JS overhead at all. Google indexes each translated page as a native static file. CMS-heavy sites — blogs with 200+ posts, resource libraries, product catalogs — translate their full collection without per-item manual editing. Linguana automates the collection duplication and pushes machine translations into the new locale CMS items in bulk, then surfaces those items for human review.
+
+The limitation is structural: Linguana's approach only makes sense if your site actually uses the Webflow CMS extensively. A five-page marketing site with no CMS collections would not get meaningful value from Linguana's architecture; you would be paying for infrastructure built to solve a problem you don't have. For those sites, native Localization is simpler and cheaper.
+
+Linguana also requires more initial setup than Weglot. The integration hooks into your Webflow project's API, creates mirror collections, and manages the rebuild pipeline. First-time setup on a complex site can take a half-day. The payoff is ongoing efficiency: once established, adding a new blog post in English triggers an automated translation push to all connected locales, requiring only a review pass rather than manual translation from scratch.
+
+## SEO outcomes: indexable translated URLs
+
+All three tools produce URLs that Google can index independently. The mechanism differs, and those differences have downstream effects you should understand before committing.
+
+Webflow Native Localization: translated pages exist as static HTML files at their locale URLs, generated at Webflow publish time. Hreflang tags are written at build time. Googlebot encounters exactly what a human visitor would — no rendering requirement, no proxy. This is the cleanest crawl path.
+
+Weglot: uses a CDN-level proxy to serve translated HTML. The subfolder URL structure (`yourdomain.com/fr/`) is the recommended configuration. Weglot injects hreflang tags server-side so they appear in the HTML before the browser renders. In practice, Weglot's SEO implementation is good enough for most sites — the risk is low, not zero.
+
+Linguana: each locale is a rebuilt static site. Google indexes the full HTML with no runtime dependency. For sites where international SEO is a primary goal, Linguana's architecture is the most defensible.
+
+Beyond URL structure, content quality is what matters for rankings. Machine-translated pages index fine technically, but they rank poorly against human-translated competitors for competitive local queries. If you're targeting French SEO for a product with real French-language competition, machine-only translation will not get you to the first page. Budget the human review time regardless of which tool you use.
+
+For a thorough breakdown of what makes translated pages rank, [Webflow multi-language SEO](/blog/webflow-multi-language-seo) covers hreflang implementation, locale-specific keyword targeting, and the most common indexing failures I've seen. If you're earlier in your SEO setup, [Webflow SEO checklist for 2026](/blog/webflow-seo-checklist-2026) is the prerequisite.
+
+## Pricing and maintenance over 2 years
+
+Single-tool pricing comparisons miss the real cost because they don't account for word count growth, added locales, and developer maintenance hours. Here is a 24-month TCO comparison for a typical 20-page marketing site with one CMS blog (100+ posts), adding two secondary languages:
+
+| Cost component | Webflow Native | Weglot | Linguana |
+|---|---|---|---|
+| Tool cost (24 mo, 2 locales) | $672 ($14/mo × 2 × 24) | ~$1,440 ($60/mo avg, word count scales) | ~$2,400 (~$100/mo custom tier) |
+| Dev setup hours | 4–8 hrs | 2–4 hrs | 6–10 hrs |
+| Translator access friction | Medium (Designer access) | Low (own dashboard) | Low (own dashboard) |
+| CMS translation ongoing | Manual per item | Automated + review | Automated + review |
+| Maintenance overhead | Low | Low–medium (word count drift) | Low (pipeline handles new items) |
+
+Webflow Native wins on tool cost if you are already on Business plan — those $14/mo per locale charges are the only localization-specific line item. The real cost is translator access: translators need Webflow Editor or Designer access, which Webflow charges per seat on some plans, and non-technical translators will need onboarding.
+
+Weglot's cost scales with word count. A site that starts at $17/mo can reach $60–$100/mo within a year as the blog grows. By month 24, you have often paid more than native Localization would have cost after accounting for the Business plan upgrade. The tradeoff is translator experience: Weglot's dashboard is genuinely easier for non-developers.
+
+Linguana's custom pricing makes exact comparison harder, but for CMS-heavy sites where the automated rebuild pipeline saves dozens of hours of manual CMS work per year, the effective cost per hour saved often justifies the higher tool fee.
+
+## Translator workflow
+
+This section matters more than tool pricing on most real projects. The best localization tool is the one your translators will actually use without friction.
+
+Webflow Native requires translators to work inside Webflow. The translation panel is usable, but it asks translators to navigate a tool designed for designers and developers. Non-technical translators will need onboarding, and they will occasionally move things they shouldn't. On projects with an internal team comfortable in the Webflow Editor, this works fine. For external translation agencies, it is a non-starter.
+
+Weglot's translator dashboard is purpose-built for translation work. Translators see a list of strings with their machine-translated versions, can search by page, filter by status, and use glossary terms inline. Translation Memory surfaces previously approved strings so identical copy is not translated twice. This is what professional translators expect from a localization platform, and it shows.
+
+Linguana's review interface is similar in spirit to Weglot's: a dashboard showing CMS items in each locale with auto-translated content ready for review. Linguana's unit of work is a CMS collection item — a whole blog post, a whole product card — rather than individual strings. Translators review content in context, which typically produces better output than string-by-string editing.
+
+If your translators are external professionals and translator experience matters, Weglot or Linguana will produce faster turnaround and fewer errors than native Localization. If your translators are internal and already comfortable in Webflow, native Localization eliminates one external dependency from your stack.
+
+## Decision rules by site size
+
+Most of the time, the right choice maps directly to site type and scale. Here is how I make the call on client projects:
+
+**5–15 page marketing site, 1–2 secondary languages, translators are internal:** Native Webflow Localization. The tool cost is the lowest, the SEO implementation is cleanest, and the maintenance overhead is minimal. Upgrade to Business plan if needed.
+
+**Any size site, 3+ languages, external translation team, fast launch needed:** Weglot. The translator dashboard handles volume well, setup is faster than the alternatives, and three or more languages make the per-locale Business plan fee add up against Weglot's flat rate on higher tiers.
+
+**CMS-heavy site, 100+ collection items, ongoing content publishing in multiple languages:** Linguana. The automated CMS duplication pipeline pays for itself quickly when you are publishing new content regularly and need it translated without a manual per-item workflow.
+
+**Enterprise or SaaS site with strong international SEO goals:** Native Webflow Localization or Linguana, depending on CMS volume. Both produce static translated HTML, which is the cleanest crawl path for Google. The JS-injection approach of Weglot introduces a dependency that becomes harder to justify as traffic stakes increase.
+
+<Callout type="tip">
+The fastest way to make this decision: count your CMS items and your target languages. Under 50 CMS items and two languages — native Localization. Three or more languages with external translators — Weglot. Over 50 CMS items with ongoing publishing — Linguana. Everything else is a variation on these three patterns.
+</Callout>
+
+For international SEO beyond tool selection — including how to structure locale content, handle duplicate content across language variants, and build hreflang correctly — [Webflow international SEO](/blog/webflow-international-seo) covers the broader strategy.
+
+The most common mistake on localization projects is treating it as a one-time setup. Translations drift the moment you update English copy without updating the translated versions. Whatever tool you pick, build a review workflow that catches gaps before they reach visitors. A French visitor landing on a page that's half-French, half-English because the English was updated three months ago and the translation wasn't — that is a trust problem, not a tool problem.
+
+Pick the tool that matches your site type, budget the human review time honestly, and treat translation maintenance as part of your content operations from day one.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
