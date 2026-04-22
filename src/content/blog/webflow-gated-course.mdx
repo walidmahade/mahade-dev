@@ -1,0 +1,162 @@
+---
+title: "Building a Gated Course on Webflow: Full Setup"
+description: "The end-to-end build of a gated course on Webflow — CMS structure, access control, video hosting, progress tracking, and launch."
+pubDate: 2026-06-22
+tags: ["memberships", "course"]
+heroImage: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A gated online course hosted on Webflow with lesson modules"
+cluster: "cms-hub"
+faq:
+  - q: "Can Webflow host a course well enough to charge $500+ for it?"
+    a: "Yes. The design freedom and CMS flexibility make Webflow arguably better than Teachable or Thinkific for premium courses where brand matters. The tradeoff: you build features others get out of the box (progress tracking, quizzes)."
+  - q: "What's the minimum stack for a Webflow gated course?"
+    a: "Webflow Business + Memberstack or Webflow Memberships + a video host (Mux, Cloudflare Stream, Wistia) + Stripe Checkout or Memberstack billing. That's the floor. $150–$300/mo fully operational."
+  - q: "How do I track lesson progress in a Webflow course?"
+    a: "Three options: Memberstack's built-in progress API (easiest), a custom approach using Airtable or Supabase as the user-progress store (most flexible), or localStorage (works but resets on device switch). Pick by complexity tolerance."
+  - q: "Should I use Vimeo or Mux for course videos?"
+    a: "Mux or Cloudflare Stream, not Vimeo. Vimeo's 'Showcase' feature is clunky and expensive at scale. Mux gives you better player control, analytics, DRM if needed, and pay-per-view pricing that suits courses."
+  - q: "Can I drip course content over time on Webflow?"
+    a: "Yes, via Memberstack's drip-access feature or a custom CMS field that stores 'unlock date' per lesson and filters visible lessons with JS. Drip tends to hurt completion rates — use it only if there's a business reason (cohorts)."
+  - q: "How much does a gated course on Webflow cost to launch?"
+    a: "Development: $8,000–$20,000 for a 10-lesson course, depending on complexity (progress tracking, quizzes, certificates). Ongoing: $150–$400/mo for Webflow Business + Memberstack + Mux bandwidth. Plus Stripe fees."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Yes, you can build a webflow gated course that charges real money and feels premium — but only if you assemble the right stack and wire it correctly from the start. Webflow alone isn't a course platform. What it is: the best front-end layer available for a course where brand, design, and conversion matter more than off-the-shelf features. I've built this architecture several times now, and this is the complete picture — from CMS schema to launch checklist — so you're not reverse-engineering it mid-project.
+
+If you already know what you want to build and want a developer to do the wiring, [get in touch](/contact).
+
+## The stack you actually need
+
+Webflow provides the design canvas and the CMS. Everything else — authentication, video streaming, billing, progress state — is handled by specialist services. The mistake most people make is picking Webflow and assuming it handles the full course experience. It doesn't, and trying to force it to will produce something fragile.
+
+Here is the minimum viable stack for a production course:
+
+| Layer | Tool | Cost/mo |
+|---|---|---|
+| Design + CMS | Webflow Business | $39 |
+| Access control | Memberstack (Growth) or Webflow Memberships | $49–$79 |
+| Video hosting | Mux or Cloudflare Stream | $20–$100+ (bandwidth-based) |
+| Billing | Stripe (via Memberstack or direct Checkout) | 2.9% + $0.30/transaction |
+| Progress state | Memberstack API or Supabase (custom) | $0–$25 |
+
+That totals roughly $150–$250/mo before bandwidth spikes. Courseware SaaS platforms start at $119–$199/mo and still charge transaction fees — and they hand you a mediocre template you can't fully control. The custom Webflow stack is competitive on price and miles ahead on design freedom.
+
+The one genuine cost is build time. You're assembling features that Teachable pre-builds. A well-scoped 10-lesson course with progress tracking runs $8,000–$15,000 in developer time. If you need quizzes, certificates, or a cohort model, budget higher.
+
+## CMS: lessons, modules, students
+
+The CMS architecture is the decision you'll live with for years. Get it wrong and you're rebuilding collections at the worst possible moment — when the course is growing and you have real students.
+
+The structure I use on most builds:
+
+**Modules collection** — top-level groupings (Week 1, Module 2, etc.). Fields: title, order (number), description, thumbnail. This is the parent.
+
+**Lessons collection** — the individual pages. Fields: title, module (reference to Modules), order (number), video embed URL or video ID, transcript (rich text), resources (multi-reference to a Resources collection or a plain list field), locked (boolean), unlock date (date — used for drip). The lesson CMS item is the page the student actually lands on.
+
+**Resources collection** (optional but worth it) — downloadable PDFs, Figma files, code snippets. Reference these from Lessons rather than hardcoding download links per lesson. When a resource updates, you update it once.
+
+One rule: keep the Lessons collection flat. Don't nest it under Modules at the URL level (e.g., `/course/module-1/lesson-3`). Webflow's CMS routing doesn't support nested dynamic paths, so you'll need a workaround. Flat URLs (`/course/lessons/[slug]`) are simpler, and you can reconstruct hierarchy visually by filtering and sorting within the template.
+
+Lesson page template: video player embed at top, transcript toggle below, resources list at bottom, next/previous lesson navigation via CMS references. Keep the DOM lean — every element below the fold can be lazy-loaded.
+
+## Access control layer (Memberstack or Webflow Memberships)
+
+Access control is where most gated-course builds on Webflow stumble. You have two credible options in 2026, and they suit different project types.
+
+**Webflow Memberships** is the native option — built into Webflow's hosting, no third-party dependency. You gate pages by assigning them to a Member-only access group, handle signup/login via Webflow's built-in auth flow, and collect payment through Webflow's commerce layer. It's the least-friction setup if your requirements are simple: one membership tier, no drip, no progress tracking, no advanced plan management. The ceiling is low. You cannot query member state from JavaScript without undocumented hacks, which means progress tracking and conditional UI are hard. My full take is in the [Webflow Memberships review](/blog/webflow-memberships-review).
+
+**Memberstack** is what I reach for on anything beyond the simplest single-tier setup. It sits on top of Webflow without replacing any of the hosting or CMS. You gate content by adding `data-ms-content` attributes, manage plans and billing from the Memberstack dashboard, and access a JavaScript API that exposes member data — plan type, custom fields, login state — so you can drive conditional UI, progress state, and drip unlocks from the client. The API surface is mature and well-documented.
+
+The comparison between Memberstack and competing tools like Outseta is worth reading if you're undecided: [Memberstack vs Outseta vs Webflow Memberships](/blog/memberstack-vs-outseta-vs-webflow) goes deep on the tradeoffs. The short version for a course: Memberstack wins if you need progress tracking or multiple tiers; Webflow Memberships wins if you want zero external dependencies and don't need custom member state.
+
+Whichever you choose, map your membership tiers before you touch Webflow. A course with a free preview tier, a paid full-access tier, and a cohort tier needs three distinct access groups. Setting that up in Webflow or Memberstack after building the content structure takes twice as long as building it in from the start.
+
+## Video hosting: Mux, Cloudflare Stream, Wistia
+
+This is the piece most people underthink and later regret. The video host is not just storage — it is the delivery layer that determines load time, playback quality, the look of the player, DRM capability, and monthly cost at scale.
+
+| Host | $/mo (baseline) | Best for |
+|---|---|---|
+| Mux | Usage-based (~$0.015/min stored, $0.008/min delivered) | Developer-controlled player, analytics, DRM needs |
+| Cloudflare Stream | $5 flat + $1/1,000 min delivered | Low-volume courses, cost predictability |
+| Wistia | $24–$99+ | Marketing-focused courses, built-in CTAs, heatmaps |
+| Vimeo Pro | $20–$80 | Not recommended for courses (see below) |
+
+<Callout type="warning">
+Bandwidth costs are the bill that surprises people. A 90-minute course with 500 students watching the full thing each month is 45,000 delivery minutes. At Mux's rate that's roughly $360/mo in delivery alone — before storage. Budget for this before pricing your course. The math changes significantly if you offer lifetime access vs. a subscription with predictable monthly active users.
+</Callout>
+
+My default recommendation is Mux for any course where you want control. The player is a standard `<video>` element pointed at an HLS stream URL, which means you can style it with CSS and control it with a few lines of JavaScript. Mux's data dashboard gives you per-video analytics: watch time, rebuffering rate, quality of experience. If you need DRM (i.e., the course is high-value enough that people pirate it), Mux supports it natively.
+
+Cloudflare Stream is the right choice when the course is smaller, the budget is tight, or you want to avoid usage-based billing anxiety. The player is embedded via a simple iframe. Less control, but rock-solid delivery on Cloudflare's network and a predictable cost structure.
+
+Wistia is interesting for courses that double as marketing assets. Its player supports in-video CTAs, email capture gates, and engagement heatmaps — useful if you're using a free preview lesson to convert prospects. The pricing is harder to justify once you scale beyond their tier limits.
+
+Avoid Vimeo for courses. The FAQ covers why: Vimeo Showcase is clunky, the API control is limited, and the per-seat pricing at the tier that supports access restrictions gets expensive fast for the feature set you get.
+
+Embed pattern in Webflow: store the video ID or signed URL in the Lesson CMS field, pull it into the template via a CMS embed (`{{wf {&quot;path&quot;:&quot;video-id&quot;} }}` syntax), and initialize the player with a small code embed. For Mux, the initialization is a single `<mux-player>` web component line. For Cloudflare Stream, it's a one-line iframe.
+
+## Progress tracking pattern
+
+Progress tracking is the feature gap that separates a $200 course from a $2,000 one. Students who can see how far they've come finish courses at higher rates, and perceived completion value justifies premium pricing.
+
+<Callout type="tip">
+Before picking a progress tracking approach, ask: does the progress need to persist across devices? If yes, you need server-side storage (Memberstack's API or Supabase). If the student will mostly use one device and device-switching is edge case, localStorage is a defensible shortcut that saves meaningful development time.
+</Callout>
+
+**Option 1: Memberstack progress API (easiest).** Memberstack exposes custom JSON fields on the member object. Store lesson completion as an array of completed lesson slugs: `{ "completedLessons": ["lesson-1", "lesson-3", "lesson-4"] }`. On each lesson page, a small `<script>` block checks whether the current lesson slug is in that array, marks the UI complete if so, and adds it to the array on a "Mark complete" button click. Write the updated array back to Memberstack with a `PUT` to the member's custom fields endpoint. The progress bar on the course dashboard is a percentage: `completedLessons.length / totalLessons * 100`. This pattern works for courses up to about 50 lessons before the member field JSON gets unwieldy.
+
+**Option 2: Supabase (most flexible).** A Supabase `progress` table with columns: `member_id`, `lesson_slug`, `completed_at`. On lesson load, query `SELECT * FROM progress WHERE member_id = $memberId` and compare against the full lessons list. On "Mark complete," insert a row. The dashboard aggregation is a simple count query. This approach scales to any course size, supports multiple courses per student, and lets you query completion rates for analytics. The downside: you need a lightweight serverless function as the API layer between Webflow (client-only) and Supabase (server-side auth), typically a Cloudflare Worker or Netlify Edge Function.
+
+**Option 3: localStorage.** `localStorage.setItem('completedLessons', JSON.stringify([...completedList, currentSlug]))` — done in 20 lines of JavaScript. No backend, no external dependency, free. The limitations: resets when the student clears browser storage, doesn't sync across devices, can't be used for analytics or certificates. Use this only on low-stakes courses or free tiers where progress persistence isn't critical.
+
+For most paid courses I build, Option 1 is the right call. It keeps the stack tight, the implementation is a day of work, and Memberstack's custom fields are durable enough for courses up to a few dozen lessons. Scale beyond that and Option 2 earns its complexity.
+
+## Drip content over time
+
+Drip — releasing lessons on a schedule rather than all at once — is a feature many course creators ask for before thinking through whether they actually want it.
+
+The implementation in Webflow is straightforward. Add an `unlock_date` field (date type) to the Lessons collection. On the course index page and the lesson template, a client-side script compares `unlock_date` against today's date: lessons with a future date are rendered as locked (greyed out, click disabled, no video embed). The check is client-side, which means a determined student can circumvent it — if that matters, pair it with a Memberstack drip-access plan that denies the page entirely until the date.
+
+Memberstack's drip-access feature handles this at the plan level: you configure "unlock day X after subscription start" for each content group. This is the more secure approach because it's enforced server-side. The downside is it locks you into cohort-style thinking — every student who signs up on the same day unlocks the same content on the same schedule, not on a calendar date.
+
+A word on whether to drip at all: it usually hurts completion rates and increases support volume ("why can't I see lesson 5 yet?") without proportional benefit to the course creator unless your business model is specifically cohort-based and you need students moving through material together. If you're selling async self-paced access, unlock everything at enrollment and let students set their own pace.
+
+## Payments and renewals
+
+Stripe is the right payment infrastructure regardless of what membership tool you use. The question is how you connect it.
+
+**Memberstack billing** is the simplest path. You create Plans in Memberstack (one-time, monthly, annual), attach Stripe in the Memberstack settings, and Memberstack's hosted checkout handles the payment form, subscription creation, and webhook-driven access grants. Dunning (failed payment retries and member suspension) is automatic. This is the right setup for most courses — it handles the 90% case with minimal configuration.
+
+**Direct Stripe Checkout** makes sense when you need more control over the checkout experience — custom coupon logic, upsells, multi-item carts, or order bumps. You create a Stripe Payment Link or a Checkout Session from a serverless function, redirect the student there, and on success webhook, update their Memberstack plan or Webflow Memberships access. More moving parts, more control.
+
+For the billing architecture beyond Stripe's direct integration, the [Webflow + Stripe Checkout deep-dive](/blog/webflow-ecommerce-stripe) covers the session creation, webhook handling, and access-grant flow in detail.
+
+Two billing decisions to make before building: one-time vs. subscription, and refund policy. One-time purchases are simpler technically (no subscription lifecycle, no dunning) and easier for students to evaluate psychologically. Subscriptions make sense for ongoing content (new lessons added monthly) or when the access model is time-limited. Set both in Stripe before you write a line of code — changing payment models after students are enrolled is painful.
+
+## Launch checklist
+
+A course launch is more operationally complex than a standard website launch because there are live students the moment you go public. This is the sequence I run through before flipping the course to published.
+
+1. Confirm Webflow site is on Business plan and custom domain is fully propagated with HTTPS.
+2. Test Memberstack signup, login, logout, and password reset flow end-to-end in a private browser window.
+3. Make a test purchase through Stripe — real card, not test mode — and verify the membership plan upgrades correctly.
+4. Verify all lesson pages are gated: log out and attempt to access a paid lesson URL directly. You should hit the gate, not the content.
+5. Play every video from first frame to last in the production environment. Not in the Webflow Designer, not from a local preview — from the live URL, authenticated as a student.
+6. Test progress tracking: complete two lessons as a test student, navigate away, return, and confirm progress persisted correctly.
+7. Confirm drip unlock logic (if used): set the test student's enrollment date to 30 days ago and verify future-locked lessons are still locked and past-due lessons are visible.
+8. Send a test receipt email from Stripe and confirm it reaches an inbox (not spam) and contains the correct course access link.
+9. Run Lighthouse on the lesson template page. Target 80+ on mobile — video embeds will cost you performance points, so pre-optimize everything else (fonts, unused scripts, image sizes).
+10. Test on mobile (375px) and tablet (768px) — the video player, navigation, and progress UI all need to hold at smaller viewports. This is always where issues surface.
+
+---
+
+Building a premium webflow gated course is absolutely achievable — the stack is mature, the costs are reasonable, and the design ceiling is higher than any dedicated courseware platform will give you. The investment is in assembly time and in making the right architectural decisions upfront: CMS structure, access control tool, video host, and progress tracking approach. Get those four right before writing a line of JavaScript and the rest of the build is straightforward.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
