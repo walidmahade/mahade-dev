@@ -1,0 +1,229 @@
+---
+title: "Webflow Form Validation: Native + Custom Code Patterns"
+description: "What Webflow's native form validation covers, where it falls short, and the specific custom-code patterns that fill the gaps."
+pubDate: 2026-07-08
+tags: ["forms", "validation"]
+heroImage: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Webflow form showing inline validation errors"
+cluster: "integrations"
+faq:
+  - q: "Does Webflow have built-in form validation?"
+    a: "Yes, basic. Required fields, email format, phone number type. No regex patterns, no async validation, no conditional rules. For anything more than those basics you'll write custom code or use a third-party form builder."
+  - q: "How do I add regex validation to a Webflow form field?"
+    a: "Via the Custom Attributes panel on the input — add `pattern=\"^[0-9]{10}$\"` for a 10-digit phone, for example. Browser validates client-side on submit. Works in all modern browsers; no JS needed for simple patterns."
+  - q: "Can I show inline error messages on Webflow form fields?"
+    a: "Not with native Webflow. Native only shows a single generic error message after failed submit. For inline per-field errors you need Custom Code — a 30-line JS file handles the whole site's forms."
+  - q: "Does Webflow validate emails server-side?"
+    a: "No. All validation is client-side. Bot traffic and bad actors can bypass HTML5 validation. Server-side means wiring submissions through Webflow Logic, a webhook to Cloudflare Workers, or HubSpot's form processing."
+  - q: "How do I prevent form spam on Webflow?"
+    a: "Three layers. (1) Webflow's built-in reCAPTCHA on Business plans. (2) A honeypot field (hidden from humans, filled by bots) — blocks 80% of bot traffic. (3) Rate-limit and validate server-side at your handler. Ship all three."
+  - q: "What's the difference between HTML5 validation and JS validation?"
+    a: "HTML5 validation is declarative and works without JS — faster to ship, consistent across browsers. JS validation is custom and interactive (show errors as user types). Use HTML5 for basics, JS for better UX."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow form validation out of the box covers the basics and stops there. Required fields, email format, and phone input type — that's the full list. Everything else — regex patterns, inline per-field errors, async checks, spam prevention, server-side verification — requires custom code. The gap is real and it matters, because a form that lets bad data through (or frustrates a real lead with a generic error message) is a broken form, whatever the designer looks like.
+
+This is the breakdown I give clients who want to ship [multi-step forms](/blog/webflow-multi-step-forms) or anything more sophisticated than a basic contact form. If you want me to handle the implementation, [book a call](/contact).
+
+## What Webflow validates by default
+
+When you publish a Webflow form, the platform applies HTML5 native validation. That means:
+
+- **Required fields.** Any input or textarea with the Required toggle on will block submission if empty. Webflow renders the `required` attribute on the element — browsers handle the rest.
+- **Email format.** An `input[type="email"]` field rejects anything that doesn't match the browser's email regex on submit.
+- **Phone input type.** `input[type="tel"]` shows a numeric keyboard on mobile but does not enforce a format — any string passes.
+- **A generic error state.** When validation fails, Webflow shows its built-in form error block (the red block you can style in the Designer). One message for all errors. No field-level feedback.
+
+That's it. The error message is customizable in the Designer, but it applies to the whole form, not to individual fields. A user who fills in nine fields correctly and makes a typo in the tenth gets told "please fill in all required fields" with no indication of which field is the problem.
+
+For a landing page with a two-field form — name and email — native validation is fine. For anything more complex, it's not.
+
+## Where native validation is thin
+
+| Capability | Native | Custom code |
+|---|---|---|
+| Required fields | Yes | Yes |
+| Email format check | Yes (basic) | Yes (stricter regex) |
+| Phone format enforcement | No | Yes (pattern attribute or JS) |
+| Postal / ZIP format | No | Yes |
+| Inline per-field error messages | No | Yes |
+| Error shown as user types | No | Yes |
+| Conditional required fields | No | Yes (JS) |
+| Async email / domain check | No | Yes (fetch to external API) |
+| Honeypot spam field | No | Yes |
+| Server-side validation | No | Yes (Logic / Workers / HubSpot) |
+| Custom error message per field | No | Yes |
+
+The table is not a criticism of Webflow — native HTML5 validation is genuinely useful and has zero JS overhead. But every project that goes beyond the leftmost column needs at least some custom code.
+
+## Pattern 1: regex patterns (phone, postal)
+
+The fastest way to add format validation to a Webflow input is the HTML5 `pattern` attribute. No JavaScript involved. You add it via the Custom Attributes panel in the Designer, and the browser enforces the regex on submit.
+
+```html
+<!-- 10-digit US phone number -->
+<input
+  type="tel"
+  name="phone"
+  pattern="^[0-9]{10}$"
+  title="10-digit phone number, digits only"
+  required
+/>
+
+<!-- US ZIP code (5 digits or ZIP+4) -->
+<input
+  type="text"
+  name="zip"
+  pattern="^\d{5}(-\d{4})?$"
+  title="ZIP code: 12345 or 12345-6789"
+  required
+/>
+
+<!-- Alphanumeric username (letters and numbers only, 3–20 chars) -->
+<input
+  type="text"
+  name="username"
+  pattern="^[a-zA-Z0-9]{3,20}$"
+  title="3–20 characters, letters and numbers only"
+  required
+/>
+```
+
+A few things to know about this approach:
+
+The `title` attribute is critical. When the browser rejects a `pattern`-invalid field, it shows the `title` value as the explanation. Without it, users see "please match the requested format" — which tells them nothing. Write a plain-English explanation of what format you expect.
+
+The browser's native popup for pattern errors is ugly and browser-dependent. If visual consistency matters (it usually does), you'll want the JS inline error approach in Pattern 3 below, but keep the `pattern` attribute as a fallback for non-JS environments.
+
+In Webflow, add these attributes via the Settings panel on the input element under Custom Attributes. Add `pattern` as the key and your regex as the value. The `title` attribute works the same way.
+
+## Pattern 2: async email/domain validation
+
+Client-side email format checks catch typos (`user@gmial.com`). They do not catch disposable email addresses, invalid domains, or addresses that will bounce. If lead quality matters — and on most B2B sites it does — you want async validation that fires after the user leaves the email field.
+
+The approach is a `blur` event listener that calls a validation API or your own serverless function.
+
+The request flow: user types an email and tabs away, your script fires a `fetch` to a validation endpoint, the endpoint checks the domain MX record (or uses a service like Mailcheck.js, Kickbox, or ZeroBounce), the response comes back, and you show an error or clear it.
+
+Wire it through Webflow Logic's webhook action or a Cloudflare Worker that proxies the external API call — this keeps your API key off the client. You're already routing submissions through an external handler if you're doing [HubSpot integration](/blog/webflow-hubspot-integration), and the same handler can do this check before the contact is created.
+
+One caveat: async validation adds latency. If the API takes 800ms to respond, the user may have already started typing in the next field. Fire the check on blur, not on every keystroke, and show a loading indicator on the email field so the user knows something is happening.
+
+## Pattern 3: inline error messages with JS
+
+This is the pattern that has the biggest visible UX impact. Instead of a single red block at the bottom of the form that says "please check your fields," each field shows its own error message directly below it — in red, right where the user's attention already is.
+
+The implementation is around 30 lines of vanilla JS. Add it to the page-level Custom Code embed (Settings panel, before-body-close section) or load it from a project-level script.
+
+```js
+document.addEventListener('DOMContentLoaded', () => {
+  const forms = document.querySelectorAll('[data-validate]');
+
+  forms.forEach(form => {
+    const inputs = form.querySelectorAll('input, textarea, select');
+
+    inputs.forEach(input => {
+      // Show error on blur
+      input.addEventListener('blur', () => validateField(input));
+      // Clear error on input
+      input.addEventListener('input', () => clearError(input));
+    });
+
+    form.addEventListener('submit', e => {
+      let valid = true;
+      inputs.forEach(input => {
+        if (!validateField(input)) valid = false;
+      });
+      if (!valid) e.preventDefault();
+    });
+  });
+
+  function validateField(input) {
+    const error = input.parentElement.querySelector('[data-error]');
+    if (!error) return true;
+
+    if (!input.validity.valid) {
+      const msg =
+        input.dataset.errorMsg ||
+        input.validationMessage ||
+        'Please check this field.';
+      error.textContent = msg;
+      error.hidden = false;
+      input.setAttribute('aria-invalid', 'true');
+      return false;
+    }
+
+    clearError(input);
+    return true;
+  }
+
+  function clearError(input) {
+    const error = input.parentElement.querySelector('[data-error]');
+    if (error) {
+      error.textContent = '';
+      error.hidden = true;
+    }
+    input.removeAttribute('aria-invalid');
+  }
+});
+```
+
+In Webflow, add a `data-validate` attribute to each form you want this to apply to. For each input, add a Text element beneath it, give it the `data-error` custom attribute, set it to hidden by default, and style it in red. Add a `data-error-msg` attribute to any input where you want a custom message over the browser's default (`"Valid email required"` instead of `"Please include an '@' in the email address. 'user' is missing an '@'."`).
+
+This works alongside native HTML5 constraints — the `input.validity.valid` check respects `required`, `pattern`, `type`, `min`, `max`, and `maxlength` without you having to re-implement any of those checks.
+
+For [custom code basics and where to put scripts](/blog/webflow-custom-code), that post covers the page-level vs. project-level tradeoff in detail.
+
+## Pattern 4: honeypot and server-side checks
+
+Client-side validation, no matter how thorough, is cosmetic from a security standpoint. Anyone can open DevTools, disable your JS, and submit whatever they want. Spam bots do exactly this.
+
+<Callout type="warning">
+Never rely on client-side validation alone for anything that matters. If a form submission creates a lead, triggers an email, or writes to a database, validate again on the server before processing it. Client-side validation is UX. Server-side validation is security.
+</Callout>
+
+The practical anti-spam stack for most Webflow sites is three layers:
+
+**Honeypot field.** Add a text input to the form that is visually hidden via CSS (`position: absolute; left: -9999px; opacity: 0`). Real users never see it; spam bots fill every field they find. On the server side, reject any submission where the honeypot field is non-empty. Add `autocomplete="off"` and a label that reads something like "Leave this blank" to prevent browser autofill from accidentally triggering a false positive.
+
+In Webflow, use a Custom Embed for the honeypot input to avoid it appearing in the Designer preview. Set the Custom Attribute `tabindex="-1"` on the field so keyboard users skip it.
+
+**Webflow's reCAPTCHA.** Available on Business plans. Off by default, toggle on in Form Settings. It's invisible reCAPTCHA v3 — no checkbox, no puzzle, just a score that Webflow checks before accepting the submission. Enable it if you're on Business. If you're on a lower plan and can't access it, the honeypot above is your first line of defense.
+
+**Server-side validation.** Wire your form through Webflow Logic (built-in, limited) or a webhook to Cloudflare Workers / a backend of your choice. At the handler level: validate required fields again, check email format, check the honeypot, rate-limit by IP (one submission per minute from the same IP is a reasonable floor), and reject anything that looks like injection — a "name" field containing `<script>` or SQL keywords.
+
+For HubSpot-connected sites, [HubSpot's form processing](/blog/webflow-hubspot-integration) does some of this automatically — it has its own spam filtering and deduplication. But you still want the honeypot in place before submissions reach HubSpot, because every spam submission that gets through counts against your contact limit.
+
+## Accessibility considerations
+
+Form validation that is visually clear can still be completely inaccessible to screen reader users if you don't handle the ARIA attributes.
+
+<Callout type="tip">
+Add `aria-invalid="true"` to any input that fails validation, and remove it when the error is cleared. Pair every error message element with `aria-live="polite"` so screen readers announce the error without interrupting the user. These two attributes are the minimum for accessible form validation.
+</Callout>
+
+The JS snippet in Pattern 3 already sets and removes `aria-invalid` on each field. The remaining step is to add `aria-live="polite"` to each `[data-error]` element in your Webflow project — do this via Custom Attributes on the Text element you're using for error messages.
+
+A few more things worth knowing:
+
+**Error messages must be programmatically associated with their inputs.** The simplest approach is to give each error element an ID and reference it on the input via `aria-describedby`. Without this, a screen reader user hears "Email, invalid entry" but doesn't hear the explanation of why. With it, they hear "Email, invalid entry. Valid email address required."
+
+**Never use color alone.** The red text color is a visual convention that color-blind users can't rely on. Add an error icon (a simple `!` character in a styled `<span>` works) or prefix the message with "Error:". Webflow's class system makes this easy — create an error-state class on the input that changes the border color and adds the icon via a pseudo-element.
+
+**Focus management on submit.** If validation fails on form submit, programmatically move focus to the first invalid field. The inline error script above prevents submission but doesn't move focus — add `inputs.find(i => !i.validity.valid)?.focus()` after the `if (!valid) e.preventDefault()` line.
+
+**Field labels, not placeholders, for accessibility.** Placeholder text disappears when the user types, leaving them without a reference for what the field expects. Use visible labels. Webflow's native Label element is accessible by default when you connect it to the input via the "For" field in the Settings panel.
+
+These are not edge cases — they are the difference between a form that works for everyone and one that frustrates a measurable percentage of users who use assistive technology.
+
+---
+
+The short version: use HTML5 `pattern` and `required` for anything they cover (they cover more than you think), layer in the inline-error JS for per-field UX, add the honeypot and server-side validation for anything that creates real data, and handle the ARIA attributes from the start. Each of those four layers is independently shippable — you don't have to do all of them in one pass.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
