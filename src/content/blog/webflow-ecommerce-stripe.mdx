@@ -1,0 +1,194 @@
+---
+title: "Webflow Ecommerce + Stripe: The Full Setup Guide"
+description: "How to wire Stripe payments into Webflow Ecommerce and Webflow Logic — native integration, fallback methods, and the tax/invoicing setup."
+pubDate: 2026-05-29
+tags: ["ecommerce", "stripe"]
+heroImage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Stripe payment flow connected to a Webflow checkout"
+cluster: "integrations"
+faq:
+  - q: "How do I connect Stripe to Webflow Ecommerce?"
+    a: "In Webflow Ecom settings: Ecommerce > Checkout > connect Stripe account. One-click via Stripe Connect. Takes under 5 minutes. Apple Pay/Google Pay enable with an additional toggle once Stripe is connected."
+  - q: "Does Webflow support Stripe subscriptions?"
+    a: "Not natively. Webflow Ecom is one-time payments out of the box. For recurring billing, wire up Webflow Logic + Stripe webhooks, or front-end the subscription via Memberstack, Outseta, or a direct Stripe Checkout link."
+  - q: "Can I use Stripe Tax with Webflow?"
+    a: "Yes. Stripe Tax auto-calculates sales tax by jurisdiction and it flows into Webflow's checkout totals. Setup adds 1–2 hours to your build. Worth it if you ship to 3+ US states or internationally."
+  - q: "How do I handle Stripe webhooks on Webflow?"
+    a: "Two paths. Webflow Logic can receive and route webhooks for common events (payment_succeeded, invoice.paid) without code. For anything custom, deploy a Cloudflare Worker or AWS Lambda and point Stripe at it."
+  - q: "What's the Stripe fee on Webflow transactions in 2026?"
+    a: "Stripe's standard 2.9% + 30¢ per transaction in the US. Webflow does not add its own transaction fee on top of Stripe — unlike some platforms. That's a small but real win."
+  - q: "Can I customize Stripe receipts?"
+    a: "Yes, via Stripe's receipt template settings (logo, color, footer). The receipt content itself is partly locked by Stripe's tax/compliance requirements, but branding is fully yours."
+---
+
+import Figure from '@/components/blog/Figure.astro';
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The webflow stripe integration is one click to connect and a few hours to get right. Here is the exact setup sequence, the decisions that trip people up, and the pre-launch checklist I run on every Webflow Ecommerce project before it goes live.
+
+If you are building a store from scratch, read [Webflow Ecommerce in 2026](/blog/webflow-ecommerce-2026) first — it covers the product catalog, shipping, and fulfillment fundamentals. This guide picks up at the payment layer and goes deep. If you already know what you need and want someone to handle the build, [get in touch](/contact).
+
+## Native Stripe in Webflow Ecommerce
+
+Webflow's Ecommerce plans ship with Stripe as the default and only native payment processor. The connection is handled via Stripe Connect — you authorize Webflow to charge through your Stripe account, and Webflow manages the checkout session, order creation, and confirmation emails. You do not hand off your customer to Stripe's hosted page; the transaction happens inside Webflow's checkout flow while Stripe handles the money.
+
+To connect: open your Webflow project, go to **Ecommerce > Settings > Checkout**, and click **Connect with Stripe**. You will be redirected to Stripe's OAuth flow, authorize, and land back in Webflow with the connection active. Total time: under five minutes.
+
+Once connected, two additional toggles appear: Apple Pay and Google Pay. Enable both. These require no extra configuration from you — Stripe handles the domain verification automatically when you publish your site — and they meaningfully improve mobile conversion rates.
+
+A few things worth knowing before you go further:
+
+**No Webflow transaction fee.** Webflow does not add a platform fee on top of Stripe's processing fee. You pay Stripe's standard rate (2.9% + 30¢ in the US, lower with volume negotiation or Stripe's international tier pricing) and that is it. Shopify charges 0.5–2% on top of their payment processor unless you use Shopify Payments. That difference adds up fast at volume.
+
+**Payouts land in your Stripe account.** Webflow never touches your money directly. Stripe holds it, does the fraud screening, and transfers to your bank on your Stripe payout schedule. This is the right architecture — you own the Stripe account, all the data lives there, and switching platforms later does not mean losing your payment history.
+
+**Test mode works end-to-end.** Stripe's test cards (4242 4242 4242 4242 with any future expiry and any CVC) run through the full Webflow checkout without any special configuration. Orders appear in both your Webflow dashboard and your Stripe test mode dashboard. Always test before going live.
+
+## Stripe Checkout vs Payment Element
+
+When people talk about Stripe on Webflow, they usually mean the native Ecom integration above. But there is a second path: embedding Stripe's own UI components directly via custom code, bypassing Webflow's native checkout entirely.
+
+This matters when Webflow's built-in checkout does not fit your use case — single-product landing pages with a direct "pay now" button, digital-only products where you want a stripped-down payment flow, or situations where you need the Payment Element's more granular control over payment method display.
+
+| Use case | Webflow Native Checkout | Stripe Checkout / Payment Element |
+|---|---|---|
+| Physical product store, multi-SKU catalog | Best fit | Overkill |
+| Single digital product (course, template) | Works, heavier UI | Better fit |
+| Subscription / recurring billing | Not supported | Required |
+| Custom checkout UX (brand-critical pages) | Limited customization | Full control |
+| Apple Pay / Google Pay | One toggle, done | Requires manual setup |
+| Guest checkout without Webflow account | Native | Native |
+| Selling in multiple currencies | Limited | Strong |
+
+Stripe Checkout (Stripe's hosted page) is the fastest path when you need to go outside Webflow's native flow: generate a Checkout Session server-side (or via a Cloudflare Worker), redirect the user, and Stripe handles everything. The redirect model means you lose checkout UI customization, but it is zero-maintenance.
+
+Stripe's Payment Element is the embed option: a Stripe-hosted iframe that drops into your own page via a JS snippet. You control the surrounding layout; Stripe controls the sensitive payment fields. This is the right choice when you want a fully custom-feeling checkout but do not want to build card input from scratch.
+
+I covered the Webflow checkout experience and what you can and cannot customize in the [Webflow Ecommerce checkout guide](/blog/webflow-ecommerce-checkout) — worth reading if you are unsure which path to take.
+
+<Callout type="tip">
+If you are selling one or two products and want a clean "buy now" experience, a Stripe Payment Link is genuinely the fastest option: generate it in your Stripe dashboard, embed the button with Stripe's script tag, and you have a working payment flow in under 30 minutes. No backend required. For a catalog store with cart and inventory management, stick with Webflow's native checkout.
+</Callout>
+
+## Subscriptions and recurring billing
+
+This is the gap in Webflow Ecommerce that catches people off guard.
+
+<Callout type="warning">
+Webflow Ecommerce handles one-time payments only. There is no native subscription billing, no recurring charge scheduling, and no dunning management built into the platform. If your product is a membership, a SaaS tool, or anything sold on a monthly or annual basis, Webflow's checkout cannot manage that on its own.
+</Callout>
+
+You have three realistic paths for subscriptions on Webflow:
+
+**Memberstack or Outseta.** These platforms sit on top of Webflow and add gating, recurring billing, and member dashboards via script embeds and Webflow CMS integration. Memberstack handles the Stripe subscription creation and billing cycle; your Webflow site handles the design and content. Right path for membership sites, communities, and course platforms.
+
+**Webflow Logic + Stripe webhooks.** Logic can receive and route Stripe webhook events without a backend. For subscriptions specifically: Logic can listen for `customer.subscription.created`, `invoice.payment_succeeded`, and `customer.subscription.deleted` and trigger downstream actions — unlocking CMS content, sending confirmation emails, updating connected tools.
+
+**Direct Stripe Checkout with a subscription price ID.** The most minimal path: a Cloudflare Worker creates a Stripe Checkout session with `mode: 'subscription'` and a recurring price ID. The user completes checkout on Stripe's hosted page. You handle post-checkout state via webhooks. No membership layer, no Webflow Ecommerce layer.
+
+For a course product where content gating matters, Memberstack is worth the added cost. For a SaaS product where the Webflow site is purely marketing, go direct to Stripe.
+
+## Tax: Stripe Tax vs manual
+
+Sales tax is a compliance risk, not an afterthought. Stripe Tax solves most of it.
+
+**Stripe Tax** automatically calculates the correct rate for each transaction based on the customer's location and product type — US economic nexus, EU VAT, Australian GST. The calculated amount flows directly into Webflow's checkout total, so your customer sees the correct tax line without you maintaining a rate table.
+
+To enable it: Stripe Dashboard > Tax > turn on > set your origin address > configure product tax codes. Physical goods, digital products, and services each have separate codes that determine taxability by jurisdiction. Setup time is 1–2 hours for most stores.
+
+**Manual tax configuration** inside Webflow Ecommerce lets you define fixed rates by region. Fine for a single-jurisdiction store. Does not scale to multi-state US or any international exposure. Stripe Tax (0.5% per transaction, capped) is worth it for any store with real geographic spread.
+
+One thing before launch: check whether you have nexus in states where your customers are concentrated. Stripe Tax calculates; registration and filing are still on you or on TaxJar.
+
+## Webhooks via Webflow Logic
+
+Stripe fires webhook events every time something happens in your account: payment succeeds, refund issues, subscription renews, charge fails. For a Webflow store, the two events you care about most are `payment_intent.succeeded` (order paid) and `charge.refunded` (order refunded). If you are doing subscriptions via Stripe, add `customer.subscription.created` and `customer.subscription.deleted` to that list.
+
+**Webflow Logic** can receive webhook events directly. In your Logic workspace, create a trigger of type "Webhook received," copy the generated endpoint URL, and add it to your Stripe webhook endpoints in the Stripe dashboard. Specify the events you want to receive, and Logic will fire the flow every time Stripe sends a matching event.
+
+What you can do inside Logic after receiving the event: update a CMS item, send an email via a connected email provider, create a record in Airtable, post to Slack, or chain to another Logic flow. For common post-purchase workflows — confirmation emails with dynamic order details, tagging a contact in your CRM after purchase — Logic handles this without any custom code.
+
+For anything more complex, a Cloudflare Worker is the right tool. Workers run at the edge, are free for low-to-moderate traffic, and can handle the full Stripe webhook payload without timeout constraints. Here is a minimal handler that verifies the Stripe signature and processes a `payment_intent.succeeded` event:
+
+```js
+export default {
+  async fetch(request, env) {
+    const signature = request.headers.get('stripe-signature');
+    const body = await request.text();
+
+    let event;
+    try {
+      event = await verifyStripeWebhook(body, signature, env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+      return new Response(`Webhook verification failed: ${err.message}`, { status: 400 });
+    }
+
+    if (event.type === 'payment_intent.succeeded') {
+      const paymentIntent = event.data.object;
+      const orderId = paymentIntent.metadata.webflow_order_id;
+
+      await fetch(`https://api.webflow.com/v2/sites/${env.SITE_ID}/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${env.WEBFLOW_API_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: 'fulfilled' }),
+      });
+    }
+
+    return new Response(JSON.stringify({ received: true }), { status: 200 });
+  },
+};
+```
+
+Deploy this to Cloudflare Workers, add your `STRIPE_WEBHOOK_SECRET` and `WEBFLOW_API_TOKEN` as Worker secrets, and point Stripe at the Worker URL. Stripe will verify delivery and retry automatically on failure.
+
+The same pattern applies to any post-purchase action you want to automate: update a CRM record, add the customer to a mailing list, trigger a fulfillment API. I use a similar webhook-to-API pattern in HubSpot integrations — the architecture is nearly identical, which I covered in the [Webflow HubSpot integration guide](/blog/webflow-hubspot-integration).
+
+## Receipts and invoicing
+
+Stripe sends a receipt email automatically on every successful charge (Dashboard > Settings > Emails > Successful payments). Webflow also sends its own order confirmation. By default your customer gets two emails — decide which is the canonical receipt and disable the other.
+
+Customize the Stripe receipt under Dashboard > Settings > Branding: logo, brand color, footer text. The line items and amounts are fixed by compliance requirements, but the branding wrapper is yours.
+
+For B2B orders that need a formal PDF invoice, use Stripe Invoicing. Create invoices manually per order, or automate creation via the Stripe API when a Webflow order fires. The invoice includes your business details, line items, tax breakdown, and a pay-now link.
+
+If you are VAT-registered and selling to EU customers, your invoices have legal requirements around content. Stripe Invoicing is built to meet those requirements. Webflow's confirmation email is not. For any internationally-facing store with VAT obligations, Stripe Invoicing is non-negotiable.
+
+## Testing the flow
+
+Test mode in Stripe is fully functional and works end-to-end with Webflow Ecommerce. Use it — do not skip this because the checkout looked right in the designer.
+
+The test cards you need:
+
+- **4242 4242 4242 4242** — successful payment, any future expiry, any 3-digit CVC
+- **4000 0000 0000 0002** — card declined, for testing your declined state UI
+- **4000 0025 0000 3155** — triggers 3D Secure authentication flow
+
+Run all three before launch. Verify that your order confirmation email fires, that the Webflow order dashboard shows the order correctly, that the Stripe dashboard shows the charge in test mode, and that any Logic flows or webhook handlers trigger correctly.
+
+If you have Stripe Tax enabled, verify the tax calculation is appearing correctly at checkout for orders in different jurisdictions. Use a billing address in a state with no sales tax (Oregon, Montana, Delaware) and one in a high-tax state (California, New York) and confirm the checkout total reflects the difference.
+
+If you are using Apple Pay or Google Pay, test on a real iOS or Android device — these do not trigger in desktop browser developer tools or Webflow's designer preview. You need a published site (even on a staging domain) accessed on mobile hardware.
+
+Webhook testing: use Stripe's CLI (`stripe trigger payment_intent.succeeded`) to fire test events at your webhook endpoint without processing a real payment. Confirm your handler receives and processes the event correctly before you are debugging it with real customer orders.
+
+## Going live: the pre-launch checklist
+
+Run this before you flip to live mode and take real money.
+
+1. **Switch Stripe to live mode.** Webflow's Ecommerce settings show which mode you are in. The connection you made in test mode needs to be re-authorized in live mode — go to Ecommerce > Settings > Checkout and reconnect Stripe with your live account credentials.
+2. **Verify your Stripe payout schedule.** Default is daily payouts with a 2-day lag. Confirm your bank account is verified in Stripe and payouts are enabled. Your first payout after going live takes 7–14 days; subsequent payouts follow the schedule.
+3. **Enable Apple Pay and Google Pay on the live connection.** These toggles reset when you switch to live mode. Re-enable both.
+4. **Confirm Stripe Tax is configured on your live Stripe account.** Tax settings in Stripe are per-account, not per-mode. If you set up Tax in test mode, verify the same configuration exists on your live account — origin address, product tax codes, active registration in your nexus states.
+5. **Set up live webhook endpoints.** Test mode webhooks do not fire in live mode. Go to Stripe Dashboard > Webhooks > Add endpoint, add your Logic endpoint URL or Cloudflare Worker URL, and select the same events you configured for test mode.
+6. **Test one real transaction.** Use your own card, buy the cheapest product in your store, and verify the full flow: charge appears in live Stripe dashboard, order appears in Webflow, confirmation email arrives, webhook fires. Then issue a refund to yourself.
+7. **Set your store currency and check pricing.** If you set prices while Stripe was in test mode, verify every product's price is correct in your live store. Currency conversion and regional pricing do not happen automatically.
+8. **Verify your terms and refund policy are linked at checkout.** Stripe and most card networks require merchants to have a clearly accessible refund policy at the point of purchase. Webflow's checkout has a dedicated field for this link — fill it in.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
