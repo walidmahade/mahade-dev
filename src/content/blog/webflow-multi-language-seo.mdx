@@ -1,0 +1,177 @@
+---
+title: "Multi-Language Webflow Sites: SEO and hreflang Setup"
+description: "The exact hreflang, sitemap, and URL setup for a multi-language Webflow site so Google indexes the right version per country."
+pubDate: 2026-06-26
+tags: ["seo", "i18n", "hreflang"]
+heroImage: "https://images.unsplash.com/photo-1517817748493-49ec54a32465?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "hreflang tags in a Webflow site head code"
+cluster: "seo-hub"
+faq:
+  - q: "Does Webflow auto-generate hreflang tags?"
+    a: "Only for native Localization on Business+. Other setups (Weglot, Linguana, manual duplicates) require you to add hreflang via Page Settings or global Head Code. Google will not infer translations — tag them explicitly."
+  - q: "Should my translated Webflow pages use subfolders or subdomains?"
+    a: "Subfolders (example.com/de/). Subdomains (de.example.com) split domain authority. ccTLDs (example.de) work but cost 10x in setup and SEO rebuild. Subfolders win for 90% of cases."
+  - q: "How do I add hreflang tags to a Webflow CMS template?"
+    a: "In the Collection template's Page Settings > Custom Head Code, add hreflang link tags with CMS-bound language and URL fields. Each language version needs reciprocal tags pointing to all other versions including itself."
+  - q: "What's the difference between hreflang and canonical tags?"
+    a: "Canonical says 'this is the authoritative URL for this content'. hreflang says 'here are this content's versions in other languages'. A translated page has its own canonical (self-referential) plus hreflang tags to siblings."
+  - q: "How do I submit a multi-language sitemap?"
+    a: "Webflow auto-generates one sitemap.xml per published locale. Submit each to Google Search Console as a separate property (e.g., example.com, example.com/de/). Cross-language entries appear in the main sitemap as hreflang annotations."
+  - q: "What's the #1 hreflang mistake?"
+    a: "Non-reciprocal tags. If the English page tags the German version but the German page doesn't tag the English version back, Google ignores the relationship. Both pages must list all versions including themselves."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Getting **webflow hreflang** right is the difference between Google showing German visitors your English page and showing them the actual German page they were looking for. The technical setup is not complicated — but it is unforgiving. Miss one reciprocal tag, pick the wrong URL structure, or skip the Search Console property setup, and your international traffic lands wherever Google guesses it should.
+
+This is the exact setup I use on multi-language Webflow projects: URL strategy first, then the tag implementation for both static pages and CMS templates, then the sitemap and Search Console work that completes the picture. If you haven't decided yet whether to use Webflow's native Localization or a third-party tool like Weglot, read my [Webflow Localization vs Weglot comparison](/blog/webflow-localization-vs-weglot) first — that decision determines which parts of this guide apply to you. If you want the broader SEO foundation before going international, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) is the right starting point. For implementation help, [get in touch](/contact).
+
+## URL strategy: subfolder vs subdomain vs ccTLD
+
+The URL structure you pick for language variants sets the SEO baseline you'll be working within for the life of the site. It's worth getting right before you build anything.
+
+| Strategy | Pros | Cons | Best for |
+|---|---|---|---|
+| Subfolders (`example.com/de/`) | Consolidates domain authority, easiest to set up in Webflow, hreflang is straightforward | All languages live under one domain — a penalty affects all | 90% of projects |
+| Subdomains (`de.example.com`) | Separate crawl control per language, some argue cleaner for very large sites | Splits link equity, requires configuring a separate Webflow project or custom hosting | Enterprise with dedicated SEO teams |
+| ccTLDs (`example.de`) | Strongest geographic signal to Google | Separate domains = separate authority to build from zero, 10x setup cost | Global brands with serious budget and existing brand recognition per market |
+
+Subfolders win for almost every Webflow project I've worked on. The domain authority you've built stays consolidated, the Webflow publishing setup is simpler, and hreflang implementation is cleaner because all your URLs live on the same domain. The subdomain argument ("cleaner crawl separation") is mostly theoretical at the project sizes that land on Webflow in the first place.
+
+If you're building with Webflow native Localization, the subfolder structure is what you get by default — Webflow appends `/de/`, `/fr/`, etc. to the primary domain automatically. For third-party tools or manual duplicates, you set this up yourself in DNS and hosting.
+
+For a deeper look at the international SEO implications of each approach before you commit, [Webflow international SEO](/blog/webflow-international-seo) covers the tradeoffs with Google's documentation behind them.
+
+## hreflang tags: where Webflow supports them
+
+Webflow's hreflang support depends entirely on what plan and tooling you're using.
+
+**Native Webflow Localization (Business and Enterprise plans):** Webflow generates hreflang tags automatically when you publish locale-specific pages. The tags are injected into the `<head>` at publish time and reference the correct subfolder URLs. This is the only scenario where you don't have to manage hreflang by hand.
+
+**Weglot or Linguana:** These tools handle translation but do not auto-inject hreflang. You need to add them manually via Page Settings or a global Head Code embed. Weglot's documentation shows a global script injection approach — it works but you give up granular per-page control.
+
+**Manual duplicate pages or CMS collections:** No automation at all. Every translated page needs hreflang tags written by hand or bound from CMS fields. This is where most problems happen and where the rest of this guide focuses.
+
+The fundamental rule: if Webflow didn't generate the hreflang tag, Google doesn't know it exists. The platform will not infer language relationships from URL patterns or content similarity. You have to declare every relationship explicitly, in both directions.
+
+## hreflang on static pages
+
+For pages that aren't CMS-driven — your homepage, about page, services page — you add hreflang in the Page Settings custom head code for each language version of that page.
+
+Each page needs to list itself and every other language variant. If you have English and German, the English page gets two tags; so does the German page. If you add French later, every page gets three tags.
+
+Here is what the head code looks like for the English version of a homepage with English and German variants:
+
+```html
+<link rel="alternate" hreflang="en" href="https://example.com/" />
+<link rel="alternate" hreflang="de" href="https://example.com/de/" />
+<link rel="alternate" hreflang="x-default" href="https://example.com/" />
+```
+
+And the matching head code for the German version:
+
+```html
+<link rel="alternate" hreflang="en" href="https://example.com/" />
+<link rel="alternate" hreflang="de" href="https://example.com/de/" />
+<link rel="alternate" hreflang="x-default" href="https://example.com/" />
+```
+
+A few things to notice. The tags are identical on both pages — they point to both versions regardless of which page they're on. The `x-default` tag tells Google which version to serve when no language match is found; point it at your primary-language version. Every URL must be absolute, not relative. And `hreflang="en"` specifies language only — if you want to target English speakers in the UK specifically, use `hreflang="en-GB"` with the ISO region code appended.
+
+In Webflow, paste this into Designer → Pages panel → the relevant page → Page Settings → Custom Code → Inside `<head>` tag. Do this for every static page, in every language version of that page. It is tedious. It is not optional.
+
+## hreflang on CMS templates
+
+CMS templates are where hreflang gets complicated in Webflow, because the tags need to be dynamic — bound to CMS fields rather than hardcoded — or you'd need to update head code every time you add a post.
+
+The approach I use: add a plain text field to each language's Collection for the equivalent URL in every other language. So the German blog post collection has an `English URL` field; the English collection has a `German URL` field. Then bind those fields in the collection template's head code.
+
+Here is the static template version you'd adapt (Webflow lets you insert field values into Page Settings Custom Head Code using the `+` field binding button):
+
+```html
+<link rel="alternate" hreflang="en"
+  href="[CMS: English URL]" />
+<link rel="alternate" hreflang="de"
+  href="[CMS: German URL]" />
+<link rel="alternate" hreflang="x-default"
+  href="[CMS: English URL]" />
+```
+
+Where `[CMS: English URL]` and `[CMS: German URL]` are the field binding placeholders replaced with actual CMS field values at publish time.
+
+This approach requires discipline in your content workflow: every time you publish a new post in one language, you need to fill in the URL of its translated counterpart in the other collection, and vice versa. If you leave it blank, that post publishes without hreflang. Build a checklist into your editorial process.
+
+One Webflow-specific caveat: CMS field bindings in Page Settings Custom Head Code work but are finicky in the Designer — you won't see a live preview of the resolved values. Publish to staging and inspect the source to verify the tags are rendering correctly before going live.
+
+## Sitemap structure for multi-language
+
+Webflow auto-generates a sitemap.xml for each published locale when you use native Localization. You get a sitemap for `example.com/` and a separate one for `example.com/de/` — each listing the pages in that locale.
+
+For the full picture on how Webflow's sitemap generation works and where it falls short, [Webflow sitemap, robots, and canonical tags](/blog/webflow-sitemap-robots-canonical) covers the mechanics in detail.
+
+For multi-language specifically, the sitemap question is about Search Console submission, not the file itself. Submit each locale's sitemap as a separate property. Don't rely on Google discovering language variants through sitemap crawling alone — the sitemap helps Google find pages, but hreflang tags are what establish language relationships.
+
+If you're managing manual duplicates outside native Localization, Webflow generates one sitemap that includes all your pages regardless of language — it won't annotate them with hreflang in the sitemap. In that case, the hreflang signal comes entirely from the tags in the page head, not the sitemap. This is fine — head tags are Google's preferred signal for hreflang anyway.
+
+One thing worth doing: in Webflow's SEO settings, check that your translated pages are set to "Indexed" and not accidentally excluded from the sitemap. It's easy to miss this when you're duplicating pages for a translation workflow and the default state carries over.
+
+## Canonical tags across languages
+
+Canonical and hreflang serve different purposes and work in parallel — confusing them is one of the more common mistakes I see on multi-language Webflow builds.
+
+The canonical tag (`<link rel="canonical" href="..." />`) declares which URL is the authoritative version of a piece of content. It's for handling duplicate content — for example, if your site can be reached via both `www` and non-`www`, the canonical tells Google which one to index.
+
+For translated pages, the rule is: **each translated page is its own canonical.** The German page canonicalizes to itself (`https://example.com/de/about/`), not to the English page. If the German page canonicalized to the English page, you'd be telling Google "this German content is a duplicate of the English content" — and Google would deindex the German page. That defeats the entire purpose.
+
+Webflow sets self-referencing canonicals by default when you publish pages normally. The issue arises when people copy pages to create translation variants and forget to update the canonical, or when a third-party localization tool sets an incorrect canonical. Always inspect the rendered source on a published language variant to confirm the canonical is self-referencing.
+
+The hreflang tags then sit alongside the self-referencing canonical, telling Google "this German page is authoritative for German, and here are its sibling versions in other languages."
+
+## Search Console setup per region
+
+Getting hreflang right in the code only solves half the problem. You also need to tell Google's Search Console which geographic markets each site version targets.
+
+<Callout type="tip">
+For subfolder setups, add each language subfolder as a separate property in Search Console: add `example.com` as a Domain property, then also add `https://example.com/de/` as a URL-prefix property. The subfolder property lets you set a geographic target independently of the root domain. Go to the subfolder property → Settings → International Targeting → Country, and select the target country.
+</Callout>
+
+For subdomain setups, each subdomain is already a separate property — add them individually and set geographic targeting on each.
+
+Submit the sitemap for each property. For the root domain, submit the root sitemap. For `example.com/de/`, submit the sitemap Webflow generates for that locale. Search Console will show you coverage data per-property, which makes it much easier to spot pages that aren't being indexed in a given market.
+
+One more thing: after you've completed the hreflang implementation and published, use Search Console's URL Inspection tool on both the English and German versions of a key page. The rendered HTML view will show you exactly what Google sees — including whether the hreflang tags are rendering with the correct URLs after Webflow publishes. This is faster than manually crawling and more reliable than trusting the Designer preview.
+
+For the broader Search Console and indexing strategy for a Webflow site, [Webflow international SEO](/blog/webflow-international-seo) covers the full property setup in the context of a live launch.
+
+## Common mistakes that tank international rankings
+
+The implementation errors I see most often on multi-language Webflow builds are consistent enough that it's worth listing them directly.
+
+<Callout type="warning">
+The single most damaging error: non-reciprocal hreflang. If your English page tags the German version but the German page doesn't tag the English version back, Google discards the entire relationship and treats both pages independently. Every version of every page must list all other versions — including itself. Always.
+</Callout>
+
+**Using relative URLs in hreflang tags.** The `href` attribute in a hreflang tag must be an absolute URL, including the protocol (`https://`). A relative path like `/de/about/` will be ignored.
+
+**Wrong language codes.** `hreflang="de"` targets German-language users globally. `hreflang="de-DE"` targets German-language users specifically in Germany. If you want to target German speakers in Austria, that's `hreflang="de-AT"`. Using the wrong ISO codes means the signal goes to the wrong audience, or nowhere.
+
+**Translated pages canonicalizing to the primary language version.** As covered above — each page must canonical to itself. A German page with a canonical pointing to the English equivalent will not rank in German search.
+
+**Publishing without verifying the rendered output.** Webflow's CMS field bindings in head code don't render in the Designer. You need to publish to staging and inspect the actual HTML source. I've had projects where the CMS binding was syntactically valid in the Designer but rendered blank in production because the field was named differently in the collection. Always check the source.
+
+**Forgetting `x-default`.** The `x-default` tag is your fallback for users who don't match any specific language target. Without it, Google has to guess what to serve users in markets you haven't explicitly targeted. Point it at your primary-language homepage.
+
+**Adding hreflang to one language but not the other.** If you add hreflang tags to the English pages of a new language pair but haven't finished adding them to the translated pages yet, the relationship is incomplete and Google ignores it. Build both sides before publishing.
+
+The pattern behind all of these mistakes is the same: hreflang is a handshake, not a broadcast. Every side of the relationship has to acknowledge it for Google to accept it.
+
+---
+
+Multi-language SEO in Webflow is solvable with a systematic approach: subfolders for URL structure, self-referencing canonicals on every translated page, complete and reciprocal hreflang tags on both static pages and CMS templates, separate Search Console properties per locale, and a content workflow that keeps the cross-language URL fields in your CMS up to date. The technical side is a one-time setup cost. The discipline is ongoing.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
