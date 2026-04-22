@@ -1,0 +1,144 @@
+---
+title: "Webflow File Uploads: What Actually Works"
+description: "File upload options for Webflow forms — native Uploadcare/Filestack integration, the file-size limits, and the three patterns that ship."
+pubDate: 2026-07-10
+tags: ["forms", "uploads"]
+heroImage: "https://images.unsplash.com/photo-1554224154-26032cdc0ca2?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A file upload widget on a Webflow form"
+cluster: "integrations"
+faq:
+  - q: "Does Webflow have native file upload in forms?"
+    a: "Yes, on Business plans and above. Native file upload handles up to 10MB per file and 100MB total per submission. Files save to the form submission and can be emailed to you or pushed to HubSpot via integration."
+  - q: "What's the biggest Webflow file upload limitation?"
+    a: "10MB per file. For video submissions, design deliverables, or medical/legal docs, 10MB is too low. You need Uploadcare, Filestack, or an S3-based upload for files above that ceiling."
+  - q: "How do I add Uploadcare to a Webflow form?"
+    a: "Replace the file input with the Uploadcare widget (a script + div). Files upload directly to Uploadcare's CDN; the widget returns a URL you store as a hidden field in the Webflow form. Setup takes ~30 minutes."
+  - q: "Is Uploadcare or Filestack better for Webflow?"
+    a: "Uploadcare for developer experience and global CDN. Filestack for deeper integrations (Box, Dropbox, Google Drive pickers) and enterprise features. For a simple 'upload a file to the form' use case, Uploadcare wins."
+  - q: "How do I handle file uploads over 100MB on Webflow?"
+    a: "Pre-signed S3 URLs. User requests upload → your backend (Cloudflare Worker, Lambda) returns an S3 URL → browser uploads directly to S3 → URL stored as a form field. Standard pattern, ~2 hours of backend work."
+  - q: "Are uploaded files secure on Webflow?"
+    a: "Webflow-native uploads: yes for basic use, files are CDN-served and not guessable. For sensitive files (medical, legal, financial), use Uploadcare or S3 with signed-URL delivery and expiry. Never store sensitive files in Webflow's native form attachments."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow file upload works — with the right pattern. The native form input handles most straightforward cases, Uploadcare covers the mid-range, and pre-signed S3 handles everything large or sensitive. Which one you need depends almost entirely on file size and whether the files require secure delivery.
+
+I've wired up file uploads on Webflow forms for intake flows, portfolio submission forms, client portals, and legal onboarding. The native option gets you 80% of the way there. The other 20% is where clients almost always underestimate the work. If you're building something that needs more than basic file attachment, [get in touch](/contact) and we can scope it properly.
+
+This post assumes you already have a Webflow form working. If you're still fighting validation or conditional fields, read [multi-step forms in Webflow](/blog/webflow-multi-step-forms) first — the patterns here build on that foundation.
+
+## Webflow's native upload limits
+
+Webflow added native file upload to forms on Business plans and above. It works exactly like you'd expect: add a file input element to your form in the Designer, and uploaded files attach to the form submission in your dashboard. You can configure notification emails to include the attachment, and the Webflow + HubSpot integration will push the file reference into the contact record.
+
+The constraints are real:
+
+- **10MB per file.** Not negotiable. There's no setting to raise it.
+- **100MB per submission total.** Across all file inputs on the form.
+- **No file type validation in the Designer.** You can add the `accept` attribute via custom attributes, but Webflow won't enforce it server-side — only client-side.
+- **Files are stored on Webflow's CDN** with a non-guessable URL but no expiry or access control. Anyone with the URL can download the file indefinitely.
+
+<Callout type="warning">
+The 10MB limit kills a lot of use cases: design deliverables (often 20–100MB), video uploads, medical or legal documents, CAD files, or any zip archive with real content. If your brief includes any of these, plan for an external upload provider from day one. Retrofitting it after launch costs significantly more than building it correctly upfront.
+</Callout>
+
+For contact forms, inquiry forms, and "upload your resume" fields where file sizes are predictably small, the native option is fine. For anything else, pick a pattern from the table below.
+
+| Approach | Max file size | Setup time | Cost/mo |
+|---|---|---|---|
+| Webflow native | 10MB/file, 100MB/submission | 5 min | Included in Business plan |
+| Uploadcare widget | 5GB/file (free tier: 500MB) | ~30 min | Free to ~$59 |
+| Filestack | 100MB/file on free tier; higher on paid | ~45 min | Free to ~$99 |
+| S3 pre-signed URLs | Unlimited (S3 limits) | ~2 hrs backend | ~$0.023/GB stored |
+
+## Pattern 1: Uploadcare widget
+
+Uploadcare is the cleanest third-party solution I've found for Webflow. The integration pattern is straightforward: you replace the native file input with the Uploadcare widget (loaded via their CDN script), the widget handles the upload directly to Uploadcare's infrastructure, and when the upload completes it populates a hidden field in your Webflow form with the file URL. When the user submits the form, the URL travels with the rest of the form data.
+
+The setup in Webflow:
+
+1. Add a custom code embed or use the page's `<head>` embed in Site Settings to load the Uploadcare script.
+2. In your form, add a hidden text field — this will hold the uploaded file URL.
+3. Add a div where the Uploadcare widget will mount.
+4. In a custom code block below the form (or in the page's `</body>` embed), initialize the widget and wire the `onUploadComplete` callback to set the hidden field value.
+
+The whole thing takes about 30 minutes if you've done it once. The tricky part is making sure the Uploadcare widget fires its callback before Webflow's form submit handler captures the field values. If you trigger submission immediately after selecting a file, the upload may still be in-flight. Add a loading state to the submit button until `onUploadComplete` fires.
+
+<Callout type="tip">
+Uploadcare vs Filestack for Webflow: pick Uploadcare. The developer experience is cleaner, the CDN is faster, and the free tier (500MB storage, 1GB bandwidth) is enough for most small sites. Filestack wins if you need source pickers — Box, Dropbox, Google Drive — because its picker UI handles those natively. For a straightforward "upload a file to the form" case, Uploadcare is the faster path.
+</Callout>
+
+Uploadcare also gives you image transformation URLs out of the box. If someone uploads a headshot and you want to store it in Webflow's CMS and display it at a specific size, you can append `-/resize/400x/` to the CDN URL and skip a separate image optimization step. For design-portfolio intake forms or client onboarding flows, this is useful.
+
+## Pattern 2: Filestack / Cloudinary
+
+Filestack's widget works on the same principle as Uploadcare — external upload, URL returned to a hidden field — but the integration surface is slightly larger. The picker supports direct uploads from Dropbox, Google Drive, Box, and Instagram alongside local file selection. If your use case needs those source pickers, Filestack is the right choice.
+
+Cloudinary is different in character. It's an image and video CDN with transformation capabilities, not primarily a form-upload tool. You can wire up Cloudinary's Upload Widget the same way (script on the page, hidden field for the URL, callback on completion), but Cloudinary's real value is post-upload: automatic format conversion, quality optimization, and responsive image delivery via URL parameters. For portfolio intake forms where clients submit raw image assets you'll later display in a CMS, Cloudinary earns its cost. For general file uploads, it's overkill.
+
+Both Filestack and Cloudinary require [custom code in Webflow](/blog/webflow-custom-code) — there are no native integrations. All three patterns (Uploadcare, Filestack, Cloudinary) live in the same custom code embed or `</body>` script block. The pattern is identical; the library and API key change.
+
+One practical note on Filestack: the free tier limits uploads to 100MB per file and 1,000 transforms per month. For production use on a client site that will see real volume, the $49/month Basic plan is the floor you need.
+
+## Pattern 3: S3 pre-signed URLs
+
+This is the right architecture for large files, sensitive files, or any case where you need real access control. The pattern:
+
+1. User selects a file on the client (the Webflow form page).
+2. The browser makes a request to your backend — a Cloudflare Worker, AWS Lambda, or a simple API endpoint — asking for an upload URL. The backend verifies any preconditions you need (authentication, file type, size limit) and returns a pre-signed S3 URL.
+3. The browser uploads directly to S3 using the pre-signed URL. The upload never touches your server.
+4. On completion, the S3 object key or URL is stored in a hidden field and submitted with the Webflow form.
+
+The backend work is genuinely lightweight — about two hours to set up a Cloudflare Worker that generates S3 pre-signed URLs and returns them to the browser. The AWS S3 side is 20 minutes of bucket configuration (CORS policy, IAM credentials, lifecycle rules if you want automatic expiry). The Webflow form side is the same hidden-field pattern as Uploadcare.
+
+What you get for that extra setup:
+
+- No file size ceiling (S3 multipart upload handles files up to 5TB)
+- Files never touch Webflow's servers
+- Signed URL delivery: files expire after a set time, so a URL from last year no longer works
+- IAM access controls: different users can have different download permissions
+- Full audit trail via S3 access logs or CloudTrail
+
+For medical forms, legal intake, financial document submission, or any case where the client's compliance team will eventually ask "who can access uploaded files," this is the only answer.
+
+## Handling large files (>100MB)
+
+Large-file uploads over 100MB need either Uploadcare's paid tier, S3 pre-signed URLs with multipart upload, or a purpose-built tool like Filestack's chunked upload. The browser-side complexity for multipart upload is real: you're splitting the file into chunks (typically 5–10MB each), uploading them in parallel, handling retries on individual chunks, and assembling them server-side. Uploadcare and Filestack handle all of that for you in their SDKs. S3 multipart is manageable but requires a bit more code.
+
+For video submission — demo reels, product walkthroughs, client feedback recordings — Uploadcare's adaptive chunked upload on their paid tiers works well. The alternative is accepting a Loom/Vimeo URL in a standard text field and skipping the file upload entirely. For most video use cases, this is actually the better answer: shorter forms, no upload progress UI to build, no storage costs.
+
+The practical ceiling where you should stop and reconsider the form approach entirely is around 1GB. Above that, dedicated file-transfer tooling (WeTransfer, a client portal, a shared Drive folder) is a better user experience than a form upload on a marketing site.
+
+## Storing file references in CMS or HubSpot
+
+Once a file URL lands in a Webflow form submission, you have a few options for where it goes next.
+
+**Webflow form dashboard.** The URL appears in the submission alongside other field values. Simple, requires no extra setup. Sufficient for low-volume intake where a human reviews every submission.
+
+**HubSpot via Webflow's native integration.** Map the hidden URL field to a HubSpot contact property. The URL shows up on the contact record. HubSpot won't preview the file, but the link is there and clickable. Useful for sales teams who need to access submitted documents from the CRM.
+
+**Zapier or Make to Webflow CMS.** If submitted files should appear in a CMS collection — a portfolio directory, a resource library — a Zap can catch the form submission, extract the URL, and create a CMS item. This is how I build client intake flows where submissions need to surface in an internal review dashboard built on Webflow's CMS.
+
+**Direct Webflow CMS API.** For higher volumes or more control, a Cloudflare Worker can catch the form webhook, write the CMS item directly via Webflow's API, and trigger downstream notifications. More moving parts, more reliable than Zapier for anything above a few dozen submissions per day.
+
+## Security considerations
+
+Native Webflow uploads store files on Webflow's CDN with unguessable but permanent URLs. This is fine for low-sensitivity material: resumes, portfolio samples, general inquiry attachments. It is not appropriate for anything that would be a problem if someone else accessed it — health records, legal documents, financial statements, personally identifiable information beyond a name and email.
+
+The security architecture for sensitive files is straightforward: S3 with pre-signed URL delivery and a short expiry (15 minutes, or as long as the user reasonably needs to download it). The Webflow form stores the S3 object key, not the public URL. When a legitimate user needs to access the file, a backend endpoint generates a fresh pre-signed URL on demand. The previous URL has already expired.
+
+For form validation patterns that catch bad input before anything gets uploaded, [Webflow form validation](/blog/webflow-form-validation) covers client-side and server-side approaches in detail — worth reading alongside this if you're building anything that handles user-submitted files.
+
+The other consideration is file type spoofing. A user can rename a `.exe` to `.pdf` and your `accept="application/pdf"` attribute won't stop them. Client-side validation is user-facing polish, not a security control. Any real file type enforcement needs to happen server-side — MIME type sniffing on the actual file bytes, not the filename extension. If you're processing uploaded files in any way (parsing, displaying, forwarding), validate the actual file type before touching the contents.
+
+---
+
+The right Webflow file upload pattern almost always comes down to two questions: how big are the files, and how sensitive are they? Under 10MB and low-sensitivity: native Webflow. Under 500MB and moderate-sensitivity: Uploadcare. Anything sensitive or large: S3 pre-signed URLs. Get those two answers before you write a single line of embed code.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
