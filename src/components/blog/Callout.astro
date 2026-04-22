@@ -1,0 +1,25 @@
+---
+interface Props {
+  type?: 'tip' | 'warning' | 'note';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+
+const styles: Record<string, string> = {
+  tip: 'border-brand bg-brand-soft',
+  warning: 'border-[color:var(--color-accent)] bg-paper-tint',
+  note: 'border-line bg-paper-tint',
+};
+
+const labels: Record<string, string> = {
+  tip: 'Tip',
+  warning: 'Heads up',
+  note: 'Note',
+};
+---
+<aside class={`my-8 rounded-lg border-l-4 p-5 ${styles[type]}`} role="note">
+  <p class="text-eyebrow text-ink mb-2">{title ?? labels[type]}</p>
+  <div class="text-body text-ink-muted [&>p]:m-0 [&>p+p]:mt-3">
+    <slot />
+  </div>
+</aside>

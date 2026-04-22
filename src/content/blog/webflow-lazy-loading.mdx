@@ -1,0 +1,164 @@
+---
+title: "Lazy Loading in Webflow: What Actually Works in 2026"
+description: "Webflow's built-in lazy loading, when it falls short, and how to extend it with fetchpriority, Intersection Observer, and above-the-fold rules."
+pubDate: 2026-04-29
+tags: ["performance", "lazy-loading"]
+heroImage: "https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A browser network waterfall showing lazy-loaded images"
+cluster: "perf-hub"
+faq:
+  - q: "Does Webflow lazy-load images by default?"
+    a: "Yes, for Image elements. Webflow adds loading='lazy' to all Image elements automatically. Background images (set via CSS) are not lazy-loaded — they wait for the CSS to parse before any loading begins, which is different behavior."
+  - q: "Should I disable lazy loading for above-the-fold images?"
+    a: "Yes, always. The hero image is your LCP element; lazy loading it adds 100–400ms to LCP. Set loading='eager' on the hero Image element (via Webflow's built-in setting) or use a Custom Code override."
+  - q: "How do I set fetchpriority on a Webflow image?"
+    a: "Webflow doesn't expose it in the Designer. Add an Embed block with a small script that finds your LCP image and sets fetchpriority='high' programmatically, OR set it via a Custom Attribute on the image if you're on a Business plan or above."
+  - q: "Can I lazy-load iframes in Webflow?"
+    a: "Yes, via loading='lazy' on the iframe tag. For YouTube embeds, use a lite-youtube wrapper (there are many open-source options) rather than the raw iframe — it defers the YouTube JS which is 400kB+."
+  - q: "Does lazy loading hurt SEO?"
+    a: "Not if implemented right. Google's crawler understands loading='lazy' and correctly indexes lazy-loaded content. Where it hurts: if JavaScript controls the lazy loading instead of the native attribute, crawlers may miss content."
+  - q: "When should I turn off lazy loading entirely?"
+    a: "On a single-page landing page where everything fits above the fold on desktop, OR on infinite-scroll content where you need to guarantee visible content has loaded before triggering next-page fetch. Otherwise, leave lazy loading on."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow lazy loading images by default is a good thing. The platform adds `loading="lazy"` to every Image element automatically, and for most below-the-fold images that is exactly right. Where Webflow falls short is at the edges: above-the-fold images that should never be lazy-loaded, third-party embeds that block the main thread, and custom components where the browser has no idea what to defer. If your [Core Web Vitals](/blog/webflow-core-web-vitals) are struggling or your site just feels slow on mobile, there is a good chance the loading strategy is the first thing worth auditing. This post covers what the defaults get right, where they go wrong, and how to fix both without leaving the Webflow ecosystem. [Get in touch](/contact) if you want me to audit your specific setup.
+
+## How Webflow lazy-loads (the default)
+
+When Webflow publishes your site, it injects `loading="lazy"` onto every `<img>` tag that comes from a Webflow Image element. That is the native browser lazy-loading attribute, available in all modern browsers. It tells the browser: don't start fetching this image until it's within a certain threshold of the viewport — typically 1,200px on a fast connection, closer to 2,500px on a slow one.
+
+This is the right default for most images. A blog post with ten images in the body doesn't need all ten fetched immediately. The browser fetches the first two or three visible ones, then queues the rest as the user scrolls. Bandwidth saved, page load faster.
+
+What Webflow does not lazy-load: background images set via CSS. A `background-image` in a style rule has different loading behavior entirely — it's requested only after the CSS is parsed and the element is determined to be visible, which can actually make it arrive later than a properly lazy-loaded `<img>` would. If you're using a large background image in a section (common for hero sections with a parallax background), that image is not under Webflow's lazy-loading control at all. It follows CSS loading rules.
+
+The practical implication: use Webflow Image elements for content images, not background images, whenever the image is meaningful to the page. Reserve CSS background images for decorative elements where content equivalence and performance nuance don't matter.
+
+## The above-the-fold mistake (LCP hit)
+
+Here is the most common lazy-loading mistake I see on Webflow sites: the hero image — the single largest element on the page — has `loading="lazy"` applied to it.
+
+Webflow applies lazy loading globally. It doesn't know which image is above the fold and which isn't. The hero image that lands in the viewport immediately when the page loads? Lazy-loaded. The browser sees `loading="lazy"` and deprioritizes the fetch. The image arrives late. Your LCP (Largest Contentful Paint) tanks.
+
+<Callout type="warning">
+Lazy loading your hero image is one of the easiest ways to add 100–400ms to your LCP for no gain whatsoever. The image is immediately visible — there's nothing to defer. Lazy loading only saves bandwidth on images the user might never scroll to; it costs time on images the user sees immediately.
+</Callout>
+
+The fix is straightforward. In the Webflow Designer, select your hero Image element, open the Settings panel, and set the loading attribute to "Eager." Webflow exposes this as a toggle as of the 2025 Designer update. On older projects, you can override it with a Custom Attribute: `loading` = `eager`.
+
+Do this for every image that is visible on initial viewport load: hero images, above-the-fold logos, the first product image in a showcase. Everything else can stay lazy.
+
+A note on background images used as heroes: if your hero is a `div` with a CSS background image rather than a Webflow Image element, the lazy/eager toggle doesn't apply. You need to ensure that background image URL is referenced early in the document — ideally with a `<link rel="preload">` tag in the `<head>` via Custom Code — so the browser fetches it at high priority. I cover this in more detail in the [Webflow image optimization](/blog/webflow-image-optimization) post.
+
+## Fetchpriority: the 1-line LCP fix
+
+Beyond lazy vs. eager, the browser has a second signal it can use for resource scheduling: `fetchpriority`. This attribute, now widely supported, tells the browser whether to treat an image as high or low priority in the network queue — regardless of when it's discovered.
+
+The difference matters in practice. An image with `loading="eager"` will be fetched, but it competes in the normal network queue with stylesheets, scripts, and other resources. An image with `fetchpriority="high"` gets pushed to the front of that queue. For your LCP image, that distinction can be meaningful.
+
+Webflow doesn't expose `fetchpriority` in the Designer. The workaround depends on your plan.
+
+On a Business plan or above, you can add custom attributes directly to the image element in the Designer. Set the attribute `fetchpriority` with the value `high` on your hero image. Webflow will pass it through to the rendered HTML.
+
+On lower plans, or when you want to target an image you can't easily identify by class, an Embed block with a small inline script works:
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var hero = document.querySelector('.hero-image img');
+    if (hero) {
+      hero.setAttribute('fetchpriority', 'high');
+      hero.setAttribute('loading', 'eager');
+    }
+  });
+</script>
+```
+
+The selector `.hero-image img` should match whatever class you've given your hero image wrapper in Webflow. Keep the selector tight — you want it to match exactly one element.
+
+One caution: `fetchpriority="high"` on too many images defeats its own purpose. The browser's prioritization logic works because most resources are normal priority. Mark your one LCP image as high priority, and leave everything else alone.
+
+For a complete treatment of image format, compression, and sizing in Webflow — the other half of the image performance equation — see [Webflow image optimization](/blog/webflow-image-optimization).
+
+## Lazy-loading iframes, videos, and Lottie
+
+Images are not the only resource that benefits from deferred loading. Iframes, videos, and Lottie animations can all be expensive, and Webflow doesn't handle any of them automatically.
+
+**Iframes.** The native `loading="lazy"` attribute works on iframes just as it does on images. In a Webflow Embed block, write your iframe with that attribute set:
+
+```html
+<iframe
+  src="https://www.google.com/maps/embed?..."
+  width="600"
+  height="450"
+  loading="lazy"
+  referrerpolicy="no-referrer-when-downgrade"
+></iframe>
+```
+
+The browser will defer the iframe fetch until it's near the viewport. For maps, contact forms, and other utility embeds this is correct in almost every situation.
+
+<Callout type="tip">
+For YouTube and Vimeo video embeds, skip the raw iframe entirely. Use a lite-youtube or lite-vimeo wrapper instead. These open-source components render a static thumbnail and only load the player JS when the user clicks to play. A raw YouTube iframe loads 400kB+ of script on page init whether or not anyone watches the video — that weight hits your Time to Interactive even if you've added loading="lazy" on the iframe itself.
+</Callout>
+
+**Lottie animations.** Webflow's built-in Lottie integration loads the full animation JSON on page load regardless of where the animation sits on the page. For complex animations (anything over 100kB of JSON), this is a meaningful cost on mobile. The practical workaround: host the Lottie JSON yourself, and use an Embed block with a custom script that loads the animation only when the container enters the viewport. An Intersection Observer is the right tool for this — which brings me to the next section.
+
+## Intersection Observer for custom lazy behavior
+
+When the native `loading` attribute isn't enough — you're lazy-loading a Lottie, triggering a heavy React island, or deferring a third-party script — Intersection Observer is the correct primitive. It lets you specify a callback that fires when an element becomes visible, without polling.
+
+Here is the minimal pattern I use in Webflow Embed blocks for custom lazy-loading:
+
+```js
+(function () {
+  var target = document.querySelector('.lottie-wrapper');
+  if (!target) return;
+
+  var observer = new IntersectionObserver(
+    function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+        loadAnimation(entry.target);
+      });
+    },
+    { rootMargin: '200px' }
+  );
+
+  observer.observe(target);
+
+  function loadAnimation(el) {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.your-domain.com/animation.js';
+    document.body.appendChild(script);
+  }
+})();
+```
+
+The `rootMargin: '200px'` means the callback fires when the element is within 200px of the viewport — giving the browser a 200px head start on fetching before the user actually scrolls to it. You can tune this: smaller margins mean tighter resource scheduling, larger margins mean earlier load at the cost of some bandwidth savings.
+
+`obs.unobserve(entry.target)` is important. Without it, the callback fires every time the element enters the viewport — you don't want the animation loading twice.
+
+This same pattern applies to any expensive third-party embed: chat widgets, Typeform forms, Calendly schedules. If the user might not scroll to it on every visit, defer it. If it's interactive and the user needs to see it without clicking, set a generous `rootMargin`. If you are not sure how much these embeds affect your overall scores, the [Webflow site slow](/blog/webflow-site-slow) post has a diagnostic checklist for finding the culprits quickly.
+
+## When to turn lazy loading OFF
+
+Lazy loading is the right default, but there are scenarios where it actively hurts.
+
+**Single-page landing pages where everything is above the fold.** If your page is a long-scroll homepage and every section is designed to be read in sequence, most of your images load before the user reaches them anyway. Lazy loading adds overhead (the browser checks the threshold, schedules the fetch, resolves it) for resources that were going to be fetched imminently regardless. On pages with fewer than five images total, the benefit is negligible and the implementation complexity isn't worth it.
+
+**Infinite scroll / paginated content.** If you're triggering a new content fetch when the user reaches the bottom of a page, you need to know that the last visible image has loaded before firing the next-page request. Lazy loading introduces ambiguity about whether images in the current batch have resolved. In those implementations, control the loading yourself with Intersection Observer and manage your own state rather than relying on the browser's native lazy-loading scheduling.
+
+**Print stylesheets.** Native lazy loading means images that the user hasn't scrolled to will not be loaded when they print. If your page has print value — reports, case studies, product specs — either add `@media print` CSS that forces all images visible or disable lazy loading on the specific images that matter for print.
+
+Outside these cases, leave lazy loading on. The default is correct for the majority of Webflow projects, and the only interventions worth making are the ones above: eagerly load your LCP image, add `fetchpriority="high"` to that same image, wrap iframes and Lottie files in deferred loading patterns, and use Intersection Observer when the native attribute isn't available.
+
+Get those four things right and your image loading strategy is solid. Everything else is marginal.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

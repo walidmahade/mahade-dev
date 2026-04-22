@@ -1,0 +1,45 @@
+---
+import { site } from '@/data/site';
+
+interface Props {
+  variant?: 'hire' | 'consult' | 'subscribe';
+}
+const { variant = 'consult' } = Astro.props;
+
+const copy = {
+  hire: {
+    eyebrow: 'Work with me',
+    heading: 'Need a Webflow developer who actually ships?',
+    body: 'I build fast, SEO-friendly Webflow sites for founders and design agencies. Book a 30-minute call and tell me what you need.',
+    cta: 'Book a call',
+    href: site.links.cal,
+  },
+  consult: {
+    eyebrow: 'Getting stuck?',
+    heading: 'Want a second pair of eyes on this?',
+    body: "If you are hitting a wall on Webflow SEO, performance, or CMS structure, I can review your setup and tell you what to fix.",
+    cta: 'Get in touch',
+    href: '/contact',
+  },
+  subscribe: {
+    eyebrow: 'More like this',
+    heading: 'Building on Webflow?',
+    body: 'Read the rest of the blog for more guides on Webflow CMS, SEO, and performance.',
+    cta: 'See all posts',
+    href: '/blog',
+  },
+};
+
+const c = copy[variant];
+---
+<aside class="mt-12 rounded-lg border border-line bg-paper-tint p-6 md:p-8 not-prose">
+  <p class="text-eyebrow text-brand">{c.eyebrow}</p>
+  <h3 class="mt-2 text-heading-lg text-ink">{c.heading}</h3>
+  <p class="mt-3 text-body text-ink-muted">{c.body}</p>
+  <a
+    href={c.href}
+    class="mt-5 inline-flex items-center gap-2 rounded-md bg-ink px-5 py-2.5 text-paper font-medium hover:gap-3 transition-all"
+  >
+    {c.cta} →
+  </a>
+</aside>

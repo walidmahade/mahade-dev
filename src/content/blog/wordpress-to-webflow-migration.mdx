@@ -1,0 +1,239 @@
+---
+title: "When to Migrate from WordPress to Webflow (and When to Stay Put)"
+description: "A technical decision guide for migrating from WordPress to Webflow — pages, CMS, SEO, redirects, and the costs nobody warns you about."
+pubDate: 2026-05-08
+tags: ["migration", "wordpress", "webflow"]
+heroImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A WordPress site being redesigned for Webflow"
+cluster: "migration"
+faq:
+  - q: "Will I lose SEO rankings if I migrate from WordPress to Webflow?"
+    a: "Not if you do it right. The 3 things that determine whether rankings hold: a 1:1 301 redirect map, preserving title/meta/H1 structure, and keeping the same URL patterns where possible. Done right, rankings are stable within 2–4 weeks."
+  - q: "How long does a WordPress to Webflow migration take?"
+    a: "A 10-page site: 2–4 weeks. A 50-page site with a blog and custom post types: 6–10 weeks. A 200+ page content site: 12+ weeks. Most of the time is in CMS mapping and redirect planning, not the build itself."
+  - q: "Can Webflow import WordPress directly?"
+    a: "Partially. Webflow CMS can import CSV. You can export WordPress posts via WP All Export, map the CSV to Webflow Collection fields, and import. Images need a separate pass. It's a workable pipeline but not one-click."
+  - q: "What replaces Yoast SEO in Webflow?"
+    a: "Webflow's built-in SEO settings (title, meta, OG image per page, plus CMS-level dynamic fields) cover 90% of what Yoast does. For schema markup, use Webflow's Embed to drop JSON-LD. For sitemap, Webflow auto-generates."
+  - q: "Can I keep the WordPress blog and migrate just marketing pages?"
+    a: "Yes, and sometimes it's the right call. Use a subdomain split (blog.yoursite.com on WordPress, yoursite.com on Webflow). Downsides: two platforms to maintain, split analytics, and potential internal linking issues."
+  - q: "How much does a WordPress to Webflow migration cost?"
+    a: "A 50-page site runs $8,000–$18,000. The build itself is maybe 60% of that. The rest is redirect planning, CMS mapping, SEO verification, and post-launch monitoring."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+A wordpress to webflow migration is the right move for a specific kind of site. If you're a performance-obsessed marketing team tired of plugin debt, security patches, and developer dependencies for every small change, Webflow will feel like a different planet. If you're running a 400-post content operation with complex custom post types, WooCommerce, and five contributor logins, you may be trading one set of pain for a worse set.
+
+I've done this migration in both directions — moved clients off WordPress to Webflow and, in two cases, talked clients out of it. This guide is the full decision framework: when to move, what moves cleanly, what doesn't, how to protect your SEO, and what the real costs look like once you add up all the pieces most estimates don't mention.
+
+If you've already compared the platforms at a feature level, my [Webflow vs WordPress breakdown](/blog/webflow-vs-wordpress-2026) covers the feature parity question in depth. This guide assumes you're past that — you're in the decision zone and need to know whether your specific site is a good candidate. [Reach out](/contact) if you'd rather talk it through directly.
+
+## The honest answer: a 5-question decision flow
+
+Before we get into the mechanics, run through these five questions. They'll tell you whether migration makes sense faster than any feature comparison.
+
+**1. Is the primary complaint "WordPress is slow to update"?**
+
+If your pain is that making a layout change requires a developer, or that the site looks dated because you can't afford to rethink it in the current theme, that's a Webflow migration problem — and Webflow solves it. The Editor is genuinely usable by non-technical marketing teams. Page changes that would require a developer in WordPress can be made in Webflow's visual interface in minutes.
+
+**2. Does your site have more than 150 CMS-driven pages?**
+
+Webflow CMS has a hard limit of 10,000 items per collection and 30 collections per site on the Business plan, with a 2 MB per-item size cap. For most marketing sites with a blog, this is irrelevant. But if you're running a directory, a job board, a recipe site, or any content operation where the CMS is the product rather than a supplement, these limits will constrain you within 12–18 months.
+
+**3. Is WooCommerce central to your business?**
+
+Webflow has Ecommerce functionality, but it is not a WooCommerce replacement. Inventory management, tax calculation, shipping integrations, and the plugin ecosystem that WooCommerce has built over a decade do not have Webflow equivalents. If ecommerce is a major revenue channel, not a side feature, stay on WordPress or evaluate Shopify instead.
+
+**4. Do you rely on a specific WordPress plugin that has no equivalent?**
+
+This is the question most migration assessments skip. Write down your ten most-used plugins. Check whether each has a Webflow-native equivalent, an integration via Zapier or Make, or requires a custom code embed. For most marketing sites, the list reduces to: contact forms, analytics, SEO meta fields, and maybe a membership layer. All of those are solvable in Webflow. If your list includes specialized compliance plugins, LMS functionality, or complex multi-author workflows, the answer is more nuanced.
+
+**5. Do you have more than 50 blog posts with significant organic traffic?**
+
+This is not a reason to stay — it is a reason to plan very carefully. Fifty-plus posts with established rankings means the redirect map and SEO verification phase becomes the most expensive part of the project. Done right, rankings hold. Done wrong, six months of recovery. This question doesn't change the answer; it changes the budget.
+
+If you answered yes to questions 3 or 4 (WooCommerce-centric or plugin-dependent), the honest recommendation is to stay on WordPress or reassess what you're actually trying to solve. For everyone else, migration is likely the right call — and the rest of this guide covers how to do it well.
+
+## What carries over cleanly
+
+Not everything is a migration headache. These elements transfer with minimal friction:
+
+**Static page content.** Hero sections, about pages, service pages, team bios — any page that's primarily layout + text + images moves straightforwardly. You're rebuilding the design in Webflow from scratch, but the content itself (copy, images) drops in without structural changes.
+
+**Blog posts without complex shortcodes.** Posts that are straight prose with images move cleanly via CSV import. Export from WordPress using WP All Export, map fields to Webflow Collection fields, import. Images require a separate download-and-upload pass, but the text content moves in bulk.
+
+**URL structure.** If your WordPress site uses clean permalink slugs (`/blog/post-slug`, `/services/web-design`), those same slugs work identically in Webflow. You're not forced to change URL structure, which means your redirect map for these pages is trivially a 1:1 match.
+
+**Title tags and meta descriptions.** If they were set individually in Yoast, you can export them alongside post content and import them into Webflow's SEO fields. Nothing is lost — it's a data mapping exercise.
+
+**Analytics continuity.** Google Analytics and Google Tag Manager embed the same way in Webflow as in WordPress. Traffic data is uninterrupted. No migration work required.
+
+**Brand assets.** Logos, fonts, color systems, and icon sets move directly. If your WordPress site had a coherent design system (many don't), the Webflow rebuild inherits it. If it didn't, the migration is a natural reset point.
+
+## What you'll have to rebuild
+
+This is the part the "easy migration" marketing materials skip. These items are not transferable — they require deliberate rebuilding decisions.
+
+**Custom post type architecture.** WordPress allows arbitrary post types with arbitrary custom fields via Advanced Custom Fields or Custom Post Types UI. Webflow has Collections. The concepts are similar but the implementation differs. A "Team Member" CPT with 12 custom fields in WordPress needs to be re-architected as a Webflow Collection — field by field, relationship by relationship. This takes time and a developer who understands Webflow's CMS model.
+
+**Shortcode-heavy content.** If any blog posts or pages use shortcodes for tables, buttons, accordions, or layout blocks, those render as raw text after migration. Every shortcode instance is a manual fix. On a 200-post blog with shortcodes in 30% of posts, this is 60 posts to touch by hand.
+
+**Plugin-powered features.** ACF field groups, Gravity Forms with complex conditional logic, membership areas, anything powered by a plugin that has no Webflow-native equivalent — all of it needs to be rethought and rebuilt. I cover specific replacements in section 6.
+
+**Multisite setups.** If you're running WordPress Multisite (multiple sites under one WordPress installation), Webflow has no equivalent. Each site would need its own Webflow project. This is usually the right architecture anyway, but the migration complexity multiplies accordingly.
+
+**Media library organization.** WordPress organizes uploads by date in the file system. Webflow doesn't have a folder structure for the Asset Manager in the same way. If your content references a precise media library structure (programmatic image paths, for example), that structure breaks and needs to be rebuilt at the image reference level.
+
+**Theme customizations.** Custom child themes, template-specific PHP, functions.php modifications — all of that disappears. The Webflow equivalent is custom CSS and code embeds, but it's a different paradigm that requires a different kind of implementation work.
+
+## SEO risk: the redirect map that saves you
+
+The most common way a WordPress to Webflow migration destroys organic traffic is also the most preventable: no redirect map, or a redirect map full of holes.
+
+<Callout type="warning">
+The single biggest SEO failure mode in migrations is launching on Webflow before the 301 redirect map is fully implemented and tested. Every URL that returns a 404 instead of a 301 is a signal to Google that the page is gone. For pages with backlinks or established rankings, that signal compounds daily. If even 20% of your ranked URLs aren't redirected on launch day, expect a significant rankings drop that takes months to recover.
+</Callout>
+
+A redirect map is a spreadsheet with three columns: old URL, new URL, and redirect type (301 for permanent, which is almost always what you want). The process:
+
+1. Export every URL on the current site — use Screaming Frog or a similar crawler for accuracy.
+2. Filter to URLs that have organic traffic or backlinks. Google Search Console's page report + Ahrefs or Semrush gives you both signals.
+3. Map each URL to its equivalent on the new Webflow site. Same slug = trivial. Changed slug = explicit entry needed.
+4. Implement every redirect in Webflow's 301 Redirects panel before DNS is switched.
+5. After launch, re-crawl the old URLs and verify each returns a 301, not a 302, 404, or redirect chain.
+
+Here's what a representative redirect map looks like:
+
+| Old URL | New URL | Type |
+|---|---|---|
+| `/about-us/` | `/about` | 301 |
+| `/services/web-design/` | `/services/webflow-development` | 301 |
+| `/blog/2022/01/our-first-post/` | `/blog/our-first-post` | 301 |
+| `/contact-us/` | `/contact` | 301 |
+| `/team/` | `/about#team` | 301 |
+| `/wp-content/uploads/2023/logo.png` | `/images/logo.png` | 301 |
+| `/feed/` | `/blog` | 301 |
+
+Three things worth emphasizing on this table: the date-based WordPress permalink pattern (`/2022/01/`) needs an explicit entry if you're moving to slug-only URLs. WordPress system paths (`/wp-content/`, `/feed/`, `/wp-admin/`) should be redirected to sensible destinations rather than left to 404. And section anchor redirects (`/about#team`) work in Webflow's redirect panel — Webflow passes the fragment through.
+
+Beyond redirects, the other SEO elements to verify during migration are covered in detail in my [Webflow SEO checklist](/blog/webflow-seo-checklist-2026). The short version: keep title tag patterns identical, keep H1 text as close as possible, check canonical tags, and verify the XML sitemap includes all pages you want indexed. On the sitemap and robots side, see also [Webflow sitemap, robots, and canonical setup](/blog/webflow-sitemap-robots-canonical) — Webflow handles these automatically but there are edge cases worth knowing.
+
+## CMS migration: mapping custom post types to Webflow Collections
+
+This is where most mid-complexity migrations get slow. The WordPress data model and Webflow's CMS model are similar in concept — both have structured content types with custom fields — but they differ in enough specifics to require careful re-mapping rather than automatic translation.
+
+<Callout type="tip">
+Before you touch a single CSV export, draw the CMS map on paper first. List every WordPress CPT or taxonomy on the left. Write the Webflow Collection equivalent on the right. Draw lines for reference fields. This 30-minute exercise will surface every structural mismatch before you're knee-deep in a broken import.
+</Callout>
+
+The key conceptual differences:
+
+**WordPress taxonomies vs. Webflow reference fields.** In WordPress, a blog post can have multiple categories and tags — these are taxonomies. In Webflow, this is a multi-reference field pointing to a separate Collection (e.g., a "Categories" Collection). The relationship is equivalent, but the data model is different enough that you can't import taxonomy data directly — you need to create the Category Collection first, then import posts with the correct reference IDs.
+
+**ACF field types vs. Webflow field types.** Advanced Custom Fields supports file fields, Google Maps fields, repeater fields, and flexible content fields. Webflow has no repeater equivalent. A WordPress CPT with a repeater field (say, a "Team Member" with a repeating "Certifications" sub-field) needs to be restructured. Options: flatten the data (join certifications into a plain text field), or create a separate "Certifications" Collection with a reference back to Team Members.
+
+**Image fields.** WordPress ACF image fields store image IDs that resolve to attachment URLs. Webflow image fields store direct URLs. The import pipeline needs to download the images from WordPress, upload them to Webflow (or a CDN), and replace the field references with the new URLs. This is the most manual part of any CMS migration and the step most developers underestimate.
+
+**Content-only import via CSV.** Webflow's import accepts CSV with columns matching Collection field slugs. The import process is: export from WordPress (WP All Export handles field-level CSV export), clean the CSV (column names, field type formatting), create the Collection in Webflow with matching fields, import. On a 200-post blog with no custom fields beyond title/body/date/category, this is a half-day task. On a 100-item portfolio with 15 custom fields including image galleries and file downloads, budget a week.
+
+For a deeper dive on structuring Webflow Collections correctly for the long term — including reference fields, multi-reference, and CMS architecture decisions that are hard to undo — [Webflow CMS structure](/blog/webflow-cms-structure) has the full breakdown.
+
+## Plugin replacements: what Webflow covers natively and what it doesn't
+
+The WordPress plugin ecosystem is one of the most complete in web development. Webflow doesn't match it in breadth. Here's the honest replacement map for the most common plugins:
+
+| WordPress plugin | Webflow equivalent |
+|---|---|
+| Yoast SEO / Rank Math | Webflow built-in SEO settings (title, meta, OG, JSON-LD via Embed) |
+| Contact Form 7 / Gravity Forms | Webflow native forms (simple) or Logic (conditional logic) |
+| WooCommerce | Webflow Ecommerce (simple catalogs only — not a full WooCommerce replacement) |
+| MonsterInsights / GA plugin | Google Tag Manager code embed in `<head>` |
+| WP Rocket / LiteSpeed Cache | Not needed — Webflow hosts on Fastly CDN with automatic asset optimization |
+| Wordfence / security plugins | Not needed — Webflow is SaaS, no server access to secure |
+| WP All Export / Import | WP All Export for export; Webflow CMS import for import |
+| Memberstack / MemberPress | Memberstack or Outseta (both integrate with Webflow natively) |
+
+A few notes on this table:
+
+WP Rocket and caching plugins have no equivalent in Webflow because they solve a problem that doesn't exist on the platform. Webflow serves sites from a CDN (Fastly) with automatic static asset delivery. There's nothing to cache at the server layer because there is no server layer in the traditional sense.
+
+Gravity Forms with complex conditional logic (multi-step forms, file uploads, payment collection) has no complete Webflow-native equivalent. Webflow Logic handles basic conditional visibility and CRM routing. For anything more complex — especially multi-step forms with branching logic or file upload handling — you're looking at a third-party embed (Typeform, Tally, Paperform) or a custom build.
+
+WooCommerce is the most important caveat. Webflow Ecommerce covers product catalog, cart, checkout, and basic order management. It does not cover: product variants with inventory management at the variant level, complex tax rules by jurisdiction, third-party fulfillment integrations, subscription billing, wholesale pricing tiers, or the hundreds of WooCommerce extensions. If ecommerce is a serious part of your business, the replacement story is either Shopify (for a full commerce platform) or a Webflow + headless approach, not Webflow Ecommerce.
+
+Security plugins are genuinely irrelevant in Webflow. There's no PHP execution surface, no server file system to protect, and no WordPress admin to brute-force. You're on Webflow's infrastructure, not your own hosting. This removes an entire maintenance category — one that consumes a disproportionate amount of WordPress management time.
+
+## Timeline: what a 50-page migration actually takes
+
+The number I see quoted most often is "4–6 weeks" for a WordPress to Webflow migration. That number assumes good conditions — clean content, minimal custom post types, no ecommerce, and a client who delivers content on schedule. In practice, most migrations of meaningful complexity take longer, and the delays are always in the same three places: CMS mapping complexity, redirect planning, and client content delivery.
+
+Here's the honest timeline breakdown by project type:
+
+| Project type | Timeline | What drives the range |
+|---|---|---|
+| 5–10 static pages, no CMS | 2–3 weeks | Design complexity, responsiveness scope |
+| 10–20 pages + blog (50 posts) | 4–6 weeks | CMS import, redirect map, SEO verification |
+| 50-page site + blog (200 posts) | 8–12 weeks | CMS architecture, image migration, redirect volume |
+| 50 pages + custom CPTs (3–4 types) | 10–14 weeks | CPT re-architecture, multi-reference rebuild |
+| 200+ page content site | 14–20 weeks | Volume, QA at scale, redirect testing |
+| WordPress Multisite (5 sites) | 16–24 weeks | Each site is a separate migration project |
+
+The 50-page site with a blog and some custom post types — the most common mid-market case — runs 8–12 weeks when scoped honestly. The breakdown within that:
+
+- **Weeks 1–2:** Discovery, CMS mapping, redirect map planning. Nothing built yet.
+- **Weeks 3–5:** Webflow design and development — global styles, homepage, interior pages, CMS Collection templates.
+- **Weeks 6–8:** CMS content import — CSV export, field mapping, image migration, reference field setup.
+- **Weeks 8–10:** Redirect implementation, SEO field population, QA on all pages.
+- **Weeks 10–12:** Stakeholder review, revisions, pre-launch checklist, DNS cutover, post-launch monitoring.
+
+The most consistent source of timeline slip: content isn't delivered on schedule. Copy that needs updating, images that need sourcing, CMS data that the client needs to supply — every one of these is a dependency that's outside the developer's control. In the contract, build in explicit content delivery milestones with agreed-upon consequences for delay.
+
+## Cost breakdown
+
+A 50-page WordPress to Webflow migration costs $8,000–$18,000 from a qualified developer. Here's where that money goes:
+
+**Discovery and planning (15–20% of budget).** CMS mapping document, redirect map spreadsheet, SEO audit of existing rankings, content inventory. This work prevents the expensive surprises — you'd rather find out about the 40 shortcoded posts in week one than week eight.
+
+**Design (15–25% of budget).** If you're doing a visual redesign alongside the migration (most projects are), this is where design time lands. If you're doing a straight migration with no visual changes, this bucket shrinks significantly — but the development work gets easier.
+
+**Development (35–45% of budget).** Building pages in Webflow, configuring CMS Collections, implementing interactions, responsiveness across breakpoints, custom code where needed.
+
+**CMS content migration (10–20% of budget).** CSV exports, field mapping, image downloading and re-uploading, reference field wiring. On a small blog this is minimal. On a large content site this is a major cost driver.
+
+**SEO and redirect implementation (10–15% of budget).** The redirect map built in discovery gets implemented here, along with title tag verification, canonical setup, and sitemap QA.
+
+**Post-launch monitoring (5–10% of budget).** Two weeks of watching Search Console for coverage issues, checking redirect chains, verifying no ranking drops, fixing anything that slipped through QA.
+
+The numbers that change the total most: post count (more posts = more CMS migration time), custom post type complexity (more CPTs = more architecture work), and whether you're doing a redesign alongside the migration. A straight migration with no visual changes costs 30–40% less than a migration-plus-redesign.
+
+If you want to understand how to evaluate quotes and make sure you're comparing like-for-like scope, [hiring a Webflow developer](/blog/hire-webflow-developer-2026) covers how to read a proposal and spot the gaps between estimates.
+
+## The 2-week post-launch checklist
+
+The moment DNS switches is not the end of a migration — it's the start of a two-week verification window. Most SEO problems from migrations surface in the first 14 days. Here's the checklist I run on every project:
+
+1. **Verify all 301 redirects are live** — re-crawl the old URL list, confirm every entry returns a 301 (not 302, not 404, not a redirect chain of more than one hop).
+2. **Submit the new sitemap to Google Search Console** — go to Google Search Console, add the new Webflow sitemap URL (`/sitemap.xml`), and request indexing. This accelerates Google picking up the new site structure.
+3. **Check Google Search Console for coverage errors** — filter to "Excluded" and "Error" states in the Coverage report, investigate any unexpected 404s or noindex tags that shouldn't be there.
+4. **Verify canonical tags on all pages** — spot-check 10–15 pages across templates and confirm `rel=canonical` points to the correct URL. Especially check CMS template pages, which can generate duplicates if the canonical is misconfigured.
+5. **Check all forms are submitting and routing correctly** — test every form, confirm notifications are arriving at the right addresses, verify any CRM integrations are capturing leads.
+6. **Verify analytics are firing** — open Google Analytics in real-time view while clicking through the site. Confirm pageviews are registering. Check GA4 for any gaps in the data stream.
+7. **Test site speed on mobile** — run Lighthouse on the homepage and the highest-traffic templates. Flag anything under 70 on mobile performance.
+8. **Test all pages at 375px, 768px, and 1280px** — visual QA at mobile, tablet, and desktop. Fix any layout breaks before Google indexes the mobile-first version.
+9. **Check all internal links resolve** — crawl the new site and confirm no internal 404s. Pay special attention to links that pointed to old WordPress URL patterns.
+10. **Verify OG tags and social previews** — use the OpenGraph debugger (developers.facebook.com/tools/debug) and Twitter Card Validator to confirm social share previews are rendering correctly with the right images and titles.
+11. **Monitor Search Console impressions for 7 days** — a significant drop in impressions in the first week indicates pages aren't being indexed correctly, redirects are misconfigured, or the new sitemap hasn't been crawled yet.
+12. **Check for any PHP or WordPress-specific paths still being linked externally** — use Google Search Console's Links report to find any inbound links pointing to `/wp-admin/`, `/wp-content/`, or other WordPress-specific paths that need redirects.
+
+For a broader pre-launch verification process that goes beyond the migration-specific items, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) has the complete launch checklist I use on every project.
+
+---
+
+The takeaway from all of this: a WordPress to Webflow migration is straightforwardly the right call for most marketing-focused websites that are under 150 pages, don't depend on WooCommerce, and are primarily maintained by a non-technical team. The operational benefits — no plugin updates, no security patches, visual editing for marketers, better performance out of the box — compound significantly over two to three years. The migration itself is a real project with real costs, mostly in the planning work that keeps SEO intact. Budget for it honestly, plan the redirect map before you write a line of code, and the transition is smoother than most clients expect.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

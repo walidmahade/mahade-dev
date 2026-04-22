@@ -1,0 +1,232 @@
+---
+title: "Webflow Analytics in 2026: GA4, Plausible, or Something Else?"
+description: "A Webflow developer's take on GA4 vs Plausible vs the alternatives — tradeoffs, setup, cookie-consent, and what I recommend by use case."
+pubDate: 2026-05-14
+tags: ["integrations", "analytics"]
+heroImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "GA4 and Plausible dashboards shown side by side"
+cluster: "integrations"
+faq:
+  - q: "Should I use GA4 or Plausible on my Webflow site?"
+    a: "GA4 if you need free, deep, integrated-with-Google-Ads analytics and you're OK with cookie consent banners. Plausible if you want clean, GDPR-friendly, no-cookie analytics and you're OK paying $9/mo for a small site."
+  - q: "Is Plausible good enough to replace GA4?"
+    a: "For 80% of marketing sites, yes. Plausible shows you pageviews, sources, top pages, bounce rate, and custom events. What it lacks: audience segments, funnels beyond basic events, and free Google Ads integration."
+  - q: "Do I still need a cookie banner with Plausible?"
+    a: "No, typically. Plausible sets zero cookies and doesn't collect personal data. Most legal teams in the EU confirm you don't need consent for it. Confirm with your own legal, but this is the dominant interpretation."
+  - q: "How do I install GA4 on Webflow?"
+    a: "Project Settings > Custom Code > Head Code. Paste the GA4 tag (gtag.js). Publish. Confirm events flow in GA4's DebugView within 1–2 minutes."
+  - q: "Does Webflow have built-in analytics?"
+    a: "Webflow has basic visitor counts and form-submission tracking on paid plans, but it's not a replacement for GA4 or Plausible. Think of it as a fallback, not primary."
+  - q: "What about Fathom, Umami, and Simple Analytics?"
+    a: "All solid. Fathom is Plausible's main competitor — slightly more expensive, nicer UX. Umami is open-source/self-host-friendly. Simple Analytics is the simplest of the three and best for non-technical teams. Pick by budget and UX preference; they're all accurate."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow analytics is a solved problem, but most people solve it wrong. They either install GA4 without a consent banner (a GDPR landmine) or they reach for Plausible without knowing what it can't do. This post cuts through the noise: here's what each tool actually does, what it costs, what it breaks, and what I install for each project type.
+
+Before diving in: analytics is the lens through which everything else makes sense. Once you have good data, you'll want to act on it — fix slow pages, improve SEO, tighten up forms. If you haven't already checked the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026), start there. And if you want a second pair of eyes on your analytics setup or anything else on your Webflow build, [get in touch](/contact).
+
+## The one-line verdict per use case
+
+Here's where I land after setting up analytics on dozens of Webflow sites. The right tool is almost always obvious once you're honest about what you actually need.
+
+| Use case | Pick | Why |
+|---|---|---|
+| Running Google Ads campaigns | GA4 | Conversion data flows into Ads natively, no export hacks needed |
+| GDPR-sensitive EU audience, no ads | Plausible | No cookies, no consent banner, clean data |
+| Non-technical team managing the dashboard | Simple Analytics | Simplest UI of any option here |
+| Self-hosted or open-source requirement | Umami | Full control, no SaaS dependency |
+| Budget-sensitive but want more UX polish than Plausible | Fathom | $14/mo, cleaner dashboard, same privacy model |
+
+If you're still unsure after that table, default to Plausible. It covers the needs of most marketing sites, installs in sixty seconds, and won't surprise you with a GDPR complaint.
+
+## GA4: what it's actually good at, and its Webflow gotchas
+
+GA4 is the most powerful free analytics tool that exists. It has machine learning–assisted insights, full funnel reporting, deep audience segmentation, and first-class integration with Google Ads and Search Console. If paid search is part of your strategy, GA4 is not optional — everything else requires either expensive exports or manual stitching that breaks every quarter.
+
+The gotchas on Webflow specifically:
+
+**GA4 requires a cookie consent mechanism in the EU.** The Google tag sets `_ga` and related cookies that fall squarely under ePrivacy Directive requirements. Without a compliant consent banner that gates the tag, you are running an unconsented tracking setup in every jurisdiction with a GDPR equivalent. That list is long and growing.
+
+<Callout type="warning">
+Installing GA4 on a Webflow site without a cookie consent manager is a compliance risk, not a technicality. At minimum, use a Consent Mode v2 implementation that fires a "denied" signal before consent is collected. Without it, you're not just skating on thin legal ice — Google itself will deprecate the tag behavior for EU traffic.
+</Callout>
+
+**Enhanced measurement fires automatically in ways that can double-count.** GA4's enhanced measurement tracks scroll depth, outbound clicks, video engagement, and form interactions without any extra code. On a Webflow site where you're also wiring up custom events, it's easy to end up with duplicate event data. Audit the enhanced measurement settings under the Data Stream configuration and disable anything you're tracking manually.
+
+**Webflow's native form submissions are invisible to GA4 by default.** The Webflow form success state fires a JavaScript event that GA4 doesn't catch unless you wire it up. You'll need a custom event trigger — more on that in the event tracking section.
+
+**The learning curve is steep.** GA4's interface is not beginner-friendly. The reports have moved, metrics have renamed, and Looker Studio is now the practical path to any dashboard beyond the defaults. If your team needs to check analytics more than once a month, factor in the training time.
+
+## Plausible: the 1-KB replacement
+
+Plausible is a privacy-first analytics tool that ships a script under 1 KB — roughly one-fiftieth the size of the GA4 tag. It collects pageviews, referrers, top pages, devices, countries, and custom events without setting a single cookie or collecting personally identifiable information.
+
+The script weight matters on Webflow. A Webflow site's JavaScript payload is already non-trivial between the interactions runtime, custom embeds, and third-party tools. Adding a 45 KB GA4 tag moves the needle on Total Blocking Time. Plausible doesn't. If you've dug into why a Webflow site feels sluggish, [script weight is frequently the culprit](/blog/webflow-site-slow) — and analytics tags are the easiest thing to swap.
+
+What Plausible can't do:
+
+- **Audience segments.** No way to filter by "users who visited pricing and then bounced." GA4 has this natively.
+- **Google Ads integration.** Plausible conversions won't flow into a Google Ads campaign without manual workarounds that break attribution.
+- **Funnels at the user level.** Plausible shows goal completions, not user journeys across sessions.
+- **Free tier.** $9/month for up to 10,000 monthly pageviews, scaling up from there.
+
+For most Webflow sites I build — marketing sites, portfolio sites, SaaS landing pages without paid search — Plausible is the right answer. The dashboard is readable by any team member without training, the data is accurate (no sampling, no consent-gate filtering), and setup takes three minutes.
+
+## Fathom, Umami, Simple Analytics: where they fit
+
+The privacy-first analytics space has enough competition that Plausible isn't the only name worth knowing.
+
+| Tool | Starting price | Cookie-free? | Self-host? |
+|---|---|---|---|
+| Plausible | $9/mo | Yes | Yes (community edition) |
+| Fathom | $14/mo | Yes | No |
+| Umami | Free (self-host) | Yes | Yes (primary mode) |
+| Simple Analytics | $9/mo | Yes | No |
+
+**Fathom** is Plausible's closest competitor. The dashboard is arguably prettier and the customer support is better. The main reason I recommend Plausible over Fathom isn't technical — it's that Plausible's open-source community means faster iteration and more integrations. If you prefer to pay slightly more for a polished SaaS experience with no self-hosting path you'll never use, Fathom is a clean choice.
+
+**Umami** is the right pick when you have a hosting situation (a VPS, a Vercel deployment, a Docker environment) and need full data ownership. It's open-source, MIT-licensed, and the data never leaves your server. The tradeoff is operational overhead: you manage the database, the upgrades, and the uptime. For agencies handling enterprise clients with strict data residency requirements, this is the only option that satisfies legal without negotiation.
+
+**Simple Analytics** targets non-technical teams. The interface is the simplest of any tool here — pageviews, referrers, and goals, nothing else. If your client is a small business owner who needs to glance at traffic once a week and understand it without help, Simple Analytics is the honest recommendation. It has no learning curve because it has almost no features.
+
+All three are accurate, all three are GDPR-compliant by default, and all three install on Webflow in under five minutes with a single script tag.
+
+## Webflow's own Analytics (yes, it exists) — worth it?
+
+Webflow's built-in analytics, available on CMS and Business plans, shows session counts, unique visitor counts, page-level traffic, and form submission counts — accessible from the Webflow dashboard without any code.
+
+It is not a replacement for GA4 or Plausible. It exists to answer "is my site getting traffic?" and nothing more. No source/medium breakdown, no device split, no goal tracking, no event tracking, and no way to export the data. The session counting also doesn't match industry-standard definitions, making the numbers unreliable for comparisons.
+
+Use it as a sanity check when troubleshooting a publish or confirming a new page is live and indexed. Don't use it to make decisions. It's a fallback, not primary.
+
+## Cookie consent banners and GDPR reality
+
+Let's be direct about what the law actually requires.
+
+If you set cookies that aren't strictly necessary for the site to function, you need consent in the EU and a growing list of other jurisdictions. GA4 sets `_ga`, `_ga_XXXXXXXX`, and potentially others — not strictly necessary. You need a consent banner that actually gates the tag, not one that shows a banner and fires it anyway.
+
+If you use Plausible, Fathom, Umami, or Simple Analytics, you set zero cookies. The GDPR applies to personal data, and these tools don't collect it — no IP addresses stored, no fingerprinting, no cross-site tracking. Most EU legal teams confirm this sits outside consent requirements.
+
+<Callout type="tip">
+The "no cookie banner needed with Plausible" position is not legal advice and you should confirm it with your own counsel — but it is the dominant interpretation among EU privacy lawyers and has held up in every project I've shipped to EU-based clients. The practical effect: Plausible gives you cleaner data because consent-gated GA4 typically sees 30–60% of actual traffic depending on consent rate. Plausible sees everything.
+</Callout>
+
+If you do need a consent banner for GA4, use a Consent Mode v2–compatible CMP. Options worth considering: Cookieyes, Axeptio, or Klaro. Wire them to Webflow via the Custom Code head embed. Do not build your own consent logic with a custom JavaScript flag — it will fail an audit.
+
+If you're integrating with tools that extend beyond analytics — HubSpot, for instance — the consent picture gets more complex. My post on the [Webflow HubSpot integration](/blog/webflow-hubspot-integration) covers how to handle consent across both tools without creating conflicting gate logic.
+
+## Event tracking: clicks, form submits, scroll depth
+
+Pageviews are table stakes. The data that actually drives decisions — which CTA button gets clicked, which form gets submitted, how far down the page users scroll — requires event tracking. Here's how to approach it in each tool.
+
+**GA4 enhanced measurement** handles scroll depth (triggers at 90% scroll), outbound clicks, and video plays automatically once you enable it under the data stream. For custom events — Webflow form submissions, specific button clicks, CTA clicks — you'll need either a Google Tag Manager container (the reliable enterprise path) or direct `gtag()` calls in a Webflow custom code embed.
+
+Webflow forms submit via Ajax. The success callback you need is the `.w-form-done` class becoming visible, or you can listen for the `submit` event on the form element. A minimal pattern that works:
+
+```html
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var forms = document.querySelectorAll('.w-form');
+    forms.forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        gtag('event', 'form_submit', {
+          form_id: form.id || 'webflow_form',
+        });
+      });
+    });
+  });
+</script>
+```
+
+Paste this into the Page Settings footer embed of any page with a form, or into the Project Settings footer embed if you want it sitewide.
+
+**Plausible custom events** use a slightly different API. You fire `plausible()` calls and they appear as goals in the dashboard once you've defined them under the site settings.
+
+**Scroll depth** in Plausible isn't automatic. You'll need to fire a `plausible('Scroll Depth', { props: { depth: '50%' } })` call at whatever scroll thresholds matter to you. A basic implementation using IntersectionObserver:
+
+```html
+<script>
+  (function () {
+    var fired = {};
+    var thresholds = [25, 50, 75, 90];
+    thresholds.forEach(function (pct) {
+      var sentinel = document.createElement('div');
+      sentinel.style.position = 'absolute';
+      sentinel.style.top = pct + '%';
+      document.body.appendChild(sentinel);
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting && !fired[pct]) {
+            fired[pct] = true;
+            plausible('Scroll Depth', { props: { depth: pct + '%' } });
+          }
+        });
+      });
+      observer.observe(sentinel);
+    });
+  })();
+</script>
+```
+
+## Installing each one in Webflow (code snippets)
+
+All of these go into Webflow's **Project Settings > Custom Code > Head Code**, then publish. Confirm in the respective dashboards that data is flowing — GA4's DebugView and Plausible's real-time view both confirm within a minute or two.
+
+**GA4:**
+
+```html
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+```
+
+Replace `G-XXXXXXXXXX` with your Measurement ID from GA4's Data Streams panel.
+
+**Plausible:**
+
+```html
+<script defer data-domain="yourdomain.com" src="https://plausible.io/js/script.js"></script>
+```
+
+Replace `yourdomain.com` with the exact domain you registered in Plausible.
+
+**Fathom:**
+
+```html
+<script src="https://cdn.usefathom.com/script.js" data-site="XXXXXXXX" defer></script>
+```
+
+Replace `XXXXXXXX` with your Site ID from the Fathom dashboard.
+
+**Umami (self-hosted):**
+
+```html
+<script async defer src="https://your-umami-instance.com/script.js" data-website-id="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></script>
+```
+
+Replace the `src` with your instance URL and the `data-website-id` with the UUID from your Umami installation.
+
+**Simple Analytics:**
+
+```html
+<script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+<noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade"/></noscript>
+```
+
+No configuration needed beyond pasting the snippet. Simple Analytics auto-detects the domain.
+
+---
+
+Pick Plausible for most marketing sites. Pick GA4 if you're running paid Google Ads. Don't pick both unless you have a specific reason — "extra data" is not a specific reason, and you'll tax performance for no benefit. The cookie consent overhead alone makes dual-tracking a meaningful operational cost that rarely pays off.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

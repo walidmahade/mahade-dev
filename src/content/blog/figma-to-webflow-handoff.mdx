@@ -1,0 +1,205 @@
+---
+title: "Figma to Webflow: The Handoff Spec Every Agency Should Send"
+description: "The exact Figma-to-Webflow handoff I want from every design agency — Auto Layout, components, breakpoints, tokens, and the spec template I use."
+pubDate: 2026-05-15
+tags: ["figma", "handoff", "agency"]
+heroImage: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Figma file prepared for Webflow handoff with organized layers"
+cluster: "agency"
+faq:
+  - q: "What's the biggest Figma-to-Webflow handoff mistake?"
+    a: "Designers building pixel-perfect artboards instead of systems. Webflow is class-based and responsive by nature. A Figma file without a design system (typography, colors, spacing tokens) forces the developer to invent one — badly."
+  - q: "Should the Figma file use Auto Layout everywhere?"
+    a: "Yes, with narrow exceptions (hero illustrations, overlapping decorative elements). Auto Layout maps directly to Webflow's Flex and Grid, so every Auto Layout frame you have saved is time saved in build."
+  - q: "Do I need to design every breakpoint in Figma?"
+    a: "No, 2–3 breakpoints is enough for most marketing sites: desktop (1440px), tablet (768px), and mobile (375px). A good dev can handle the in-between states if the design system is coherent."
+  - q: "Should the Figma file include interaction specs?"
+    a: "Yes for complex interactions (multi-step animations, scroll-linked transitions), no for standard hovers and transitions. Record a Loom for anything custom — it's faster and clearer than written specs."
+  - q: "How long does a proper Figma handoff take?"
+    a: "2–4 hours of designer time for a 10-page site. That investment saves 6–12 hours of developer back-and-forth. The return is clear — but only if the agency actually does it."
+  - q: "Should I include CMS content in the Figma file?"
+    a: "Real content, yes. Lorem ipsum is a red flag. The developer needs to see what actual post titles, case study descriptions, and team bios look like to build CMS templates that won't break."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The figma to webflow handoff is where most agency projects quietly derail. Not in the kick-off. Not during design reviews. After the design is "approved" and the developer opens a Figma file that looks beautiful, is completely unbuilt, and answers almost none of the questions the build actually needs answered.
+
+I've received hundreds of Figma files across [white-label Webflow development](/blog/white-label-webflow-development) engagements and direct client work. The worst ones add two to three weeks of back-and-forth before a single class gets named in Webflow. The best ones let me open a browser tab, look at the design, and start building immediately — because every structural decision has been made and documented.
+
+This post is the spec I send back to agencies before we start. If you share it with your design team before the next handoff, I'll spend less time asking questions and more time building. That's better for everyone, especially the client.
+
+If you want someone who can work from a great handoff and ship fast, [get in touch](/contact).
+
+## Why handoff is where most projects blow up
+
+Design approval and build-readiness are not the same thing. Agencies conflate them constantly, and the result is a gap that falls entirely on the developer to bridge — usually without being paid for it.
+
+A Figma file approved in a client presentation answers the question: does this look right? It does not answer: how does this behave at 768px? What happens when the CMS post title runs three lines instead of one? Which components appear on every page and which are one-offs? What's the interaction timing on that scroll-triggered entrance? How does the nav collapse on mobile?
+
+Those are build questions, and the developer needs answers to all of them before writing a single line of CSS.
+
+The projects I've seen in my [work](/work) that launch cleanly and on schedule share one thing: a designer who treated the Figma file as a specification document, not a presentation asset. The difference in developer hours is not small. A complete handoff spec reduces clarification time by roughly half on a 10-page site. On a 25-page site with a CMS, it can eliminate a full week of revision cycles.
+
+[White-label Webflow development](/blog/white-label-webflow-development) projects make this especially sharp — when I'm one step removed from the end client, there's no quick Slack thread to resolve ambiguity. The file has to be complete.
+
+## File structure: pages, frames, naming
+
+Before looking at any individual frame, I look at the file architecture. A well-structured Figma file signals a designer who has thought systematically about the project. A chaotic one signals the opposite — and the chaos always finds its way into the build.
+
+| Frame | Purpose | Naming convention |
+|---|---|---|
+| Cover | Project title, version, status | `Cover` |
+| Design System | Colors, type, spacing, components | `_Design System` (underscore pins it first) |
+| Global Components | Header, footer, nav states | `Global / Header`, `Global / Footer` |
+| Page frames | One frame per page at 1440px | `Page / Home`, `Page / About` |
+| Breakpoint variants | Tablet and mobile per page | `Page / Home / 768`, `Page / Home / 375` |
+| Interaction notes | Annotated overlay or dedicated frame | `Specs / Interactions` |
+| Content notes | Real copy, CMS field labels | `Specs / Content` |
+
+The naming convention matters more than it sounds. When I'm jumping between Figma and Webflow for eight hours, predictable navigation in the Figma layers panel saves five to ten minutes per session. It compounds.
+
+One rule I enforce: every page that exists in the Webflow build must exist as a frame in Figma. Not a rough sketch — a designed frame with all breakpoints. "The about page is basically the same structure as the services page, just use that as a reference" is how you get an about page that's 80% right and 100% annoying to fix.
+
+## Auto Layout: the mindset shift to Flex/Grid
+
+This is the single biggest technical skill gap between designers who make Webflow builds easy and designers who make them painful.
+
+Webflow doesn't know what a free-floating absolute-positioned box is supposed to do at 600px wide. Webflow does know exactly what to do with a flex container with a gap of 24px that wraps at its content's minimum width. Auto Layout in Figma maps directly to that mental model. Frames with no Auto Layout map to nothing — they're artboard decorations that force the developer to reverse-engineer the layout intent.
+
+I've written a full guide on [Auto Layout to Webflow Flex](/blog/auto-layout-to-webflow-flex) if your design team needs the detailed mapping. The short version: every section, every card grid, every navigation row, every button — wrap it in Auto Layout. Set the direction (horizontal/vertical), the gap, the padding, and the alignment. That's your CSS spec. The developer doesn't have to guess.
+
+The narrow exceptions: hero illustrations with overlapping elements, decorative background shapes, and cases where absolute positioning is genuinely intentional (a badge overlapping a card corner, a floating tooltip). For those, a note in the specs frame explaining the intended behavior is worth more than any amount of visual guesswork.
+
+When a designer hands me a file where every frame is Auto Layout, the build goes roughly 30% faster. That's not an abstraction — it's the average delta I see in my own project timelines.
+
+## Components: what maps 1:1, what doesn't
+
+Figma components and Webflow components are not the same thing. Understanding where they map cleanly — and where they diverge — lets you build a component library in Figma that actually translates to a maintainable Webflow project.
+
+What maps well:
+
+- **Single-state UI elements.** Buttons, badges, tags, icons, input fields. One Figma component with variants for size and state becomes one Webflow class stack with combo classes for each variant. Clean.
+- **Cards.** A blog post card, a team member card, a service card. One Figma component per card type, with a real content fill. Maps to one Webflow symbol (or component in the new system) that plugs into a CMS collection.
+- **Section templates.** A two-column text+image section, a features grid, a testimonial row. Each gets a dedicated component in Figma, a dedicated section in Webflow.
+
+What doesn't map cleanly:
+
+- **Interactive component states.** Figma's hover and pressed variants are visual annotations. Webflow's hover states are actual CSS rules on the class. Don't assume Figma's component variants will drive Webflow's interaction states without translation.
+- **Complex overlays and modals.** Figma shows the visual output. Webflow needs to know the trigger, the animation, the overlay behavior, and what element receives focus on open. Document this in the interactions spec.
+- **Figma's hidden layers.** A collapsed layer in Figma that represents a "mobile-only" element is invisible to me unless it's in a breakpoint frame or called out explicitly. Don't hide content in Figma and expect the developer to find it.
+
+For a deeper look at how Webflow's own component system works and where the legacy symbols model still applies, [Webflow components vs symbols](/blog/webflow-components-vs-symbols) covers the evolution and the practical implications for CMS-driven designs.
+
+## Breakpoints: 4 vs 5 and where Webflow disagrees
+
+Figma has no breakpoint system. Webflow has a very specific one, and the two don't line up as neatly as designers expect.
+
+Here's the practical mapping:
+
+| Figma frame width | Webflow breakpoint | Notes |
+|---|---|---|
+| 1440px | Desktop (base) | Webflow's base — all styles cascade down from here |
+| 1280px | None (handle in Desktop) | Not a Webflow breakpoint; use max-width on the Container |
+| 991px | Tablet (landscape) | Webflow calls this "Tablet" — triggers at ≤991px |
+| 768px | Tablet (portrait) | Falls inside Webflow's Tablet breakpoint |
+| 479px | Mobile Landscape | Webflow breakpoint at ≤479px |
+| 375px | Mobile Portrait | Webflow's smallest default breakpoint at ≤479px |
+
+The friction point: Webflow has five default breakpoints (Desktop, Tablet, Mobile Landscape, Mobile Portrait, plus the custom breakpoint option). Most designers design for three. That's fine — 1440px, 768px, and 375px covers the meaningful variation for most marketing sites. But the designer needs to know that Webflow's Tablet breakpoint fires at 991px, not 768px. If your 768px Figma frame is the target, I need to know you've signed off on the 768–991px range using the same design.
+
+Where custom breakpoints make sense in Webflow: wide-screen layouts (1920px+) where the design has specific behavior, and narrow ranges where a specific element needs tighter control. I add custom breakpoints sparingly — they increase maintenance surface area without proportional benefit on most marketing sites.
+
+One thing I never do: design at 1280px as the "desktop" frame when Webflow's base breakpoint is uncapped. The Designer works top-down — what I set at Desktop applies to all widths above Tablet unless I add a max-width constraint or a custom breakpoint. Know where your frame widths land in that hierarchy.
+
+## Typography and color tokens
+
+A Figma file without a design system forces me to invent one. Whatever I invent will be wrong in ways that only surface three months after launch, when the client adds a new page and the type scale doesn't match.
+
+Typography needs to be defined as a system — not just as "the headline on the homepage is 64px Geist, weight 600." I need:
+
+- A named scale (Display, Heading Large, Heading Medium, Body Large, Body, Caption — or whatever your naming convention is)
+- The font family, weight, size, line height, and letter spacing for each step
+- Which scale step maps to which HTML element (H1 → Display, H2 → Heading Large, etc.)
+- Mobile equivalents for each step where the size changes
+
+Colors need named tokens, not hex values. I do not want to hunt through a design to figure out that `#1A1A2E` is "ink" and `#F5F5F0` is "paper." Define them in Figma's color styles, name them with the same names you'd use in CSS or a design token file, and document them in the design system frame.
+
+<Callout type="tip">
+If your Figma file uses Figma Variables (the native tokens system), export them as a JSON token file and include it in the handoff. I can use it directly to configure CSS custom properties in Webflow or cross-reference during build, cutting the token-to-variable translation step entirely.
+</Callout>
+
+Spacing matters too. If your sections all use a consistent vertical rhythm — say, 80px padding at desktop, 48px at mobile — define that as a token. Don't let me read the padding off every individual frame and hope I spot the pattern. Name it, document it, done.
+
+## Interactions and motion: what's specified, what's guesswork
+
+Most interaction specs I receive are one of two things: nothing at all, or a Figma prototype that shows what something looks like but tells me nothing about how to build it.
+
+Here's what I need for each interaction that goes beyond a standard CSS hover:
+
+- **Trigger:** on scroll into view, on click, on hover, on page load
+- **Target:** what element animates (the whole card? just the icon? the text?)
+- **Animation:** translate, scale, opacity, or a combination — and the direction
+- **Duration and easing:** specific values, not "smooth" or "fast"
+- **Stagger:** if multiple elements enter sequentially, the delay between each
+- **Mobile behavior:** does the interaction run on mobile or is it disabled?
+
+For complex animations — scroll-linked parallax, multi-step entrance sequences, SVG path draws — a Loom recording of the intended behavior is faster and clearer than any written spec. Two minutes of someone animating a prototype in Principle or After Effects saves an hour of developer guesswork.
+
+Standard hover states do not need documentation. If a button darkens slightly on hover and an underline slides in on a nav link, I'll handle that. What I can't handle is a scroll-triggered counter that increments numbers as the section enters the viewport and a designer who described it as "the numbers animate in."
+
+Webflow Interactions can produce complex effects without custom code, but the design spec has to give me enough to map the effect to IX2 triggers and actions — or tell me it needs GSAP. Those are different builds with different time estimates.
+
+## Copy and CMS content in Figma
+
+This is the section that most agencies need to hear the most.
+
+<Callout type="warning">
+Lorem ipsum in a Figma file is a build risk, not a placeholder. A CMS card designed with two lines of lorem ipsum may break visually when a real case study title runs to four lines. A testimonial quote designed at 120 characters may overflow its container when the actual quote is 280. Real content in Figma is not a nicety — it's a structural requirement.
+</Callout>
+
+When I build a CMS template in Webflow, I need to know what the actual content looks like at its minimum length and its maximum length. I need to know if the blog post titles are typically short ("Webflow Tips") or long ("How We Rebuilt Our SaaS Marketing Site in Webflow and Cut Load Time by 60%"). I need to know if testimonial quotes are two sentences or a paragraph. I need to know if team bios are 40 words or 200.
+
+Content extremes define the template constraints. Without real content, I'm building for an imaginary average that will fail the moment real content is dropped in.
+
+For CMS-driven pages, the Figma file should show:
+
+- A CMS collection template with real sample content — at least three items, not one
+- The minimum viable item (shortest title, no optional fields populated)
+- An item with a long title or description that will stress-test the layout
+- Any conditional visibility rules (a "featured" badge that only shows on certain posts, an author field that's optional)
+
+The Webflow CMS has hard limits: 30 CMS items max in a filtered list without pagination, 10,000 items per collection, 30 fields per collection. If the design implies a CMS structure that brushes against those limits, I need to know before I build the schema.
+
+## The handoff spec template
+
+This is the checklist I send to design teams before every project starts. If I get all twelve of these, I can start building without a single clarifying question.
+
+1. **Design system frame** — named color tokens, typography scale with all values, spacing tokens. No hex-only colors, no one-off font sizes.
+2. **Global components** — Header in all states (transparent, scrolled, open mobile nav), Footer with all link columns filled with real links.
+3. **Page frames at 1440px** — one frame per page, no missing pages, no "same as X" shortcuts.
+4. **Tablet frames at 768px** — all pages, or explicit documentation of which pages get unique tablet treatment vs. a shared pattern.
+5. **Mobile frames at 375px** — all pages. Mobile is not optional.
+6. **Auto Layout on all structural frames** — sections, cards, nav rows, buttons. Document the exceptions with an annotation.
+7. **Component library** — all repeating UI elements as Figma components, with variants for each interactive state (default, hover, active, disabled).
+8. **CMS template frames with real content** — minimum and maximum content states for every CMS-driven template.
+9. **Interaction specs** — a dedicated frame or annotated overlay for any animation beyond standard hover. Include a Loom for complex sequences.
+10. **Breakpoint behavior notes** — which elements collapse, hide, reorder, or change size at each breakpoint. Table or annotated frame, either works.
+11. **Asset exports** — SVG icons, logo variants (dark, light, favicon), and any decorative illustrations as named, exported files. Not embedded in frames.
+12. **Copy doc or real text in frames** — all body copy, headlines, CTAs, and form labels written. Page titles and meta descriptions included if SEO matters.
+
+The [Webflow handoff checklist](/blog/webflow-handoff-checklist) has the full developer-side version of this list — what I verify on my end before building starts. Cross-referencing both sides closes almost every gap.
+
+For [white-label Webflow development](/blog/white-label-webflow-development) projects specifically, I'd add a thirteenth item: brand guidelines or a link to the existing style guide. When I'm building for an agency's client without a direct line to that client, the brand constraints need to be in the file.
+
+---
+
+A complete handoff spec is 2–4 hours of designer time on a 10-page site. That investment returns 6–12 hours of developer back-and-forth that never happens. The math is obvious — the discipline to actually do it before the build starts is the only variable.
+
+Send this post to your design lead before the next project kicks off. Or [get in touch](/contact) and let's build something where the handoff is already sorted.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

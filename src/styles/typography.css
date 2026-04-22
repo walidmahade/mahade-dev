@@ -150,6 +150,46 @@
   font-style: italic;
 }
 
+.prose-page figure {
+  margin: 2rem 0;
+}
+
+.prose-page figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  display: block;
+  margin: 0;
+}
+
+.prose-page figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-ink-subtle);
+  text-align: center;
+}
+
+.prose-page > img,
+.prose-page img {
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.prose-page iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  display: block;
+  margin: 2rem 0;
+}
+
 .prose-page table {
   width: 100%;
   max-width: 100%;
@@ -175,6 +215,7 @@
   color: var(--color-ink);
   border-bottom: 1px solid var(--color-line);
   white-space: nowrap;
+  background: var(--color-paper-tint);
 }
 
 .prose-page td {
@@ -192,14 +233,26 @@
   background: var(--color-paper-tint);
 }
 
+.prose-page pre {
+  background: var(--color-paper-tint);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.prose-page pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
 .prose-page hr {
   border: 0;
   border-top: 1px solid var(--color-line);
   margin: 2.5rem 0;
-}
-
-.prose-page img {
-  border-radius: 12px;
-  border: 1px solid var(--color-line);
-  margin: 1.5rem 0;
 }

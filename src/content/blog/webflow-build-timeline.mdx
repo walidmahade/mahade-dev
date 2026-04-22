@@ -1,0 +1,173 @@
+---
+title: "How Long Does a Webflow Build Actually Take? Real Timelines by Project Type"
+description: "Honest timelines for Webflow builds — landing pages, 10-page marketing sites, blogs, and redesigns — based on 40+ real projects."
+pubDate: 2026-05-18
+tags: ["timelines", "project-mgmt"]
+heroImage: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A project timeline on a calendar with milestones"
+cluster: "hire-hub"
+faq:
+  - q: "How long does a simple Webflow landing page take?"
+    a: "3–5 working days if the design is finalized. 1–2 weeks if design needs iteration. The build itself is usually 1.5–2.5 days; the rest is revisions, content, and QA."
+  - q: "How long does a 10-page Webflow site take?"
+    a: "2–4 weeks. Assume 1 week for homepage + global components, 1 week for internal pages, 1 week for CMS + integrations, and 3–5 days for review and polish."
+  - q: "How long does a Webflow site with a blog take to build?"
+    a: "4–6 weeks for 10 pages + a blog with CMS, authors, tags, and a functional editor workflow. Add 1–2 weeks if you need seeded content (10+ posts migrated in)."
+  - q: "What slows Webflow builds down the most?"
+    a: "Unfinished copy (weeks of delay), design revisions mid-build (restart cost), and approval bottlenecks where stakeholders review work in batches every 10 days instead of on a rolling basis."
+  - q: "Can a Webflow build be rushed?"
+    a: "To some extent. A 10-page site can compress to 10 days if design is locked, content is ready, and reviews happen same-day. Most 'rush' projects fail because one of those three conditions isn't met."
+  - q: "Why does my developer's timeline feel longer than yours?"
+    a: "Because theirs probably includes realistic contingency for content delays and reviews. Mine in this post are build-time. Add 30–50% for the typical real-world project."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The honest answer to "how long does a Webflow build take" is: faster than most clients expect for pure build time, slower than most clients want when you account for what actually delays projects. A webflow build timeline depends less on the developer's speed and more on whether design is locked, content exists, and stakeholders review on a rolling basis rather than in batches.
+
+I've been building Webflow sites professionally for several years. This post gives you the real numbers — not the optimistic pitch, not the over-padded agency estimate. If you're trying to [hire a Webflow developer](/blog/hire-webflow-developer-2026) and need to set expectations with your team, this is what you hand them. If you already know your timeline is broken and want help getting to launch, [let's talk](/contact).
+
+## Quick reference: webflow build timeline by project type
+
+These are build-time estimates based on real projects: design locked, content delivered on time, one round of revisions. The "calendar time" column is what projects actually take in practice, including the delays that almost always happen.
+
+| Project type | Build time | Total calendar time |
+|---|---|---|
+| Landing page (1–3 pages, no CMS) | 3–5 days | 1–2 weeks |
+| 10-page marketing site | 2–3 weeks | 3–5 weeks |
+| 25+ page marketing site | 4–6 weeks | 6–10 weeks |
+| CMS-heavy site (blog + case studies) | 5–7 weeks | 7–12 weeks |
+| WordPress → Webflow migration | 3–6 weeks | 5–10 weeks |
+| Full redesign (large existing site) | 6–10 weeks | 8–16 weeks |
+
+Use build time when talking to your developer about what's realistic for their output. Use calendar time when telling your CEO when the site will launch.
+
+## Landing page: 3–5 days build time
+
+A single-template landing page — hero, features, social proof, pricing, FAQ, footer — is the fastest Webflow project type. The actual build, assuming locked design and content in hand, runs about 1.5 to 2.5 days for a skilled developer. The remaining time is responsive QA across breakpoints, interaction polish, and one revision pass.
+
+| Phase | Duration |
+|---|---|
+| Design handoff + project setup | 0.5 days |
+| Build (desktop) | 1 day |
+| Responsive (tablet + mobile) | 0.5 days |
+| Interactions + polish | 0.5 days |
+| QA + revision round | 0.5–1 day |
+
+Where landing pages slip: the design usually isn't as locked as the client thinks. There are always three rounds of copy tweaks, a logo that came in the wrong format, and a "can we just move this section up" request after the mobile pass. Budget 1–2 weeks in total, not 3–5 days, unless you're unusually organized.
+
+This is the project type where engaging [Webflow development services](/blog/webflow-development-services) on a fixed-price basis makes the most sense — the scope is small enough to define fully before work starts.
+
+## 10-page marketing site: 2–3 weeks build time
+
+A standard marketing site — homepage, about, services, pricing, case studies, contact, plus a few supporting pages — is where most B2B and SaaS clients sit. The build runs 2–3 weeks for a senior developer moving at full pace.
+
+| Phase | Duration |
+|---|---|
+| Architecture review + Webflow setup | 2 days |
+| Homepage + global components | 4–5 days |
+| Interior pages (7–9 pages) | 5–6 days |
+| CMS schema + template pages | 2–3 days |
+| Integrations (forms, analytics, scripts) | 1–2 days |
+| QA, responsiveness, revision round | 3–4 days |
+
+The homepage takes disproportionately long because it sets the class architecture for the entire site. Every naming decision made on the homepage cascades to every other page. A developer who rushes the homepage to hit an early milestone is borrowing time from the back half of the project.
+
+The gap between 2 weeks and 4 weeks almost always comes down to three things: content wasn't ready, stakeholder reviews happened in batches rather than on a rolling basis, or design changes arrived mid-build. All three are avoidable with a good kickoff.
+
+## 25+ page marketing site: 4–6 weeks build time
+
+Once you're past 20 pages, the build isn't just longer — it's structurally different. You're dealing with multiple page templates, deeper CMS architecture (team pages, resource libraries, product pages), and usually more integrations. A 30-page site is not three 10-page sites stacked on top of each other.
+
+| Phase | Duration |
+|---|---|
+| Architecture, design system setup | 3–4 days |
+| Homepage + global components | 5–6 days |
+| Core marketing templates (4–6 templates) | 1.5–2 weeks |
+| Supporting pages (built from templates) | 1 week |
+| CMS collections + dynamic content | 1 week |
+| Integrations + scripts | 3–5 days |
+| Full QA, revisions, polish | 1 week |
+
+At this scope, developer cost scales meaningfully — I detail what the numbers look like in the [Webflow developer cost breakdown](/blog/webflow-developer-cost-2026). The short version: a 30-page site with a CMS and integrations from a senior developer typically runs $12,000–$22,000, and the timeline risk is higher because there are more surface areas for content delays to cascade.
+
+The other thing that changes at this scale: you need proper staging. Every build at 25+ pages should have a password-protected staging domain that stakeholders review before anything goes live. Projects that skip staging at this scope almost always need emergency fixes after launch.
+
+## CMS-heavy site (blog, case studies, resource library): 6+ weeks
+
+A site with a functioning CMS editorial workflow — blog with authors and tags, a case study library, maybe a resource center — is a different category of project. The pages are the easy part. The CMS architecture, the collection-to-collection references, the dynamic filtering, the Editor experience for whoever manages content after launch: those are where time goes.
+
+| Phase | Duration |
+|---|---|
+| Architecture + CMS schema design | 4–5 days |
+| Homepage + global components | 5–6 days |
+| Core marketing pages | 1.5–2 weeks |
+| CMS templates (blog, case study, author) | 1 week |
+| Dynamic lists, filtering, pagination | 4–5 days |
+| Editor workflow setup + content entry | 3–5 days |
+| Integrations, QA, revisions | 1 week |
+
+The part clients consistently underestimate is content entry. If you have 40 existing blog posts that need to be migrated into the new CMS, that's not a developer task — that's a content task that needs dedicated time and a person assigned to it. Add 1–2 weeks to the timeline if content migration is in scope, and make sure it's explicitly scoped in the contract.
+
+One thing I always do on CMS-heavy projects: build a style guide page inside the Webflow project with every rich-text element styled, every component state shown, and notes for the content editor. It takes half a day but prevents a week of "why does this look wrong when I add content" support requests after launch.
+
+## WordPress to Webflow migration: 4–10 weeks
+
+Migrations are their own category because you're not starting from zero — you're translating an existing information architecture, content model, and often a half-working design into a new platform. That translation process has its own failure modes.
+
+| Phase | Duration |
+|---|---|
+| Content audit + migration scope definition | 3–5 days |
+| Webflow site architecture + build | 3–5 weeks |
+| Content migration (manual or tooled) | 1–3 weeks |
+| URL redirect mapping + 301 setup | 2–3 days |
+| SEO audit and meta migration | 2–3 days |
+| QA, staging review, cutover | 3–5 days |
+
+The wide range (4–10 weeks) comes from the content volume. A 20-page WordPress site with a small blog migrates much faster than a 200-page site with 8 years of SEO-critical posts. The other wildcard is the redirect map: if the WordPress URL structure was `/category/year/post-name` and the Webflow structure is `/blog/post-name`, every legacy URL needs a 301 that you test before the DNS cutover.
+
+I've covered the full scope of what a migration involves — including what to do about your existing SEO equity — in the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration). The short version: don't do the cutover until the redirect map is complete and tested. Every 404 after migration is a potential SEO loss you can't easily recover.
+
+## What adds time (five killers)
+
+1. **Unfinished copy.** The single biggest project killer. A developer cannot build a homepage if the headline, subhead, and feature descriptions don't exist. "We'll finalize copy during the build" is a plan that reliably adds 2–4 weeks. Copy should be 90% locked before build starts, with only micro-edits expected.
+
+2. **Design changes mid-build.** A design revision that moves a section on page three doesn't cost one hour — it costs the time to rebuild the section, re-check responsive behavior at every breakpoint, and re-run the interaction sequence. Multiply by however many pages have similar components. Mid-build design changes have a 3x–5x cost multiplier compared to making the same change in Figma before build starts.
+
+3. **Batch approvals.** Stakeholders who review work in batches every 10–14 days instead of on a rolling basis add weeks to every project. A developer can build 8–10 pages and then sit idle waiting for a "we'll review everything next Thursday" cycle. Daily or every-other-day asynchronous feedback is the correct cadence for an active build.
+
+4. **Integrations with external systems.** Every third-party integration — HubSpot, Salesforce, custom form handling, Memberstack, Stripe — has setup time, credential handoff time, and testing time that tends to expand on contact with reality. Budget 2–5 days per integration depending on complexity, not 2–3 hours.
+
+5. **Unclear handoff scope.** Projects that launch without a defined handoff — walkthrough of the Editor, documented custom embeds, a style guide page in Webflow — almost always generate a wave of post-launch requests that consume developer time you didn't budget for. Define handoff deliverables in the contract before build starts.
+
+<Callout type="warning">
+Content delays are the most common and most preventable source of timeline overrun. They don't just add a few days — they stall entire phases of a build while the developer waits for something they cannot make up themselves. Set a content delivery date in the contract, treat it as a hard dependency, and assign a specific person on your team to own it.
+</Callout>
+
+## What shaves time (five accelerators)
+
+1. **Design locked before day one.** A complete, approved Figma file — all states, all breakpoints, all copy final — cuts the average 10-page build from 3 weeks to 2 weeks. This is the single highest-leverage investment a client can make before engaging a developer.
+
+2. **A component library the developer has used before.** A developer working with their own established Webflow component library (pre-built cards, nav patterns, CMS templates, form layouts) can produce pages 40–60% faster than building from scratch on a blank canvas. Ask candidates whether they have a starting library and what it covers.
+
+3. **Same-day review cycles.** When a client can review a page and give written feedback within the same business day, a developer maintains momentum through the whole build rather than losing days to async wait time. This alone can compress a 4-week build to 2.5 weeks.
+
+4. **Pre-defined integration credentials.** HubSpot API keys, Mailchimp list IDs, form destination email addresses — having these ready before integration work starts eliminates the 1–3 day delay that shows up on almost every project when a developer has to pause and wait for IT or marketing ops to generate credentials.
+
+5. **Locked design decisions before build.** Not just the visual design — decisions about CMS structure, URL slug format, page titles, and navigation labels. Every mid-build decision about these adds micro-delays that compound. A 30-minute pre-build architecture call where these are nailed down is one of the best investments in timeline compression.
+
+<Callout type="tip">
+If design decisions are made and documented before a single page is built in Webflow, a 10-page site with CMS can realistically launch in 10 working days. Most projects don't hit that because one decision got deferred to "we'll figure it out during the build." Don't let that be copy, URL structure, or CMS schema — those are the three that cost the most to change mid-build.
+</Callout>
+
+After launch, use the [Webflow handoff checklist](/blog/webflow-handoff-checklist) to make sure nothing was left undone — it covers the post-launch items that tend to get skipped when everyone is tired and relieved to be live.
+
+---
+
+Don't ask "how long will this take." Ask "what's on the critical path." In almost every Webflow project, the critical path isn't developer speed — it's content delivery, design sign-off, and review turnaround. Nail those three and the build timeline takes care of itself. Everything else is noise.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="hire" />

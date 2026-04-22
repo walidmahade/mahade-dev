@@ -1,0 +1,227 @@
+---
+title: "Webflow + HubSpot: The Right Way to Wire Forms in 2026"
+description: "Connect Webflow forms to HubSpot without the ugly embed — cookies, UTMs, progressive profiling, and the 3 ways to ship it."
+pubDate: 2026-05-12
+tags: ["integrations", "hubspot"]
+heroImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Webflow form wired to HubSpot contact records"
+cluster: "integrations"
+faq:
+  - q: "Can I connect a Webflow form to HubSpot without using the HubSpot embed?"
+    a: "Yes. Use Webflow's native form and POST submissions to HubSpot's Forms API via a Webflow Logic workflow, Zapier, or Make. This gives you full design control while still landing contacts in HubSpot."
+  - q: "Does Webflow support HubSpot's tracking code?"
+    a: "Yes. Paste the HubSpot tracking script into Project Settings > Custom Code > Head Code. It tracks page views and ties form submissions to contact records once a submission carries the `hubspotutk` cookie."
+  - q: "How do UTM parameters flow from Webflow to HubSpot?"
+    a: "HubSpot reads UTMs from the URL at the time of submission and attaches them as contact properties ('Original traffic source drill-down 1', etc). For this to work, the UTM must be on the URL when the form is submitted — not added client-side."
+  - q: "What's progressive profiling and does it work on Webflow forms?"
+    a: "Progressive profiling shows different form fields to known vs unknown contacts. It works natively with HubSpot's embed, not with native Webflow forms. If you need it, use HubSpot's form embed for that specific form."
+  - q: "Do I need Webflow Business plan for HubSpot integration?"
+    a: "No. Webflow's form submission limits apply on Starter/Basic, but the HubSpot integration itself works on any plan. Business is useful for raising the form-submission cap (100/mo on Basic, 1000/mo on CMS/Business)."
+  - q: "How do I test a Webflow-HubSpot integration end-to-end?"
+    a: "Open an incognito tab with `?utm_source=test`. Submit the form. In HubSpot, check: (1) contact created with UTM properties, (2) form submission event logged, (3) tracking cookie present. If any of those are missing, the integration isn't fully wired."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The Webflow HubSpot integration has one correct answer and two acceptable shortcuts, depending on how much design control you need and how much dev time you have. I'll give you all three, tell you which to pick first, and walk through the attribution plumbing that most tutorials skip — UTMs, cookies, progressive profiling, and consent.
+
+If you want someone to build this rather than read about it, [get in touch](/contact).
+
+## Three ways to connect Webflow to HubSpot (picked fast)
+
+Before diving into implementation, pick your option. The decision is mostly about design control versus time-to-ship.
+
+| Option | Ship time | Design control | Dev lift |
+|---|---|---|---|
+| Native Webflow form + HubSpot API | 2–4 hours | Full — your CSS, your markup | Medium (server-side fetch or Logic workflow) |
+| HubSpot embed form | 15–30 minutes | Partial — HubSpot's iframe, customizable via HubSpot | None |
+| Zapier / Make | 30–60 minutes | Full — Webflow's native form | Low (no-code automation) |
+
+If you have a designer-built form in Webflow that needs to look exactly right, use Option 1. If you need progressive profiling or HubSpot's smart fields, use Option 2. If you have no developer and need this working today, use Option 3.
+
+Most of my clients land on Option 1 for primary CTAs (hero forms, pricing page forms, demo requests) and Option 2 for secondary forms where brand consistency matters less (blog newsletter sign-ups, resource downloads).
+
+## Option 1: Native Webflow form + HubSpot API (the best-looking option)
+
+This approach keeps the form markup entirely in Webflow — your styles, your layout, your CMS if needed — and pushes submissions to HubSpot's Forms API via a server-side call. No HubSpot iframe in sight.
+
+You'll need three pieces of information from HubSpot: your **Portal ID** (found in Account Settings > Account Setup), the **Form GUID** (found in Marketing > Forms > [your form] > Share > Embed Code), and your HubSpot form must already exist in HubSpot even though the user never sees it.
+
+The cleanest implementation uses a serverless function (Cloudflare Worker, Vercel Edge Function, whatever your stack supports) that receives the Webflow form POST and forwards it to HubSpot. Here's the function:
+
+```js
+export default {
+  async fetch(request) {
+    if (request.method !== 'POST') {
+      return new Response('Method not allowed', { status: 405 });
+    }
+
+    const body = await request.json();
+    const { email, name, message, hutk, pageUri, pageName } = body;
+
+    const PORTAL_ID = 'YOUR_PORTAL_ID';
+    const FORM_GUID = 'YOUR_FORM_GUID';
+
+    const hubspotPayload = {
+      fields: [
+        { name: 'email', value: email },
+        { name: 'firstname', value: name?.split(' ')[0] ?? '' },
+        { name: 'lastname', value: name?.split(' ').slice(1).join(' ') ?? '' },
+        { name: 'message', value: message ?? '' },
+      ],
+      context: {
+        hutk: hutk ?? undefined,
+        pageUri: pageUri ?? request.headers.get('referer') ?? '',
+        pageName: pageName ?? '',
+      },
+    };
+
+    const response = await fetch(
+      `https://api.hsforms.com/submissions/v3/integration/submit/${PORTAL_ID}/${FORM_GUID}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(hubspotPayload),
+      }
+    );
+
+    if (!response.ok) {
+      const err = await response.text();
+      return new Response(JSON.stringify({ error: err }), {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  },
+};
+```
+
+On the Webflow side, intercept the native form submit, collect the `hutk` cookie (the HubSpot tracking token — more on this in the cookie section), and POST the JSON to your serverless endpoint. Webflow's built-in form success/error state still fires normally because you call `e.preventDefault()` and handle it yourself.
+
+The `hutk` value in the payload is what ties the submission to HubSpot's tracked session. Skip it and the contact record still gets created, but the source attribution and session data disappear. Always include it.
+
+If you are on Webflow's Business plan and want to avoid writing a serverless function, Webflow Logic can do this natively: create a Logic workflow triggered on form submission, add an HTTP request action pointing to HubSpot's Forms API, and map the form fields. Same result, no external infrastructure.
+
+## Option 2: HubSpot embed form (the fastest to ship)
+
+For forms where ship speed beats design fidelity, drop the HubSpot embed. You get progressive profiling, smart fields, and no API plumbing. The cost is an iframe HubSpot controls.
+
+HubSpot generates a script tag per form. Paste it into a Webflow HTML embed component where the form should live:
+
+```html
+<script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+<script>
+  hbspt.forms.create({
+    region: "na1",
+    portalId: "YOUR_PORTAL_ID",
+    formId: "YOUR_FORM_GUID",
+    onFormSubmit: function($form) {
+      // Optional: fire a GA4 or analytics event on submit
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'form_submit', {
+          form_id: 'YOUR_FORM_GUID',
+          form_name: 'HubSpot Contact Form',
+        });
+      }
+    },
+    onFormReady: function($form) {
+      // Optional: apply Webflow-adjacent styles once the iframe loads
+      $form.find('input, textarea, select').css('font-family', 'inherit');
+    },
+  });
+</script>
+```
+
+The `onFormSubmit` callback is where you fire analytics events or redirect the user. Without it, HubSpot handles the thank-you state inside the iframe. With it, you can redirect to a dedicated thank-you page — which is better for GA4 conversion tracking anyway.
+
+Styling the embedded form is possible but limited. HubSpot's form builder lets you customize labels, button text, and some spacing. Deep CSS overrides require targeting the iframe, which works only if you are on HubSpot's higher tiers that allow removing their stylesheet. For most use cases: set your button color and label font in HubSpot's form builder and accept that the form won't be a pixel-perfect match to your Webflow design.
+
+The embed approach also has one meaningful advantage: HubSpot's tracking cookie is set automatically by the embed script, not by a separate tracking code install. The session context is already wired.
+
+## Option 3: Zapier / Make fallback (when you don't have dev help)
+
+No serverless function, no code embeds — just Webflow's native form connected to HubSpot via a no-code automation.
+
+In Zapier: create a Zap with "Webflow — New Form Submission" as the trigger (connect your Webflow account and select the site and form), then "HubSpot — Create/Update Contact" as the action. Map the form fields to HubSpot contact properties. Done.
+
+In Make: same pattern — Webflow "Watch Form Submissions" module, then HubSpot "Create/Update a Contact" module. Make's data mapping is more flexible for conditional logic (if the phone field is blank, don't create a phone property at all).
+
+The limitation is attribution. Zapier and Make forward the form field values, but they don't forward the `hutk` cookie or the page context. HubSpot will create the contact, but the "Original source" won't be set by the tracking session — it'll fall back to whatever HubSpot can infer from the API submission. For teams that don't use HubSpot attribution reporting heavily, this is fine. For teams running paid campaigns and needing accurate source data in HubSpot, this option is the wrong one.
+
+A workaround: add hidden fields to your Webflow form that capture UTM parameters via JavaScript, and map those hidden fields in your Zapier/Make workflow to HubSpot's UTM contact properties (`hs_analytics_source`, `hs_analytics_first_url`, etc). It's not as clean as Option 1 but recovers most of the attribution data.
+
+## Tracking UTMs and attribution across the handoff
+
+UTM parameters are the backbone of marketing attribution, and Webflow plus HubSpot handle them differently enough that the handoff breaks silently if you don't wire it explicitly.
+
+HubSpot reads UTM parameters from the URL at the time a form is submitted. It stores them as contact properties: `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`. The key word is "at the time of submission." If a visitor lands on `?utm_source=google&utm_medium=cpc` and your JavaScript strips the UTMs from the URL before the form submits, HubSpot never sees them.
+
+<Callout type="tip">
+UTM parameters in the URL survive page navigation only if you preserve them explicitly. If your site uses Webflow's page transitions or any client-side router, verify that UTMs are passed through or persisted in sessionStorage. A visitor who clicks three pages before converting will lose their UTMs on the first navigation unless you write them to sessionStorage on landing and read them back on the conversion page.
+</Callout>
+
+The practical implementation: on page load, read the URL's query string for UTM parameters and write them to `sessionStorage`. On form submit, read from `sessionStorage` and populate hidden form fields before the submission fires. This ensures the UTMs captured at session start flow through even if the visitor navigates around the site before submitting.
+
+For Option 1 (API approach), those hidden field values go into your `fields` array in the HubSpot payload. For Option 3 (Zapier/Make), map those hidden fields in the automation. For Option 2 (embed), UTMs in the URL at submission time are handled automatically by HubSpot's tracking script.
+
+For a broader look at how attribution data flows through Webflow's analytics stack and where it breaks, [Webflow analytics: GA4 vs Plausible](/blog/webflow-analytics-ga4-plausible) covers the gaps.
+
+## Progressive profiling: multi-step forms that update contacts
+
+Progressive profiling is HubSpot's feature that shows different form fields depending on what it already knows about a visitor. A first-time visitor sees name and email. A returning visitor who is already a contact sees company and phone number instead. The goal is gathering more data over time without making any single form feel long.
+
+This feature works natively with HubSpot's embed form (Option 2). The embed script reads the `hubspotutk` cookie, checks whether the visitor is a known contact, and adjusts the rendered fields accordingly. No extra configuration required on your end — it's a setting you enable inside HubSpot's form builder.
+
+It does not work with native Webflow forms posted to the API (Option 1). The API endpoint is stateless — you send a payload, a contact record is created or updated, done. The API has no mechanism to tell you "this visitor already has these properties, show them different fields." If progressive profiling is a hard requirement, use the HubSpot embed for that specific form.
+
+A practical compromise I've used: use Option 1 for the main CTA form (hero, pricing, contact page) where design control matters most, and use Option 2 for gated content download forms or newsletter sign-ups where progressive profiling is most valuable. Different forms, different options — nothing says the whole site has to use one approach.
+
+Multi-step forms are a different thing. A multi-step form in Webflow that pushes data to HubSpot at each step (step 1 creates the contact with email, step 2 updates the contact with company info) is absolutely doable with the API approach. POST to HubSpot's Forms API after each step using the same email as the identifier. HubSpot will update the existing contact rather than creating a duplicate.
+
+## Cookie consent and HubSpot tracking code
+
+HubSpot's tracking code (`hs-analytics.min.js`, loaded from `//js.hs-analytics.net/analytics/`) needs to be in your site's `<head>`. In Webflow, add it under Project Settings > Custom Code > Head Code. Once it's there, HubSpot tracks page views, sets the `hubspotutk` cookie, and ties that cookie to any form submissions that include it in the `context.hutk` field.
+
+The `hubspotutk` cookie is a first-party cookie scoped to your domain. It's set by the HubSpot tracking script and persists for 13 months. Its purpose is to identify return visitors and associate multiple visits and form submissions with a single contact record. If the visitor's browser blocks third-party cookies or they're browsing in a privacy mode that blocks tracking, the cookie won't be set — and that's fine. The form submission will still work, it just won't have session context.
+
+Where this gets complicated is consent. In regions requiring cookie consent (GDPR, ePrivacy), HubSpot's tracking script should not fire until the visitor accepts analytics cookies. If you load the HubSpot tracking script unconditionally in the `<head>`, you're setting a tracking cookie before consent — which is a GDPR violation for EU visitors.
+
+<Callout type="warning">
+If you have both a consent management platform (like Cookiebot, OneTrust, or Osano) and HubSpot's tracking code on the same site, verify they're not loading the `hubspotutk` cookie setup in parallel. Segment is a common offender: if Segment is loading HubSpot as a destination AND you've also pasted HubSpot's tracking script directly into the page head, HubSpot's analytics fires twice. The result is inflated page view counts and occasional duplicate contact records. Load HubSpot through one path only.
+</Callout>
+
+The right pattern: load HubSpot's tracking script conditionally, after consent. Most consent platforms fire a JavaScript callback when the visitor accepts analytics cookies — wrap the HubSpot script injection inside that callback. This also means that for visitors who reject analytics cookies, the `hubspotutk` cookie is never set. Form submissions from those visitors will still create contacts in HubSpot, but without session attribution.
+
+This is also a good moment to check your [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) — consent implementation has SEO implications if your consent banner is blocking the page render or injecting layout shifts that affect Core Web Vitals.
+
+## Testing the integration end-to-end
+
+Most integrations I've reviewed have at least one broken link between Webflow and HubSpot. The form submits, the developer closes the ticket, and nobody actually checks whether the contact arrived in HubSpot with attribution intact. Here's the checklist I run every time:
+
+1. Open an incognito window and navigate to the form page with UTM parameters in the URL: `?utm_source=test&utm_medium=cpc&utm_campaign=integration-test`
+2. Submit the form with a unique test email address (use a `+test` alias so it's easy to find and delete)
+3. In HubSpot, navigate to Contacts and search for the test email. Confirm the contact was created within 30 seconds — if it took longer, check your serverless function logs or Zapier task history for errors
+4. Open the contact record and verify the UTM contact properties are populated: "Original traffic source," "Original traffic source drill-down 1" (UTM source), and "Latest traffic source drill-down" should all reflect the test UTMs
+5. Click "View all properties" and check "Form submissions" — confirm the form submission event is logged with the correct form name and page URL
+6. In HubSpot's Analytics > Traffic Analytics, confirm that `test` appears as a source within 24 hours (HubSpot's traffic reports have a processing delay)
+
+If step 3 fails, the form is not reaching HubSpot — check CORS headers on your serverless endpoint, confirm your Portal ID and Form GUID, and inspect the network request in DevTools.
+
+If step 4 fails but step 3 passes, the `hutk` cookie isn't being sent or UTMs aren't on the URL at submission time. Check sessionStorage and confirm the cookie is present under Application > Cookies in DevTools.
+
+If step 5 fails, `context.pageUri` is missing or malformed in your API payload — HubSpot needs it to log the submission against a page.
+
+Running this test when a new form deploys takes ten minutes and surfaces the silent failures that marketing teams find only when they pull a quarterly attribution report and nothing adds up.
+
+Pick your option, wire the tracking correctly, and the handoff from Webflow to HubSpot becomes reliable enough to build campaigns against. If you want this built properly rather than debugged later, my [Webflow development services](/blog/webflow-development-services) include HubSpot integration as a standard scope item — [let's talk](/contact).
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />
