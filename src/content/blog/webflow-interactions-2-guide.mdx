@@ -1,0 +1,201 @@
+---
+title: "Webflow Interactions 2.0: The Complete Guide"
+description: "A working-dev walkthrough of Webflow Interactions 2.0 — triggers, timelines, scroll animations, page-load, hover, and when not to use them."
+pubDate: 2026-06-05
+tags: ["interactions", "pillar", "animation"]
+heroImage: "https://images.unsplash.com/photo-1550439062-609e1531270e?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "Webflow Interactions 2.0 timeline panel with triggers"
+cluster: "perf-hub"
+faq:
+  - q: "What's the difference between Webflow Interactions 1 and 2?"
+    a: "Interactions 2.0 is timeline-based (like After Effects) instead of event-based. You orchestrate sequences of animations on a visual timeline. Interactions 1 is legacy — new sites should never touch it."
+  - q: "Can Webflow Interactions replace GSAP?"
+    a: "For 80% of marketing-site animations, yes. Triggers, timelines, scroll-into-view, page-load, and hover are all solid. Where GSAP still wins: SVG path morphing, complex easing curves, and timeline control you can script."
+  - q: "Do Webflow Interactions hurt Core Web Vitals?"
+    a: "A heavy interaction set on a homepage can cost 50–200ms on INP, especially mouse-move interactions. Audit by disabling all interactions and re-running PageSpeed. The delta is your real budget."
+  - q: "Are class-based interactions better than element interactions?"
+    a: "Yes, almost always. Class-based interactions apply to every element with that class, so you build one card hover and it works on 50 cards. Element interactions are one-off and you'll regret them the first time you add a new card."
+  - q: "Can I copy interactions between Webflow projects?"
+    a: "Partially. Copy-paste an element with its interactions attached, and the interaction structure comes with it. Named triggers and variables don't carry cleanly between projects — expect to reconnect them."
+  - q: "What's the biggest interactions mistake?"
+    a: "Animating too much on the homepage. A single cinematic hero interaction + a few scroll-in fades is enough. Beyond that, mobile tanks and Lighthouse scores drop. Restraint is the whole game."
+---
+
+import Figure from '@/components/blog/Figure.astro';
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow Interactions 2.0 is the most powerful native animation system available in any no-code builder, and it is also the fastest way to wreck a site's performance if you use it without discipline. This guide is a full working-developer walkthrough: every trigger type, how timelines actually work, the class-based pattern that saves hours on every project, performance traps that kill INP, and the honest answer to when you should reach for GSAP instead.
+
+The short version: webflow interactions 2.0 replaces the old event-driven system with a timeline-based model that is genuinely close to what you'd build in After Effects or GSAP. For most marketing sites, it handles everything you need. For a handful of edge cases, it doesn't, and I'll tell you exactly where those edges are. If you want help implementing any of this on your site, [get in touch](/contact).
+
+## What changed from Interactions 1
+
+Interactions 1 — sometimes called IX1 — was a trigger-response system. You picked an event (click, hover, scroll) and defined a list of style changes: opacity 0 to 1, transform Y 20px to 0, duration 400ms. Simple. Also limited. Every action was independent. Running a coordinated sequence across six elements required nesting triggers inside triggers, which broke constantly and was nearly impossible to edit later.
+
+Interactions 2.0 (IX2), released in 2018 and steadily improved since, flipped the model. The trigger still exists — it fires the animation — but what the trigger fires is now a visual timeline. You see every animated element as a track, you drag keyframes, you control overlap and stagger directly on the canvas. If you have used After Effects, Premiere, or even a basic video editor, the mental model transfers immediately.
+
+The practical difference is significant. In IX1, building a staggered card entrance with six cards, a headline, and a CTA took 45 minutes and produced a brittle nest of triggers. In IX2, it takes 10 minutes and produces a single timeline you can tweak by dragging.
+
+IX2 also introduced class-based triggers and named triggers that can be reused. The system is genuinely composable in a way IX1 never was.
+
+One rule: if you open an older Webflow project and see Interactions 1 entries in the panel, do not mix IX1 and IX2. Managing both systems on one site is a debugging nightmare. Migrate to IX2 entirely or leave IX1 untouched. On new sites, IX1 should never appear.
+
+## Triggers explained
+
+Every IX2 animation starts with a trigger — the condition that fires the timeline. Getting triggers right before you build a single keyframe saves you from rebuilding interactions three times.
+
+| Trigger | Fires on | Common use |
+|---|---|---|
+| Page load | Document ready | Hero entrance, above-the-fold reveal |
+| Page scroll | Scroll position (%) | Progress bars, sticky element opacity |
+| Scroll into view | Element enters viewport | Section reveals, stat counters |
+| Mouse move in viewport | Cursor X/Y position | Parallax depth layers, magnetic effects |
+| Mouse hover | Enter / leave element | Card lifts, button fills, icon swaps |
+| Mouse click | Click / second click | Dropdown reveals, toggle states |
+| Scroll into view (once) | First time element enters viewport | One-shot entrance animations |
+| While scrolling in view | Continuous scroll progress within element | Sticky text reveals, scrubbed animations |
+
+The distinction between "scroll into view" and "while scrolling in view" trips up almost everyone building their first complex scroll animation. "Scroll into view" fires once when the element crosses the viewport threshold — it's an entrance event. "While scrolling in view" ties the animation progress directly to scroll position: 0% at entry, 100% at exit. Use the first for card reveals. Use the second for scrubbed storytelling sequences where content animates as the user scrolls through a section.
+
+"Page scroll" is the global scroll position of the page itself, not a specific element. It's the right choice for a scroll-progress bar at the top of a long page, or for fading a sticky nav from transparent to solid after the user has scrolled 80px from the top.
+
+Mouse move triggers deserve special attention because they are uniquely expensive — I'll cover the performance cost later. Used well, they create the depth-layer parallax effect that looks like a 3D scene. Used carelessly on a homepage with 12 layers, they are an INP killer that will hurt your Core Web Vitals.
+
+## Timelines and the "Element Trigger" flow
+
+Once a trigger fires, it plays a timeline. Understanding how IX2 timelines are structured changes how you build every animation.
+
+A timeline in IX2 is a sequence of keyframes across one or more target elements. Each element gets its own horizontal track. You set the start state (or leave it as "current"), set end state keyframes, and place them at positions along the time axis measured in milliseconds. The panel shows you all tracks stacked vertically, so you can see exactly where overlaps and staggers happen.
+
+The flow for building an element trigger interaction goes like this. You select an element on the canvas, open the Interactions panel on the right, choose "Element trigger," and pick the trigger type. IX2 then creates two timelines automatically for triggers that have a second state: a "1st click" and "2nd click," or "Mouse hover" and "Mouse hover out." You build both. This is the correct behavior — the out-animation should always be explicitly defined rather than relying on a reverse that may or may not behave the way you expect.
+
+Keyframe properties you can animate: opacity, transform (translate, rotate, scale, skew), width, height, max-height, border radius, background color, font color, filter (blur, brightness, contrast), and box-shadow (though I'd avoid box-shadow on principle — use borders or ring utilities for hierarchy instead). Transform properties are GPU-composited and do not trigger layout recalculation. Opacity is also GPU-composited. Everything else — width, height, background-color, filter — triggers paint or layout, which is more expensive. On complex animations, stick to transform and opacity when possible.
+
+Easing is set per-keyframe and per-property. The built-in curves (ease, ease-in, ease-out, ease-in-out, linear) cover 90% of cases. There is also a custom cubic bezier input for precise curves. What IX2 doesn't have is the spring physics system that GSAP's elastic or bounce easings give you — for true spring motion, you're still writing custom JavaScript. That's a real gap, but it's a narrow one on typical marketing sites.
+
+One underused feature: the "Affect: different elements" setting. When you build a trigger on one element, you can target animations at a completely different element — even one that isn't a child or sibling. This is how you build "hover the card, the card image scales but the CTA button also fades in" without putting both animations in the same place. The triggering element and the animated elements are decoupled.
+
+## Scroll-in-view animations
+
+Scroll-in-view is the workhorse of IX2. Every section reveal, every staggered card entrance, every stat counter that starts when the user reaches it — all of these use "scroll into view." Getting this trigger right is the core skill for any Webflow developer building a content-heavy marketing site.
+
+The full breakdown of what's possible with this trigger, including offset settings and threshold tuning, lives in [Webflow scroll animations](/blog/webflow-scroll-animations) — worth reading alongside this guide. Here I'll cover the patterns that show up on every project.
+
+The simplest scroll-in-view setup: set initial state to opacity 0 and transform Y +24px (or +40px for more drama), then animate to opacity 1 and transform Y 0 over 500–700ms with ease-out. That fade-up entrance is legible, fast to build, and works on every device. It is also slightly overused, which means you can distinguish your site by varying it — try a slight scale from 0.96 to 1.0 instead of the Y translate, or use a clip-reveal by animating max-height combined with opacity.
+
+Stagger is where IX2 earns its complexity budget. When you want six cards to reveal in sequence rather than all at once, you have two paths: you can target each card as a separate element in the timeline with offset start times (Card 1 at 0ms, Card 2 at 80ms, Card 3 at 160ms), or you can use the "Children" selector with a stagger delay setting. The Children selector approach is dramatically faster to build and produces the same visual result. Use it any time you are animating a list or grid of repeated elements.
+
+The "once" variant of scroll-into-view fires the animation the first time the element enters the viewport and never again. This is appropriate for entrance animations — you don't want the hero of a section to re-animate every time the user scrolls back up through the page. The non-once variant (which fires every time) is appropriate for things like a progress indicator that should reset on each pass, or a counter that replays on revisit.
+
+One setting that gets ignored: the viewport offset. By default, IX2 fires the trigger when the element is fully inside the viewport. You can pull this up or down — setting it to "50% from top" means the animation fires when the element has crossed halfway down the screen, which feels more natural on longer sections because the content is already visible when it starts animating.
+
+## Page load and page trigger
+
+Page load is the trigger that fires when the document finishes loading. It's the foundation of hero entrance animations — the first thing a visitor sees should feel considered, not static.
+
+The mechanics are straightforward: set the initial state of your hero elements (opacity 0, transform Y -20px, or whatever serves the design), then build the page load timeline to bring them in. The gotcha is ordering. The browser renders your initial styles before the interaction fires, which means if you haven't set the initial state correctly in the interaction panel, you'll see a flash of the fully-visible element before the animation plays. Always set initial state in IX2, not just in the Designer panel, for any element that is animated on page load.
+
+The page trigger is a set of predefined events: page load, page scroll (global), "Mouse move in viewport," and "Scroll into view" at the page level. For most page load animations, "page load" within the element trigger flow works the same way. The page trigger panel is more useful for scroll-based animations that reference total page scroll progress, not a specific element's entrance.
+
+One pattern I use on almost every homepage: a coordinated hero entrance where the eyebrow, headline, subhead, and CTA appear in sequence with 80–120ms stagger. Set initial state to opacity 0 and a small Y offset, stagger the keyframes across 600ms total. A hero that feels alive without being theatrical, built in about 15 minutes.
+
+For page transitions — fading out on navigation, fading in on arrival — use the "page is leaving" event inside the Page trigger. This is a 200–400ms window between click and navigation. Keep it short: a 200ms fade-out is enough to signal the transition. Anything longer feels sluggish on repeat visits.
+
+## Mouse-move and hover interactions
+
+Hover interactions are where IX2 shines at a tactical level. The pattern is always the same: element trigger, mouse hover event, build the "hover in" timeline, build the "hover out" timeline. The hover out should mirror the hover in in terms of properties but can use a slightly faster duration (200ms in, 150ms out reads more natural than equal durations).
+
+Card hover is the canonical example. A typical setup: card background changes from one token to another (or a subtle border appears), the card image scales from 1 to 1.03, and an arrow icon translates X +4px. None of these individually are impressive; together they signal "this is interactive" without screaming for attention. The transform animations (scale, translate) happen on the GPU and don't cause layout recalculation. The background color change triggers a paint — acceptable for a hover that fires on user intent, not on every scroll frame.
+
+Button hover states are another high-frequency use. You can build a fill-sweep effect using a pseudo-element (::before) set to width 0%, then animate it to width 100% on hover. This requires a custom CSS embed for the ::before element itself — IX2 can animate it, but you can't create it from the IX2 panel. This combination (custom CSS for structure + IX2 for animation) is a legitimate pattern and one I use often.
+
+Mouse-move interactions create parallax-depth effects. The setup: select the element to move, choose mouse-move-in-viewport trigger, set which axis (X, Y, or both) drives the transform, and set the magnitude. A magnitude of 10–20px creates a subtle depth effect; 40+px starts to feel like the element is detached from the page. Multiple layers with different magnitudes and opposite directions create the full parallax depth illusion.
+
+The practical constraint: mouse-move triggers fire on every mouse movement, which means every mousemove event. On a page with four parallax layers, this is four style updates per mouse movement frame. On a page with twelve layers, it's twelve. Mobile doesn't fire mouse-move (obviously), so the feature is desktop-only. That doesn't mean it's free on desktop — the performance section covers the cost in detail.
+
+## Class-based interactions
+
+Class-based interactions are the IX2 feature that most developers learn six months after they should have. Once you understand them, you'll restructure how you build every repeating element.
+
+The default mode in IX2 is element-based: you select a specific element, attach a trigger and timeline to that element instance. If you have twelve cards on a page and want each one to have a hover lift, element-based means building the interaction twelve times. More realistically, you'll build it once, copy it to eleven elements, and then spend twenty minutes wondering why changing one card's animation doesn't update the others.
+
+Class-based interactions work differently. Instead of attaching the interaction to an element, you attach it to a class. Any element on the page that carries that class automatically inherits the interaction. Build the card hover once on the `.card` class, and all fifty cards across the site get it for free. Add a new card in the CMS? It already has the hover.
+
+<Callout type="tip">
+When building a repeating component — cards, testimonials, feature rows — set the trigger to "Class" mode instead of "Element" before you build a single keyframe. It takes one click to switch modes. Switching after you've built the interaction on an element loses you nothing technically, but it's a habit worth forming from the start. Class-based interactions are the right default for every component that appears more than once.
+</Callout>
+
+The limitation of class-based interactions is targeting: you can target the triggering element itself and its children easily, but targeting sibling or parent elements from a class trigger requires more care. Webflow provides selector options — "Siblings," "Parent," "Children" — that cover most cases. If you need to animate something completely outside the component tree, element-based targeting is the fallback.
+
+One real-world pattern: a FAQ accordion where clicking the question reveals the answer and rotates a chevron icon. Set the trigger on the `.faq-item` class. Target the `.faq-answer` class for the max-height animation (0 to auto — use a large explicit value like 500px since "auto" doesn't animate reliably). Target the `.faq-chevron` class for the rotation animation (0deg to 180deg). This entire accordion, covering unlimited FAQ items on the page, is built once and maintained as one interaction. That is the class-based advantage.
+
+## Performance: what hurts LCP and INP
+
+This is the section most people skip. It's the most important one on the page.
+
+Webflow Interactions are not free. Every interaction adds JavaScript to your page's runtime execution cost. A homepage with six well-scoped interactions has a negligible cost. A homepage with thirty interactions including mouse-move parallax layers and scroll-scrubbed animations has a real cost that shows up in your INP (Interaction to Next Paint) and sometimes in your LCP (Largest Contentful Paint) if an on-load animation delays the paint of your hero image.
+
+The cost breakdown by interaction type:
+
+| Interaction type | Typical cost (ms, mid-range desktop) | Mobile penalty |
+|---|---|---|
+| Page load (transform + opacity only) | 5–15ms | 1.2x |
+| Scroll into view (per element, once) | 2–8ms per intersection observer | 1.5x |
+| Hover (transform + opacity) | 2–5ms on trigger | 1.3x |
+| While scrolling in view (scrubbed) | 10–30ms per scroll event | 2x |
+| Mouse-move parallax (per layer) | 8–20ms per mousemove event | N/A (desktop only) |
+| Page scroll progress | 5–15ms per scroll event | 2x |
+
+The numbers above are indicative, not exact. Your real numbers depend on element count, GPU acceleration eligibility, and device. The way to get your actual number: disable all interactions in the Designer preview, run a PageSpeed Insights test, then re-enable interactions and re-run. The INP delta is your interaction budget. If you've spent more than your budget, you have a performance problem.
+
+<Callout type="warning">
+Mouse-move parallax is the single biggest interactions performance trap. A mouse-move trigger with four layers firing on every mousemove event at 60fps is running 240 style calculations per second on desktop. On a MacBook Pro, that's invisible. On a mid-range Windows laptop — the device your actual users are on — it causes jank. On an older Android tablet, it causes the page to feel broken. Before shipping any mouse-move interaction, test on a device with limited GPU resources, not your development machine.
+</Callout>
+
+For LCP specifically: if your hero headline or hero image is part of an on-load animation that starts at opacity 0, the browser cannot paint that element until the JS fires and starts the animation. This delays LCP. The fix is to keep opacity on the initial state set within IX2, not as a CSS style, and ensure the IX2 runtime initializes fast. On slow connections, you can also add a CSS class with `opacity: 1` that IX2 removes at runtime — so users on slow connections see the content rather than a blank page.
+
+For a full breakdown of what's causing your Webflow site's Lighthouse scores to tank and how to fix each category, [Webflow site slow](/blog/webflow-site-slow) and [Webflow Core Web Vitals](/blog/webflow-core-web-vitals) go deeper than this section can.
+
+The practical rules I follow on every project:
+
+- Page load animations: transform and opacity only. No color, no size, no filter.
+- Scroll-into-view: "once" mode by default unless the design explicitly requires replay.
+- Mouse-move parallax: maximum four layers. Test on a $300 Windows laptop before shipping.
+- Scrubbed scroll animations ("while scrolling in view"): maximum two active at a time on a given viewport.
+- Never animate layout properties (width, height, margin, padding) inside an interaction that fires on scroll. The reflow cost at scroll frame rates is severe.
+
+## When to reach for GSAP instead
+
+IX2 covers most of what a marketing site needs. There are cases where it genuinely doesn't, and being honest about the threshold is more useful than overselling Webflow's capabilities.
+
+<Callout type="note">
+My working threshold: if the animation can be described as "element enters, transforms, and settles into a final state," IX2 is the right tool. If the animation requires dynamic control, conditional logic, timeline scrubbing based on JavaScript state, or SVG path operations, GSAP is the right tool. Projects that are primarily a visual design deliverable use IX2. Projects where the animation is part of the product experience — interactive demos, data visualizations, scrollytelling — lean toward GSAP.
+</Callout>
+
+The specific gaps in IX2 that I reach for GSAP to fill:
+
+**SVG path morphing.** IX2 can animate SVG element position and opacity, but it cannot morph one SVG path shape into another. GSAP's MorphSVG plugin does this. If your design includes an icon that morphs on click or a shape that transforms as the user scrolls, you need GSAP.
+
+**Spring physics and elastic easing.** IX2's custom cubic bezier gets you to good easing, but not to true spring behavior — where the animation overshoots and settles, or bounces on landing. GSAP's elastic and bounce easings, and especially its physics2D plugin, produce motion that feels physically grounded. This matters on UI that mimics real-world objects.
+
+**Programmatic timeline control.** IX2 timelines are authored in the Designer and play linearly or in reverse. You cannot pause, seek, or speed-adjust an IX2 timeline from JavaScript based on user input or data. GSAP timelines can be controlled like a video — pause at a specific position, scrub with a slider, speed up at a certain event. Interactive demos, progress-gated reveals, and data-driven animations all benefit from this.
+
+**Complex canvas-based animations.** If the animation lives on a `<canvas>` element — particle systems, WebGL effects, generative graphics — GSAP's ticker is a natural fit for synchronizing animation to frame rate. IX2 doesn't touch canvas.
+
+**Fine-grained performance optimization.** GSAP's `will-change` management, lazy rendering, and precise RAF (requestAnimationFrame) control are more mature than IX2's runtime. On a page where animation performance is critical — a scroll-driven narrative with thirty animated elements — GSAP's overhead is lower and its debugging tools are better.
+
+The full implementation guide for bringing GSAP into a Webflow project — including how to load it without breaking the Designer preview — is in [GSAP in Webflow](/blog/gsap-in-webflow). The short version: add GSAP via the project's custom code panel (head), initialize via a module script in the body, and keep your GSAP code in a separate file that the Designer doesn't touch.
+
+One thing I want to be clear about: reaching for GSAP is not a sign that Webflow failed. IX2 and GSAP are complementary. On every complex project I ship, the scroll-in-view reveals and hover states are IX2, and the one or two complex set-piece animations that need programmatic control are GSAP. The 80/20 split is real and it's the right working model.
+
+The place where IX2 consistently wins over GSAP for marketing sites is maintainability. A designer or junior developer can open the Interactions panel in the Webflow Designer and understand, adjust, and extend an IX2 animation without touching code. The same change in GSAP requires a code edit, a redeploy, and someone who can read JavaScript. For sites that need ongoing updates from a small team, that maintainability gap matters more than the technical capability gap.
+
+---
+
+The single most useful thing I can tell you after building interactions on hundreds of pages: restrain yourself on the homepage. One cinematic hero entrance, section reveals with a single entrance style repeated consistently, and one or two focal hover effects is a complete, polished interaction system. The temptation to animate everything because IX2 makes it easy is real. Resist it. Your Lighthouse score, your mobile users, and the designer who inherits your project six months from now will thank you for it.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

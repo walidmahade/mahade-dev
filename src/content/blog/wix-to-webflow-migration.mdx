@@ -1,0 +1,174 @@
+---
+title: "Wix to Webflow Migration: What Actually Breaks"
+description: "The exact failure modes when migrating from Wix to Webflow — URL structure differences, CMS shape mismatches, and the fix-list."
+pubDate: 2026-07-01
+tags: ["migration", "wix"]
+heroImage: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Wix website being migrated to Webflow"
+cluster: "migration"
+faq:
+  - q: "Can I export my Wix content to import into Webflow?"
+    a: "Not directly. Wix has no full-site export. Blog posts export as RSS or via the API; images need manual download; page layouts can't be exported at all. Plan to rebuild everything and migrate content by copy-paste or custom API calls."
+  - q: "What breaks first in a Wix to Webflow migration?"
+    a: "URLs. Wix uses patterns like /post-name not /blog/post-name, and its store URLs (/product-page/xxx) don't have Webflow equivalents. Without a careful redirect map, you lose every external and backlinked URL."
+  - q: "Do Wix apps transfer to Webflow?"
+    a: "No. Wix App Market plugins (forms, galleries, chats, bookings) are Wix-specific. You'll need Webflow equivalents: Memberstack for members, HubSpot for forms, Cal.com for bookings, etc. Budget $0–$50/mo across replacements."
+  - q: "How long does a Wix to Webflow migration take?"
+    a: "A 10-page marketing site: 2–4 weeks. A 20-page site with a blog and bookings: 4–6 weeks. Wix migrations usually take slightly longer than Squarespace because URL patterns diverge more sharply."
+  - q: "Will my Wix SEO survive the migration?"
+    a: "With a complete 301 redirect map, yes — rankings recover in 2–4 weeks. Without it, expect a 30–60% traffic drop that lingers for 2–3 months. The redirect map is the single most important deliverable of the migration."
+  - q: "Should I stay on Wix instead of migrating?"
+    a: "If you have under 10 pages, no ecommerce, no blog, and no custom integrations: maybe. Wix has improved. But if you need serious SEO, CMS flexibility, or multi-stakeholder editing, Webflow pulls ahead past year one."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+A wix to webflow migration is not technically hard — Webflow is more capable in every dimension Wix competes on. What it is: full of quiet failure modes that don't announce themselves until two weeks after launch when your organic traffic has dropped and your booking form stopped working.
+
+The short answer: URLs break first, CMS structure breaks second, app dependencies break third, and SEO recovers only if you handled the first problem before go-live. Everything else is fixable in the first sprint. The URL problem is retroactive — you either solved it before you pointed DNS, or you're paying for it for the next quarter.
+
+I cover the [WordPress equivalent of this process](/blog/wordpress-to-webflow-migration) separately — Wix has its own failure modes worth treating on their own terms. If you want to talk through your specific site before committing to a path, [get in touch](/contact).
+
+## What breaks by default
+
+No migration tool moves a Wix site to Webflow automatically. Not even close. There is no Wix export that produces anything Webflow can consume directly. What you can pull out of Wix: blog post content via RSS or the Wix Content Manager API, images via manual download (tedious, but doable), and product data via CSV if you have a Wix store. What you cannot pull out: page layouts, section structure, CMS collection schemas, app configurations, form logic, member data, or dynamic page templates. Those have to be rebuilt from scratch.
+
+This is actually fine. Most Wix sites should be rebuilt rather than ported — Wix's block editor output doesn't map to Webflow's class-based layout system, and trying to recreate it exactly produces a mess. Treat it as a new build with a content migration layer on top, not a 1:1 copy operation.
+
+What breaks specifically, in order of how badly it hurts:
+
+**URLs and SEO equity.** Wix's URL structure is its own thing, and it doesn't match Webflow's defaults. Every backlink, every Google index entry, every bookmark your users have saved — those all point to Wix URLs. Without a redirect plan in place before DNS cutover, you're handing those 404s with no recovery path. This is the highest-stakes problem of the entire migration.
+
+**CMS collection structure.** Wix calls its dynamic content system "Velo Collections" or "Content Manager." Webflow calls it CMS. The concepts are similar; the schema shapes are completely different. Field types that exist in Wix don't exist in Webflow and vice versa. You have to map the old schema to the new one by hand, and if you get the Webflow schema wrong, you'll be rebuilding collections mid-project when the content doesn't fit.
+
+**Third-party app dependencies.** Wix's app market is self-contained. Apps that extend your site — booking systems, chat widgets, galleries, membership walls — are all Wix-specific. None of them migrate. Each needs a Webflow-compatible replacement, and each replacement has its own setup cost and monthly line item.
+
+**Form routing.** Wix forms connect to Wix's own notification system and, in some plans, to a built-in CRM. Webflow native forms go to email notifications. Any form logic beyond that — routing to HubSpot, triggering automations, conditional fields — has to be rebuilt explicitly.
+
+## URL patterns: Wix's quirks vs Webflow's sanity
+
+This is the section I wish every client read before I started work. Wix's URL structure diverges from standard web conventions in ways that feel minor until you're looking at 200 dead URLs after a migration.
+
+| Content type | Wix URL | Webflow URL |
+|---|---|---|
+| Blog post | `/post/post-slug` or `/blog/post-slug` | `/blog/post-slug` |
+| Blog index | `/blog` | `/blog` |
+| Store product | `/product-page/product-name` | `/shop/product-name` or custom |
+| Store index | `/shop` or `/store` | configurable |
+| Dynamic CMS page | `/collection-name/item-slug` | `/collection-name/item-slug` |
+| Members area | `/members/profile` | not native — requires Memberstack/Outseta |
+| Booking page | `/bookings` | not native — external embed |
+
+The blog pattern is the most commonly underestimated. If your Wix blog has 40 posts indexed at `/post/slug`, you need 40 individual 301 redirects pointing to your new Webflow paths. If you don't set those up, Google sees 40 new URLs and 40 dead ones — and it takes months to sort out which new URLs should inherit the signals from the old ones.
+
+<Callout type="warning">
+Wix's deep-linked URL patterns for dynamic pages — specifically anything in the Wix Members area, Wix Bookings, and Wix Events — generate URLs that are tied to Wix's own routing layer. These aren't just different paths; they're different routing architectures entirely. There is no 1:1 Webflow equivalent, which means you can't write a simple redirect rule for them. You need to map each user-facing URL type to either a static Webflow page, a third-party app URL, or a custom 404 that actively guides users to the right place.
+</Callout>
+
+Webflow's URL structure is cleaner and more configurable than Wix's, which is part of why the migration is worth doing from an SEO standpoint long-term. But you have to bridge the gap deliberately.
+
+## Wix "Studio Collections" → Webflow CMS
+
+Wix has two content systems depending on which platform version your site runs: the older Velo-era Content Manager and the newer Wix Studio Collections. Both export the same way (poorly) and both need to be remapped to Webflow CMS collections from scratch.
+
+The structural differences that cause the most pain:
+
+**Rich text vs plain text fields.** Wix stores blog post bodies in a proprietary rich text format. Exported via RSS or the API, you get HTML or a stripped version. Webflow's rich text field won't accept arbitrary HTML without a custom embed workaround. For blogs with heavy formatting, plan to reformat each post in the Webflow editor or write a migration script using the Webflow CMS API.
+
+**Reference field equivalents.** Wix's Content Manager supports "multi-reference" style fields that connect items across collections. Webflow CMS has both Reference (single) and Multi-Reference fields. The mapping isn't automatic — you have to decide which Wix relationship maps to which Webflow field type, and building that schema wrong means rebuilding it when templates break.
+
+**Image handling.** Wix hosts images on its own CDN, and migrated content still points to Wix CDN URLs — which stay live only as long as your Wix account is active. Cancel Wix and those images break. Download every image used in CMS content, upload to Webflow's asset manager or a third-party CDN, and update references before you leave. This is the most labor-intensive part of any content-heavy migration.
+
+**Field count limits.** Webflow CMS caps at 30 fields per collection on Business plans. Wix is more permissive. If your Wix collections are heavily instrumented, audit field counts before designing your Webflow schema. Splitting one fat collection into two lean referenced ones is often cleaner anyway — but it's work you need to plan for.
+
+## Wix app dependencies that don't carry over
+
+This is where scope surprises happen. Every Wix App Market plugin your site uses needs a replacement. There's no migration path; there's only a substitution list.
+
+| Wix app | Webflow replacement | Cost/mo |
+|---|---|---|
+| Wix Bookings | Cal.com (free) or Calendly (from $10) | $0–$10 |
+| Wix Chat | Intercom, Crisp, or Tidio | $0–$39 |
+| Wix Members / Paid Plans | Memberstack or Outseta | $29–$49 |
+| Wix Forms (advanced) | HubSpot Free or Typeform | $0–$25 |
+| Wix Blog (migrated content) | Webflow CMS (native) | $0 |
+| Wix Events | Eventbrite embed or Luma | $0 |
+| Wix Restaurants (menus) | Custom CMS collection | $0 |
+| Wix Pro Gallery | Webflow native gallery or Finsweet | $0 |
+
+The replacements aren't expensive. The cost is setup time: each integration needs to be configured, embedded, and tested before launch. For a site with three or four apps, budget three to five extra development days just for replacements.
+
+One thing worth flagging about **Wix Members**: user accounts can't migrate to any third-party solution automatically. Credentials live inside Wix's auth system. You're either asking users to re-register, or building a migration flow that emails them to create a new account. Neither is painless. Plan the communication strategy before launch, not after.
+
+## Ecommerce migration path
+
+If you're running a Wix Store, the migration adds another layer of complexity. Webflow Ecommerce is a different product from Wix Stores, and the gap matters.
+
+Products can be exported from Wix as a CSV and imported into Webflow Ecommerce's product catalog — that part works reasonably well for simple products. What doesn't transfer automatically: product variants with more than three option types (Webflow Ecommerce has variant limits), customer order history (stays in Wix), customer accounts (stays in Wix), and any Wix Payments payment method configurations.
+
+For stores under 100 products with no complex variant logic, Webflow Ecommerce is viable. For larger catalogs or stores where Wix Payments is deeply embedded, evaluate whether a headless commerce layer — Shopify Buy Button, Snipcart, or Foxy.io — embedded in Webflow makes more sense.
+
+One more thing: don't cancel Wix until you've exported all order history as a CSV. That data doesn't follow you to Webflow.
+
+## Redirect map strategy
+
+The redirect map is not optional. I've said this in different ways twice already in this post and I'm saying it again here as its own section because it's the thing that gets skipped most often and causes the most post-launch pain.
+
+A complete redirect map for a Wix to Webflow migration covers:
+
+1. Every blog post URL (old Wix path → new Webflow path)
+2. Every dynamic CMS page (category pages, case study pages, team member pages)
+3. Store product URLs if you had a Wix Store
+4. Any static pages where the slug changed
+5. Wix Members and Booking deep-link URLs → either the new equivalent page or a relevant static page with a clear call to action
+
+In Cloudflare Pages, which is where I host most of my Webflow builds, redirects live in `public/_redirects` in the repository. In Webflow hosting directly, you manage them through the hosting panel's redirect editor. Either way, get them in place before you point DNS — you cannot add them retroactively for requests that have already been served as 404s.
+
+<Callout type="tip">
+Crawl your live Wix site with Screaming Frog or a similar crawler before you start building in Webflow. Export all indexed URLs to a spreadsheet. That list becomes the source of truth for your redirect map. Cross each URL off as you confirm either that the Webflow equivalent URL is identical (no redirect needed) or that you've added a redirect rule. Don't rely on memory — if a URL exists and you don't have it in the spreadsheet, you'll miss it.
+</Callout>
+
+Once live, submit the new sitemap to Google Search Console and monitor Coverage for 404s over the first two to three weeks. Any 404s are URLs you missed. Fix them with 301s immediately — the longer they sit, the more link equity bleeds out.
+
+For a full post-launch SEO checklist once you're on Webflow, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) covers every technical SEO item you need to verify before and after launch.
+
+## Timeline by page count
+
+Wix migrations consistently run slightly longer than equivalent Squarespace migrations, primarily because the URL structure diverges more sharply and the app replacement work is more involved. Here's what I see in practice:
+
+**Under 10 pages, no blog, no store, no apps:** 1.5–2 weeks. This is a rebuild with minimal content migration. The redirect map is short, the CMS work is minimal or zero, and there are no app integrations to replace.
+
+**10–20 pages with a blog (under 50 posts):** 2.5–4 weeks. Add one week for blog content migration, URL mapping for all posts, and basic CMS collection setup. If blog posts have images throughout the body copy, add another three to four days for image re-hosting.
+
+**20+ pages with blog, bookings, and forms:** 4–6 weeks. This is the realistic scope for a business site that's been on Wix for several years. The app replacement work (bookings, forms, chat) plus a full redirect map plus the content migration adds up quickly. This assumes design decisions are made quickly — a client who takes three days to approve each section design will stretch this to eight weeks.
+
+**Wix Store with 50–200 products:** add 1–2 weeks to any of the above. Product data migration, variant setup, payment configuration, and order flow testing all take real time.
+
+For comparison, the [Squarespace to Webflow migration](/blog/squarespace-to-webflow-migration) typically runs one to two weeks shorter — Squarespace URL patterns are closer to Webflow's defaults.
+
+## When to stay on Wix
+
+I do this migration work for a living, so take this seriously when I say: not every site should migrate.
+
+Wix has improved substantially. Wix Studio, their newer editor, is a more capable product than the legacy Wix editor that most people have negative memories of. The performance issues are better. The SEO tools are more complete. The CMS has grown up.
+
+If your site fits all of these criteria, staying on Wix is a defensible choice:
+
+- Under 10 pages
+- No blog or a blog with under 20 posts
+- No ecommerce
+- No custom integrations beyond basic forms
+- No plans to hire a developer for ongoing work
+- You manage the site yourself and Wix's editor works for you
+
+The math changes the moment any of those criteria shifts. A growing blog on Wix runs into SEO limitations — in particular, schema markup control and structured data customization — that Webflow solves natively. A site that needs multi-stakeholder editing, where a marketing team is adding landing pages regularly, will hit Wix's page structure limitations in ways that slow everyone down. And any site where performance scores matter — SaaS, service businesses competing for search traffic — will find that Webflow gives you more control over the knobs that actually move Lighthouse numbers.
+
+The [full Webflow vs Wix comparison](/blog/webflow-vs-wix) goes deeper on where each platform wins across price, flexibility, and SEO — worth reading before you decide.
+
+The honest summary: if you're reading this post, you're probably already past the line where Wix is the right answer. The most satisfied clients I've worked with tried to make Wix work for a year or two, hit a concrete ceiling, and then moved. The migration is the easy part — it's the year of fighting a platform you've outgrown that costs you.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

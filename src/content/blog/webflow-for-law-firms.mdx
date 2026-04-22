@@ -1,0 +1,180 @@
+---
+title: "Webflow for Law Firms: Compliance + Templates"
+description: "Why Webflow fits small-to-midsize law firms — compliance, disclaimer patterns, practice-area CMS, local SEO, and the template I use."
+pubDate: 2026-07-27
+tags: ["law", "industry"]
+heroImage: "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A professional law firm website built on Webflow"
+cluster: "hire-hub"
+faq:
+  - q: "Is Webflow a good platform for law firm websites?"
+    a: "Yes, for solo practitioners through mid-size firms (10–30 attorneys). The design freedom, local SEO control, and content management fit how most firms actually work. Large firms with DocuSign-style portals or client file management need WordPress or a custom stack."
+  - q: "What compliance issues affect law firm websites?"
+    a: "Three big ones. (1) ABA Rule 7.1 — no false or misleading claims. (2) State advertising rules (vary by state; California and New York are strict). (3) UPL rules — avoid implying you practice in jurisdictions you're not barred in. Add proper disclaimers and you're fine."
+  - q: "What disclaimer should a law firm site have?"
+    a: "Footer disclaimer on every page: 'This site is attorney advertising. Past results do not guarantee future outcomes. Nothing on this site should be considered legal advice.' Plus a contact-form disclaimer: 'Submitting this form does not create an attorney-client relationship.'"
+  - q: "How should a law firm structure practice areas in Webflow CMS?"
+    a: "A Practice Areas collection with fields: name, slug, summary, detailed description, FAQ, key attorneys (multi-reference), case results (multi-reference). Template page at /practice-areas/[slug]. This structure handles 5 areas or 50 without restructuring."
+  - q: "What local SEO schema do law firms need?"
+    a: "LegalService schema (a subtype of LocalBusiness) with name, address, phone, areaServed, priceRange, openingHours, and telephone. Plus Attorney schema for each lawyer profile page. These get rich results in Google Maps for attorney searches."
+  - q: "How much does a Webflow law firm website cost?"
+    a: "Solo practitioner (5-page site): $4,500–$8,000. Small firm (10 pages + 8 practice areas CMS): $9,000–$18,000. Mid-size firm (20+ attorneys, extensive CMS, location pages): $18,000–$40,000. Add $200–$400/mo for retainer and hosting."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow for law firms works — cleanly, compliantly, and without the bloat that makes WordPress the default choice. I've built law firm sites on both platforms, and the honest answer for solo practitioners through mid-size firms (10–30 attorneys) is that Webflow handles every core requirement: visual polish, practice-area CMS, local SEO control, attorney profiles, and the disclaimer patterns that keep your state bar happy. Where Webflow falls short is at the enterprise end: if you need client portals, matter management integrations, or document-signing workflows, you're in custom-stack territory. For everything below that threshold, here's how I build it.
+
+If you already know you need someone to build this for you, [get in touch](/contact) and we can scope it out.
+
+## Why law firms over-index on WordPress (and why it's wrong)
+
+The legal marketing industry runs on WordPress the same way law firms run on WordPerfect — through inertia, not merit. Most legal-specific themes are built for agencies managing hundreds of law firm clients, designed to deploy at volume, not to represent your firm specifically. The result looks like every other firm in your city.
+
+The practical problems stack up. Legal WordPress setups almost always involve a page builder (Elementor, Divi, or WPBakery), a separate SEO plugin, caching plugin, security plugin, and form plugin — each from a different vendor, each with its own update cycle. I've inherited WordPress law firm sites with 47 active plugins. The performance is mediocre by default.
+
+Webflow consolidates that stack. Hosting, CMS, form handling, and the visual editor are one product with no plugins to maintain. The design freedom means your firm's site can look different from competitors sharing your practice area — which matters when a potential client is comparing three tabs.
+
+The main legitimate reason to choose WordPress is integration depth: some case management systems (Clio, MyCase, Filevine) have WordPress plugins with no Webflow equivalent. If the website needs to be tightly coupled to those systems, WordPress may be the right call. For content-only sites — which most law firm public sites actually are — Webflow wins.
+
+## Compliance basics: ABA + state rules
+
+Law firm website compliance is not complicated once you know what applies. The three things that matter for your public website:
+
+**ABA Model Rule 7.1** prohibits false or misleading communications about your services. On a practical level, this means no claims you can't back up, no implying outcomes you can't guarantee, and no testimonial that suggests a specific result applies to all clients. Most law firms violate this rule in their hero copy — "We win for our clients" is borderline; "We recovered $X million for injury victims" without qualifying language is a problem in most states.
+
+**State advertising rules** vary significantly. California, Florida, and New York have the most detailed and restrictive rules. California requires a specific disclaimer label in advertising materials. New York requires a "Attorney Advertising" designation on the site itself. If your firm is licensed in multiple states, the strictest rule governs. I always verify against the state bar's advertising committee guidance before launch, not after.
+
+**Unauthorized Practice of Law (UPL) rules** are easy to violate accidentally. If your site implies you handle matters in jurisdictions where you're not barred — including vague language like "We serve clients nationwide" when you're only licensed in two states — you're in UPL territory. Keep geographic claims precise and tied to actual licensure.
+
+<Callout type="warning">
+ABA Rule 7.2 and most state equivalents treat a law firm website as attorney advertising. That means your disclaimer obligations apply to every page, not just the contact page. A page titled "Car Accident Lawyer in [City]" is advertising. Your footer disclaimer must appear on it. Set this up sitewide in Webflow's global footer component so it never gets missed on new pages.
+</Callout>
+
+## Disclaimer and advertising-rule patterns
+
+Every law firm site I build has two disclaimer blocks, both templated in Webflow components so they're consistent and never left off.
+
+**Footer disclaimer (global, every page):** "This website is attorney advertising. Prior results do not guarantee a similar outcome. The information on this site is not legal advice and does not create an attorney-client relationship. [Firm Name] is licensed to practice law in [State(s)]." This covers ABA 7.1, most state advertising rules, and the UPL issue in one paragraph.
+
+**Contact form disclaimer (inline, above or below the submit button):** "Submitting this form does not create an attorney-client relationship. Do not send confidential information through this form." This matters because a prospective client who submits a contact form and receives no follow-up can later argue they had an attorney-client relationship based on the consultation. That disclaimer cuts that argument off cleanly.
+
+In Webflow, I implement these as global symbols: the footer disclaimer is in the site-wide Footer component, and the form disclaimer is a reusable embed dropped into every form instance. When language needs to change — which happens when a firm adds a new state or a new practice area — you update it once and it propagates everywhere.
+
+## CMS: attorneys, practice areas, case results
+
+The CMS structure for a law firm site is more important to get right upfront than on most other project types, because the data relationships are non-trivial. The three core collections are Attorneys, Practice Areas, and Case Results. They reference each other, so getting the fields right before you start building saves a painful rearchitecture later. I wrote about general Webflow CMS architecture principles in [this post on CMS structure](/blog/webflow-cms-structure) — the law firm pattern is one of the more complex applications of those principles.
+
+The Practice Areas collection is the one that most law firms underspecify. Here's the full field set I use:
+
+| Field | Type | Purpose |
+|---|---|---|
+| Name | Plain Text | Collection item name, used in nav and headings |
+| Slug | Plain Text | URL path segment, e.g. `personal-injury` |
+| Summary | Plain Text | One-sentence description for listing pages and meta descriptions |
+| Full Description | Rich Text | Long-form practice area content, multiple sections |
+| FAQ | Rich Text | Practice-area-specific questions with answers |
+| Key Attorneys | Multi-Reference → Attorneys | Attorneys who handle this area, shown on the practice page |
+| Case Results | Multi-Reference → Case Results | Related wins, displayed on the practice page |
+| Hero Image | Image | Practice-area-specific header image |
+| Schema Type | Plain Text | Specific legal service type for JSON-LD, e.g. `LegalService` |
+
+The Attorney collection carries: name, photo, bio, bar admissions (plain text listing the states), practice areas (multi-reference back to Practice Areas), LinkedIn URL, and phone number. The Case Result collection carries: title, amount (optional — some states restrict disclosing settlement amounts), practice area reference, date, and a brief description.
+
+The template page for practice areas lives at `/practice-areas/[slug]`. It pulls in the full description, FAQ, key attorneys filtered by that practice area's multi-reference, and any case results. This structure scales from five practice areas to fifty without any restructuring, which matters when a firm expands its focus.
+
+## Local SEO and schema for attorneys
+
+Local SEO for law firms is primarily a Google Business Profile problem, not a website problem — but the website schema makes a material difference in whether map pack results show your firm's profile correctly.
+
+The schema type that matters is `LegalService`, which is a subtype of `LocalBusiness`. It gets rich results in Google Maps for "[practice area] attorney near me" searches, which is how most people actually look for legal help. I also add an `Attorney` schema block on each attorney profile page.
+
+Here's the `LegalService` JSON-LD block I embed in the site's global `<head>` via Webflow's site-wide custom code field:
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  "name": "Smith & Associates Law Firm",
+  "url": "https://www.smithlawfirm.com",
+  "logo": "https://www.smithlawfirm.com/images/logo.svg",
+  "telephone": "+1-555-800-1234",
+  "email": "contact@smithlawfirm.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "123 Main Street, Suite 400",
+    "addressLocality": "Chicago",
+    "addressRegion": "IL",
+    "postalCode": "60601",
+    "addressCountry": "US"
+  },
+  "areaServed": {
+    "@type": "State",
+    "name": "Illinois"
+  },
+  "priceRange": "$$",
+  "openingHours": "Mo-Fr 09:00-18:00",
+  "sameAs": [
+    "https://www.linkedin.com/company/smith-associates",
+    "https://www.avvo.com/attorneys/smith-associates"
+  ]
+}
+</script>
+```
+
+For `areaServed`, use the most specific geographic type that's accurate: `City`, `State`, or an array of both if the firm has multiple offices. Don't claim national coverage if you're barred in two states. I walk through the full Webflow schema implementation workflow, including how to use the custom code embed for collection-level schema, in [Webflow schema markup](/blog/webflow-schema-markup).
+
+For practice-area pages specifically, I also add a `Service` schema block on each practice area template page, referencing the parent `LegalService` entity. This signals to Google that the firm's personal injury page, for example, is a specific offering of the firm's legal services rather than a standalone entity.
+
+The rest of the local SEO checklist for law firm sites — title tag patterns, NAP consistency, citation building, Google Business Profile optimization — I cover in the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026). The schema work above is the piece most law firm sites are missing.
+
+## Contact form + intake pattern
+
+The contact form on a law firm site is doing more work than most contact forms. It's often the first step in a potential client relationship, which means it needs to be compliant (the disclaimer above), frictionless (short enough to complete), and effective (routing the right information to the right person).
+
+My standard law firm intake form has six fields: name, phone, email, matter type (dropdown populated from the Practice Areas collection), state where the issue occurred, and a brief description. That's enough to do a conflict check and route the inquiry to the right attorney. More than eight fields and completion rates fall off a cliff.
+
+For routing, Webflow Logic handles simple notification emails well. For anything more sophisticated — routing by practice area, triggering a Clio intake, or sending an auto-reply with different messaging per matter type — you'll need Zapier or Make connecting Webflow's form submission webhook to your CRM. I typically build this as a Zapier multi-step zap: form submission fires a webhook, Zapier checks the matter type field and routes to the correct attorney's email and creates a draft contact record in the CRM.
+
+<Callout type="tip">
+Add the no-attorney-client-relationship disclaimer directly above the submit button — not buried in fine print at the bottom of the page. Courts have found that prominent placement matters when this language is later contested. A single sentence in small but legible text, visually separated from the form fields, is the standard approach. In Webflow, this is a text block inside the form component, styled at 12px with muted color — visible but not disruptive.
+</Callout>
+
+## Accessibility and WCAG
+
+Law firms are disproportionately exposed to ADA Title III web accessibility claims. The plaintiff bar in this space files demand letters and suits against professional-service firm websites regularly, targeting firms that represent enough revenue to make the litigation worthwhile. A WCAG 2.1 AA compliant site eliminates the easiest attack vector.
+
+The Webflow-specific WCAG issues I see most often on law firm sites:
+
+**Color contrast on trust bars.** Firms often use gold or muted tones for client logos and award badges. These frequently fail the 4.5:1 contrast ratio requirement for normal text. Run every text element through the WebAIM contrast checker before launch.
+
+**Attorney photo alt text.** Every headshot needs a descriptive alt attribute ("Jane Smith, founding partner" — not "attorney-photo-2.jpg"). In Webflow's CMS, this maps to an Alt Text field on the image field in the Attorneys collection. If that field is empty, the screen reader reads nothing.
+
+**Form labels.** Every form field needs an associated `<label>` element or an `aria-label`. Webflow's native form builder generates label elements by default — don't use placeholder-only patterns where the label disappears once typing starts. On a legal intake form, that pattern creates compliance risk beyond accessibility.
+
+**Document links.** If you link to PDFs (client guides, fee agreements, intake forms), those PDFs need to be accessible too — tagged headings, readable reading order, alt text on images within the PDF. This is often the item that generates demand letters, because it's visible in search results and easy for accessibility bots to flag.
+
+## Template and launch cost
+
+The template I use is built around these core pages: homepage, about, team (attorney listing + individual pages via CMS), practice areas (listing + individual pages via CMS), case results (optional, depending on state rules), blog, contact, and a location page per office.
+
+The homepage structure: hero with primary practice area and a strong CTA, trust bar (awards, bar associations, years in practice), practice area grid, case result highlight, attorney spotlight, and intake form. Trust signals carry more weight on a law firm homepage than almost any other site type — prospective clients are making high-stakes decisions under stress.
+
+Cost breakdown by firm size:
+
+Solo practitioner (5 pages, no CMS): $4,500–$8,000. Small firm (10 pages + 8 practice areas CMS + attorney profiles): $9,000–$18,000. Mid-size firm (20+ attorneys, full CMS, location pages, blog): $18,000–$40,000. Ongoing retainer: $200–$400/month.
+
+Those ranges assume design is included. If the firm already has Figma files, subtract roughly 30%. If copywriting is also needed, add 25–40%.
+
+The one thing that consistently pushes law firm projects over budget is content delivery. Attorneys are busy, partner review cycles are slow, and "we'll have the attorney bios to you by Tuesday" rarely means Tuesday. Build a realistic content delivery schedule into the contract with explicit holds: if content is more than two weeks late, the timeline shifts and a delay fee applies. This is a standard clause in my law firm contracts and it makes the project run on schedule.
+
+If you're comparing developers for this kind of engagement, [hire-webflow-developer-2026](/blog/hire-webflow-developer-2026) covers what to look for, what to pay, and the questions that separate actual specialists from people who've watched the tutorials.
+
+Webflow handles law firm websites well. The compliance requirements are patterns, not problems — once they're templated in your component library, they never get missed. The CMS structure above scales. The schema signals to Google that you're a legitimate local legal service provider. And the design output looks like a firm worth hiring, not a site spun up by a legal marketing factory.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="hire" />

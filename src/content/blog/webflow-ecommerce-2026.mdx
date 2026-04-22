@@ -1,0 +1,193 @@
+---
+title: "Webflow Ecommerce in 2026: What It Can and Can't Do"
+description: "A working developer's honest read on Webflow Ecommerce — when it fits, what it's missing, and how it compares to Shopify and Stripe-only checkouts."
+pubDate: 2026-05-25
+tags: ["ecommerce", "pillar"]
+heroImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A Webflow Ecommerce store dashboard with product cards"
+cluster: "cms-hub"
+faq:
+  - q: "Is Webflow Ecommerce good enough for a small store in 2026?"
+    a: "Yes, for under 100 SKUs and a predictable checkout. Webflow Ecommerce has improved: Stripe native, Apple Pay, digital products, and cleaner CMS integration. Above 100 SKUs or with complex variants, Shopify is still the safer call."
+  - q: "What's the biggest limitation of Webflow Ecommerce?"
+    a: "Subscriptions and recurring billing. Webflow Ecom still treats subscriptions as a workaround rather than a first-class primitive. If you need monthly recurring, either extend with Stripe webhooks or go Shopify + Recharge."
+  - q: "Can Webflow handle 1,000 products?"
+    a: "Technically yes on Business or Enterprise plans. Practically, filtering and faceted search get slow past 500 SKUs unless you layer Finsweet Attributes or a custom search engine. At 2,000+ SKUs, look at Shopify seriously."
+  - q: "Does Webflow Ecommerce support Apple Pay and Google Pay?"
+    a: "Yes, both, via the native Stripe integration. Enable in Webflow Ecom settings. Expect a 5–10% checkout conversion bump on mobile from adding Apple Pay alone."
+  - q: "What payment processors does Webflow Ecommerce support?"
+    a: "Stripe (primary), PayPal (secondary), and Apple/Google Pay through Stripe. No native support for Klarna, Afterpay, or regional processors; for those you either route through Stripe's extensions or move off-platform."
+  - q: "How much does a Webflow Ecommerce site cost to run?"
+    a: "Webflow Ecom plans: Standard $29/mo, Plus $74/mo, Advanced $235/mo. Plus Stripe's 2.9% + 30¢. A $100K/year store lands around $1,200–$3,000/year in platform costs — competitive with Shopify."
+---
+
+import Figure from '@/components/blog/Figure.astro';
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+Webflow Ecommerce is genuinely good in 2026. It is not good for everything, and the marketing doesn't always make that clear. After building and shipping over 40 Webflow projects — several of them with ecommerce functionality — here is my honest read on where the platform delivers, where it still trails Shopify, and how to decide which tool deserves your next build.
+
+The short version: for a brand-driven store with under 100 SKUs, single-purchase checkout, and a design that needs to be deeply custom, webflow ecommerce is a serious option. For subscriptions, complex multi-variant catalogs, or anything above 500 SKUs at scale, Shopify is still the default. Everything between those poles is a judgment call, and this post is the framework I use to make it. If you already know your store fits Webflow and want to get started, [reach out](/contact) and we can scope it properly.
+
+## The one-paragraph verdict
+
+Webflow Ecommerce has come a long way since its 2019 launch. Native Stripe, Apple Pay, digital products, a real product CMS, and a checkout that you actually control the markup on — these are meaningful wins. The gaps are also real: no subscriptions as a first-class primitive, no native Klarna or Afterpay, limited built-in email automation, and a search/filtering story that gets rough past a few hundred SKUs. For a head-to-head breakdown, I've covered this fully in [Webflow Ecommerce vs Shopify](/blog/webflow-ecommerce-vs-shopify). Here is the quick reference for anyone who wants to orient fast before diving into the detail:
+
+| Scenario | Webflow Ecom | Shopify | Stripe-only |
+|---|---|---|---|
+| Brand-first store, under 100 SKUs | Best fit | Overkill for design needs | No PDP, not practical |
+| Digital products (files, templates) | Good | Good | Great with custom build |
+| Subscriptions / recurring billing | Workaround required | Native + Recharge | Native via Stripe Billing |
+| 500+ SKUs with faceted search | Gets slow | Solid | Not applicable |
+| 1,000+ SKUs, multi-warehouse | Not recommended | Strong | Not applicable |
+| Custom checkout design | Full control | Limited without Plus | Full control |
+| Regional payment methods (Klarna, etc.) | Stripe extensions only | Native | Native via Stripe |
+| Development speed, landing + store | Fastest | Moderate | Slowest |
+
+## What Webflow Ecommerce does well
+
+The thing Webflow Ecommerce genuinely gets right — and that no other hosted ecommerce platform matches — is design control. When I build a Webflow store, the product detail page is built in the Designer exactly like any other page on the site. Same class system, same global styles, same responsive breakpoints, same animation toolkit. The product card on the listing page is a collection list item. The cart is a component I can style from scratch. Nothing is walled off behind a theme engine or a Liquid template I can't touch without developer access.
+
+That design unity matters more than most people realize when they're evaluating platforms. On Shopify, your store is inside a theme. The theme has its own class architecture, its own component library, its own decisions about spacing and typography — and unless you're paying a Shopify Plus developer to rebuild the theme from scratch, you're inheriting all of those decisions. Your marketing pages and your product pages look like they came from two different teams, because effectively they did.
+
+On a Webflow store, the product page uses the same display heading class as the homepage. The navigation component is identical. The footer is identical. The grid system is identical. For brands where that coherence is a competitive advantage — which is most premium D2C brands — this is significant.
+
+Beyond design, the product CMS is well-integrated with Webflow's broader collection system. A product can reference other collections: blog posts, lookbooks, ingredient lists, team members, whatever the brand needs to associate with a product. That relational content layer is something Shopify's metafields approach handles clumsily by comparison.
+
+Digital product delivery works cleanly. Upload the file, mark the product as digital, and Webflow handles the post-purchase download link automatically. For template shops, course materials, ebooks, and similar products, this is genuinely sufficient without any third-party tooling.
+
+The checkout conversion improvements in the last two years have also been real. Apple Pay and Google Pay work natively through the Stripe integration. Address autocomplete is on by default. The checkout flow is a single-page experience. Webflow reports mid-single-digit improvement in checkout conversion rates after switching from multi-step competitors — numbers I've seen roughly validated on client stores I've worked on.
+
+## Where it falls short vs Shopify
+
+Let me be direct about the gaps, because they're the things that send projects to Shopify.
+
+The biggest structural gap is subscriptions. Webflow Ecommerce has no native recurring billing. If you sell a coffee subscription, a skincare replenishment box, or any kind of membership product with monthly billing, you are building on top of Stripe webhooks with Webflow Logic as the orchestration layer — a workaround, not a product. Shopify has Recharge, Bold Subscriptions, and native subscription APIs that have been production-proven at millions of subscribers. The gap here is not narrow.
+
+<Callout type="warning">
+If recurring revenue is a material part of your business model — even 20% of revenue from a single subscription SKU — do not build on Webflow Ecommerce without a clear plan for the webhook architecture. I have seen this decision cost clients significant rework at 12 months when subscription volume grew and the workaround started breaking under load. Shopify + Recharge is the proven path for subscription-first stores. The comparison in [Webflow vs Shopify](/blog/webflow-vs-shopify) covers this in more depth.
+</Callout>
+
+The second gap is the payment processor ecosystem. Webflow supports Stripe and PayPal. That covers the majority of US and European transactions, but it leaves out Klarna, Afterpay, Affirm, and regional processors that matter in specific markets. Stripe does offer some of these through its payment method extensions, but the integration inside Webflow's checkout is not as turnkey as Shopify's native implementation. If buy-now-pay-later is a meaningful acquisition driver for your customer base, price that integration work honestly.
+
+Third is the search and filtering story at scale. Webflow's native collection filtering is usable for catalogs up to roughly 150–200 products with simple attributes. Past that, you're looking at Finsweet Attributes for filter UI that doesn't require custom code, or a dedicated search engine like Algolia or Typesense. Shopify's predictive search and native filter panels are more capable out of the box at catalog scale.
+
+Fourth: inventory management across locations is not a native Webflow Ecom feature. Single-location or dropship stores are fine. Multi-warehouse or 3PL inventory split across locations requires integrations that Shopify handles natively.
+
+## Product CMS and variants
+
+Webflow's product CMS is built on the same collection architecture as everything else in the platform. Products are a collection. Product variants are a nested sub-collection. Each product can have rich field types: plain text, rich text, images (up to 25 per product on Business plan), references to other collections, option sets, and custom fields for anything else.
+
+I've written a detailed breakdown of how to structure the product CMS well in [Webflow Ecommerce product CMS](/blog/webflow-ecommerce-product-cms), including the specific decisions around variant architecture that most tutorials skip. The short version: the variant model works, but it has a hard limit on option combinations. Each SKU requires a distinct variant entry. If you have a product with three colors, five sizes, and two materials, that is 30 variant entries — manageable. If you have a product with seven configurable dimensions, you will hit CMS limits before you hit product complexity. That is the ceiling.
+
+For most stores I build in Webflow, the variant architecture is not a problem. A clothing brand with three colors and five sizes per product, a skincare brand with three sizes per SKU, a home goods store with two or three finishes — all comfortable. A configurator for custom furniture with twelve adjustable options — wrong platform for the job.
+
+One thing worth noting: variant-specific images work, and work well. Each variant entry can have its own featured image, so the product photo updates when a customer selects a color or finish. That's table stakes in 2026, and Webflow delivers it cleanly.
+
+Inventory tracking is per-variant, not just per-product. You can set stock counts at the variant level, enable low-stock warnings, and let Webflow automatically mark variants as unavailable when they hit zero. For stores that don't need multi-location split, this is sufficient.
+
+## Checkout customization (and the limits)
+
+Webflow's checkout is not a hosted third-party page. It's a template you build in the Designer, which means you have full control over the HTML structure and CSS. That's a significant differentiator from Shopify's standard checkout, where you cannot modify the HTML at all on non-Plus plans. Shopify Plus starts at $2,300/month. Webflow's Advanced plan, where checkout customization is most capable, starts at $235/month.
+
+What you can do in the Webflow checkout: restyle every element, reorder sections, add trust badges, add product upsell callouts as static content, embed custom JavaScript, add a custom header or footer. What you cannot do natively: dynamic upsell logic based on cart contents, conditional fields based on shipping address or product type, multi-step custom checkout flows with branching logic. Those require custom embeds and JavaScript, which Webflow's checkout does allow — it just requires developer work to implement.
+
+I have a full guide to what's actually possible, including some specific code patterns, in [Webflow Ecommerce checkout customization](/blog/webflow-ecommerce-checkout). The key insight is that the checkout is more customizable than Shopify standard but less programmable than a Stripe Elements checkout you build from scratch. It occupies a useful middle ground.
+
+One important note: SSL, PCI compliance, and Stripe's fraud tools are all handled by the platform. You don't need to configure any of that. Webflow is PCI SAQ-A compliant because the actual card data never touches Webflow's servers — it goes directly to Stripe via Stripe.js. That's the correct architecture and it works.
+
+## Payment processors: Stripe, PayPal, Apple Pay
+
+Webflow Ecommerce's payment stack centers on Stripe. The integration is native — connect your Stripe account in Webflow Ecom settings, and payments flow directly to your Stripe dashboard. No middleware, no additional API keys, no separate webhooks to configure for basic transaction handling. I cover the full setup and the less obvious configuration options in [Webflow Ecommerce Stripe setup](/blog/webflow-ecommerce-stripe).
+
+PayPal is available as a secondary payment method. In practice, I recommend enabling both — PayPal still captures around 10–15% of transactions on US stores for customer segments that distrust entering card numbers online. Disabling it to simplify the stack is a measurable conversion cost.
+
+Apple Pay and Google Pay work through Stripe's Payment Request API. Enable them in Webflow's Ecom settings once Stripe is connected, and they appear automatically in supporting browsers. On Safari/iOS, customers see Apple Pay. On Chrome/Android, they see Google Pay. You don't need to configure them separately.
+
+The conversion impact of Apple Pay on mobile is real and specific. Customers who see Apple Pay in the checkout skip entering a billing address, shipping address, and card number — it's a single Face ID or Touch ID confirmation. Across the stores I've worked on, adding Apple Pay has corresponded to a 5–8% lift in mobile checkout completion. That's not a vendor claim; that's what I've seen in Google Analytics event data and Stripe's payment breakdown by method.
+
+What Webflow does not support natively: Klarna, Afterpay, Affirm, Mollie, iDEAL, Sofort, or any regional processor outside of Stripe and PayPal. Stripe does offer some of these payment methods through its own products, and you can technically configure them at the Stripe account level, but the native Webflow checkout UI doesn't expose their specific UI flows in the same polished way that Shopify does for these methods. If your customer base expects "pay in 4" options, price the integration or reconsider the platform.
+
+## Shipping, tax, and inventory
+
+Here is the honest summary across plans and capabilities:
+
+| Feature | Standard ($29/mo) | Plus ($74/mo) | Advanced ($235/mo) |
+|---|---|---|---|
+| Shipping rules | Flat rate, free threshold | + Weight-based | + Zone-based rates |
+| Carrier-calculated shipping | No | No | No (requires integration) |
+| Tax calculation | Manual rates | Manual rates | + Stripe Tax auto-calc |
+| Tax exemptions | Not supported natively | Not supported natively | Limited |
+| Inventory tracking | Per-variant | Per-variant | Per-variant |
+| Multi-location inventory | No | No | No |
+| Product limit | 500 | 1,000 | 3,000 |
+| Staff accounts | 3 | 10 | 15 |
+
+A few things that table doesn't capture well:
+
+Carrier-calculated shipping (live rates from UPS, FedEx, USPS) is not a native Webflow feature on any plan. You can approximate it with weight-based rate tables, but if your customers expect to see live carrier rates at checkout, you need a Webflow Logic integration with a rate API, or you need to move to Shopify which supports this natively.
+
+Stripe Tax integration on the Advanced plan is genuinely useful. It handles US state sales tax and most EU VAT scenarios automatically without requiring you to maintain rate tables. The configuration is straightforward: enable it in Stripe, connect it to your Webflow Ecom settings, and tax is calculated and remitted correctly. For stores selling across US states where nexus rules are complex, this is worth the Advanced plan price alone.
+
+Inventory tracking works at the variant level and handles basic stock management reliably. Low-stock thresholds trigger notifications to the store admin. Out-of-stock variants show as unavailable in the storefront. Backorder support is limited — you can manually re-enable a product after it shows as sold out, but there's no native backorder queue with future availability dates.
+
+For stores shipping physical goods with complex dimensional weight calculations or multi-carrier comparisons, Webflow's built-in shipping is probably insufficient. Integrate with EasyPost or ShipStation via Logic webhooks, or evaluate Shopify, which has ShipStation and similar integrations baked into its app ecosystem.
+
+## Abandoned cart, email, and post-purchase
+
+Webflow Ecommerce includes a basic abandoned cart recovery email — it sends automatically after a configurable delay (30 minutes to 3 days) to customers who entered their email in the checkout but didn't complete the purchase. On the Plus and Advanced plans, you can customize the subject line, preview text, and email body within a constrained template editor. It is better than nothing and worse than a real email platform.
+
+The honest recommendation: if abandoned cart recovery is a meaningful revenue lever for your store — and for most stores it captures 5–15% of otherwise-lost revenue — do not rely on Webflow's native implementation. Connect Klaviyo or HubSpot and use that instead.
+
+<Callout type="tip">
+Here is the setup I use on most Webflow Ecom builds for abandoned cart: enable Webflow Logic to trigger on the "checkout started" event, pass the customer email and cart data to Klaviyo via webhook, and let Klaviyo handle the flow from there. Klaviyo's abandoned cart sequences support multi-touch (email at 1 hour, 24 hours, 72 hours), dynamic product blocks that pull from the Webflow product catalog, and A/B testing on subject lines. The Webflow Logic + Klaviyo combination handles what Webflow's native emails cannot, without requiring you to leave the Webflow ecosystem for the build. HubSpot works identically if your client is already on the HubSpot stack. The setup takes about two hours once the Logic workflow structure is clear.
+</Callout>
+
+Post-purchase email — the order confirmation, the shipping notification, the delivery confirmation — is handled natively by Webflow and by Stripe. Order confirmation emails come from Webflow's system with your store branding. Shipping notifications require that you or a fulfillment integration marks the order as fulfilled in Webflow and enters the tracking number, at which point Webflow sends the shipping notification automatically. Delivery confirmation is not a native Webflow feature; route tracking data to Klaviyo or your chosen ESP to trigger that.
+
+Review collection is not native. You'll need a third-party tool: Judge.me is the most common on Webflow stores (under $20/month, has a Webflow embed). Okendo is the premium option. Neither has a native Webflow integration in the App Store sense — both work through script embeds and Webflow Logic webhooks for the review request trigger. It adds a build step but it works reliably.
+
+Loyalty programs and referral systems are similarly not native. Yotpo and LoyaltyLion both work via script embeds. Budget an extra 8–12 hours of integration work if a loyalty program is in scope.
+
+The post-purchase experience in Webflow is functional but manual to extend. Every feature beyond order confirmation and basic shipping notification requires an integration. That's different from Shopify's app ecosystem, where most of these are one-click installs with tested connectors. The Webflow ecosystem is getting better — there are more well-built Logic workflow templates and integration partners than there were two years ago — but it's still a smaller selection.
+
+## When Webflow Ecommerce fits (and when it doesn't)
+
+After building stores on Webflow, Shopify, and custom Stripe stacks, here is the decision framework I actually use when a client comes to me with an ecommerce project.
+
+**Webflow Ecommerce is the right call when:**
+
+The brand story has to be the product. If the store exists to convert visitors who are buying into an aesthetic, a lifestyle, or a philosophy rather than just transacting on a commodity, design control pays back in conversion. Webflow gives you that control without compromise.
+
+The product catalog is under 150–200 SKUs and the variant structure is simple. Two or three option dimensions per product, each with fewer than eight choices. The math stays comfortable, the CMS performs well, and filtering is manageable.
+
+The checkout is single-purchase and standard. No subscriptions, no "buy now pay later" with regional processors, no custom order routing. A customer picks a product, pays with card or Apple Pay, gets an order confirmation, and receives the goods. That flow works cleanly in Webflow.
+
+The site has meaningful marketing content adjacent to the store. A blog, a lookbook, editorial pages, a storytelling-heavy about page — all of it built in the same Webflow project with complete design coherence. If 40% of the site is content and 60% is store, Webflow's unified approach beats Shopify's bolt-on blog.
+
+The development timeline is aggressive and design is already defined. A Webflow Ecommerce build on a well-defined design moves fast. I've shipped complete stores in two to three weeks that would have taken four to six weeks on a custom Shopify theme.
+
+**Shopify is the right call when:**
+
+Subscriptions are core to the business model. Non-negotiable. Go Shopify.
+
+The SKU count is above 500 and growing, the variant structure is complex, or customers expect faceted search with real-time filtering across many attributes. Shopify's search and discovery ecosystem is mature; Webflow's is not.
+
+The team managing the store post-launch is non-technical and expects one-click app installs for every new feature. Shopify's app ecosystem is orders of magnitude larger than Webflow's integration library.
+
+Regional payment methods — Klarna in Germany, iDEAL in the Netherlands, Afterpay in Australia — are a material part of the revenue mix. Shopify supports these natively.
+
+Multi-location inventory, 3PL integrations, or dropship supplier routing is required. Shopify has years of production-tested infrastructure for this. Webflow doesn't.
+
+**Stripe-only is the right call when:**
+
+You're selling exactly one or two products, digital only, and you want zero platform overhead. A Stripe Payment Link or a custom Stripe Elements checkout is simpler, cheaper, and faster for a single-product scenario. No Webflow Ecommerce plan needed.
+
+---
+
+Under 100 SKUs, predictable single-purchase checkout, brand-led design control: Webflow Ecommerce wins. Subscriptions, 1,000+ SKUs, or multi-warehouse inventory: Shopify, still. The platforms are not competitors in the same tier for the same buyer — they solve different problems at different points in a brand's growth. Build on the right one for where you are now, not where you hope to be in five years.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

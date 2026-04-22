@@ -1,0 +1,268 @@
+---
+title: "GSAP in Webflow: When to Use It Over Interactions"
+description: "When Webflow Interactions hit a wall and GSAP earns its weight — with working setups for scroll-triggered animations, SVG, and splits."
+pubDate: 2026-06-08
+tags: ["animation", "gsap"]
+heroImage: "https://images.unsplash.com/photo-1605379399642-870262d3d051?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "GSAP code in an editor next to a Webflow preview"
+cluster: "perf-hub"
+faq:
+  - q: "Do I need GSAP if I'm using Webflow?"
+    a: "No, for 80% of marketing sites. Webflow Interactions 2.0 handles scroll, hover, and page-load. Reach for GSAP only when you need SplitText, ScrollTrigger's pinning, SVG path morph, or timeline control you can script."
+  - q: "Is GSAP free to use on client sites?"
+    a: "The core library is free. SplitText, MorphSVG, and DrawSVG are bonus plugins — $99/year Club GSAP license covers commercial use of all of them. For one-off animations, the free tier covers most needs."
+  - q: "How do I install GSAP on a Webflow site?"
+    a: "CDN script in Project Settings > Custom Code > Footer (before </body>). Add `<script src='https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js'></script>`. Add ScrollTrigger separately if needed. That's it."
+  - q: "Does GSAP hurt Webflow performance?"
+    a: "GSAP itself is ~70KB gzipped — modest. The performance hit comes from what you animate. Animating transform and opacity is cheap. Animating layout properties (width, top, left) on scroll will tank mobile Lighthouse."
+  - q: "Can I use GSAP alongside Webflow Interactions?"
+    a: "Yes, but pick one per element. Mixing a Webflow Interaction and a GSAP animation on the same element causes conflicts. Use Webflow for global page-load/hover, GSAP for the complex scroll sequences."
+  - q: "What's the biggest GSAP mistake on Webflow sites?"
+    a: "Not cleaning up on page transitions. If you animate elements that get removed from the DOM, you leak event listeners and memory. Always call `ScrollTrigger.getAll().forEach(t => t.kill())` on page exit."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+The answer to "should I use GSAP in Webflow" is almost always no — until it becomes obviously yes. For the standard marketing site with fade-ins, staggered card reveals, and a parallax hero, Webflow Interactions handles everything and you never need to open a code editor. GSAP earns its place in a narrow set of situations: pinned scroll sequences, character-level text animation, SVG path drawing, and timeline logic that needs to respond to user state. Outside that set, you're adding complexity without adding value. [Get in touch](/contact) if you're building something that might belong in that set.
+
+If you're not yet fluent with what Interactions can do natively, read [the full Webflow Interactions 2.0 guide](/blog/webflow-interactions-2-guide) first. That post covers the full IX2 capability set, including action types that most developers never discover. GSAP makes sense as an extension of that knowledge, not a replacement for it.
+
+## The line where Interactions stop
+
+Webflow IX2 is good — genuinely good. I've built scroll sequences that clients assumed were GSAP because they looked that controlled. But the Designer-based trigger system has hard edges, and recognizing them saves you from spending a weekend fighting the wrong tool.
+
+**Pinning with scrub.** IX2 has a "while scrolling in view" trigger that handles scroll-linked animations, but it doesn't support true pinning — locking an element in place while the page scrolls past it. This is one of the most common requests on product and SaaS sites: a phone mockup that stays fixed while bullet points scroll alongside it. ScrollTrigger's `pin: true` does this in five lines. IX2 can't.
+
+**Sequential timeline control.** IX2 timelines run from triggers. You can chain delays and offsets, but you can't branch a timeline, reverse it programmatically, or advance it based on a scroll position returning. Any animation that needs to respond to conditional state — "play section B only if the user has hovered X" — needs code.
+
+**Character and word-level text animation.** IX2 animates elements. SplitText splits a heading into individual characters or words and animates each as a separate target. You can fake this with separate `<span>` elements, but it's brittle across CMS content and breaks with variable-length strings.
+
+**SVG path drawing and morphing.** DrawSVG animates `stroke-dashoffset` so a path appears to draw itself. MorphSVG interpolates between two SVG shapes. Neither has an IX2 equivalent.
+
+**Performance-critical scroll jank.** For a site with dozens of simultaneous scroll-linked elements, GSAP's internal batching and RAF scheduling gives you more control over main-thread impact than IX2's renderer.
+
+Everything else — fade in on load, hover lift, stagger a grid on scroll entry — stays in IX2.
+
+## Installing GSAP cleanly
+
+The fastest path to GSAP on a Webflow site is a CDN script in the project footer. Open Project Settings, go to Custom Code, and paste your scripts before `</body>`. This is also covered in the [Webflow custom code guide](/blog/webflow-custom-code) if you need the full walkthrough on placement and load order.
+
+<Callout type="tip">
+Load GSAP from jsDelivr rather than the official CDN. jsDelivr is consistently faster globally and has better cache headers. Use a pinned version number — `gsap@3.13.0` — not `@latest`. Unpinned CDN loads can break your site silently when a major version ships. If you're on Club GSAP, you can self-host the bonus plugins directly from the npm package.
+</Callout>
+
+For the core library plus ScrollTrigger:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+```
+
+Register the plugin once before any animation code runs:
+
+```html
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+</script>
+```
+
+For page-specific animations, use a Before `</body>` embed on the page itself rather than in project settings. This avoids loading GSAP on pages that don't use it — a real performance win on content-heavy sites with dozens of routes. For SplitText, MorphSVG, or DrawSVG (Club GSAP plugins), download the files from your account and host them in Webflow's Asset Manager, then reference them by URL. Don't link to the npm CDN for paid plugins — the files there are the npm package versions, not the bonus plugin builds.
+
+One architecture note: if your Webflow site uses page transitions, you need to kill ScrollTrigger instances on route change. More on that in the fallbacks section.
+
+## ScrollTrigger basics
+
+ScrollTrigger's most useful feature for Webflow work is `scrub`, which links animation progress directly to scroll position instead of playing it once on entry. Here's a minimal setup that covers the patterns I use on most projects:
+
+```js
+// Fade-and-rise on scroll entry (replaces most IX2 "while scrolling" triggers)
+gsap.utils.toArray('.animate-on-scroll').forEach(el => {
+  gsap.from(el, {
+    opacity: 0,
+    y: 40,
+    duration: 0.6,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    }
+  });
+});
+
+// Pinned section — element locks in place while scroll advances
+gsap.to('.feature-visual', {
+  scrollTrigger: {
+    trigger: '.feature-section',
+    start: 'top top',
+    end: '+=600',
+    pin: '.feature-visual',
+    scrub: 1,
+  }
+});
+
+// Scrubbed parallax on a hero background
+gsap.to('.hero-bg', {
+  yPercent: -25,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '.hero',
+    start: 'top top',
+    end: 'bottom top',
+    scrub: true,
+  }
+});
+```
+
+A few settings worth knowing:
+
+`scrub: true` ties animation progress to scroll position in real time. `scrub: 1` adds a one-second lag — smoother on scrubbed parallax, but slightly less responsive on pinned sequences. Start with `scrub: 1` and drop to `true` if the lag feels wrong.
+
+`start: 'top 85%'` means "trigger when the top of the element reaches 85% down the viewport." The second value is the viewport position. `top center` is exactly half the screen. `top 90%` fires just before the element is fully in view — good for staggered lists.
+
+`toggleActions` takes four values: onEnter, onLeave, onEnterBack, onLeaveBack. `'play none none reverse'` plays forward on entry and reverses on scrolling back up. `'play none none none'` fires once and stays. Most marketing site animations should fire once — reversing everything on scroll-up tends to feel fussy.
+
+For the pinning pattern, the key constraint is that the pinned element's parent must have a defined height that accommodates the pin duration. If the section height is `auto`, ScrollTrigger can't calculate the scroll distance correctly and you get a layout jump. Set an explicit height in pixels on the wrapper, or let ScrollTrigger add spacer height automatically (which it does by default — but you'll want to inspect it to make sure it's correct).
+
+## SplitText and typography effects
+
+SplitText is the GSAP plugin I reach for most often after ScrollTrigger. The pattern is always the same: split a heading, then stagger the pieces.
+
+```js
+// Register the plugin (Club GSAP — must be imported/hosted separately)
+gsap.registerPlugin(SplitText);
+
+// Animate a heading word by word on scroll entry
+const heading = document.querySelector('.section-headline');
+const split = SplitText.create(heading, { type: 'words,chars' });
+
+gsap.from(split.chars, {
+  opacity: 0,
+  y: '1em',
+  rotationX: -90,
+  stagger: 0.025,
+  duration: 0.5,
+  ease: 'back.out(1.7)',
+  scrollTrigger: {
+    trigger: heading,
+    start: 'top 80%',
+    toggleActions: 'play none none none',
+  },
+  onComplete: () => split.revert()
+});
+```
+
+The `onComplete: () => split.revert()` call is important. SplitText wraps each character in a `<span>`, which modifies the DOM. After the animation completes, reverting restores the original DOM structure — important for accessibility (screen readers do better with clean text nodes) and for situations where the text content changes dynamically through CMS.
+
+For word-level animation rather than character-level, use `type: 'words'` and target `split.words`. Characters are more dramatic; words are cleaner. Which one to use is a judgment call based on heading length — character splits on a 10-word sentence look frantic, word splits on a two-word hero heading look weak. Three-to-five word headings hit the sweet spot for character animation.
+
+One pattern I use on product sites: animate the heading once on page load (not on scroll), then use ScrollTrigger to trigger secondary body copy beneath it. The hierarchy reads as: headline lands first, body follows as you read down. This creates a narrative feel that IX2 can replicate but requires more click-work to wire up than two lines of GSAP.
+
+## SVG and DrawSVG patterns
+
+DrawSVG is the plugin for stroke animations — making an SVG path appear to draw itself from one end to the other. The classic use cases are icon reveals, signature effects, and technical diagrams where components "assemble" on scroll.
+
+The setup is mechanical. Your SVG needs a `stroke` attribute and a defined `stroke-width`. No fill, or `fill: none`. The path must be a single `<path>`, `<line>`, `<polyline>`, or similar stroked element — DrawSVG works on anything that has a stroke-dasharray.
+
+```js
+gsap.registerPlugin(DrawSVG);
+
+gsap.from('.icon-path', {
+  drawSVG: 0,
+  duration: 1.5,
+  ease: 'power2.inOut',
+  scrollTrigger: {
+    trigger: '.icon-wrapper',
+    start: 'top 75%',
+    toggleActions: 'play none none none',
+  }
+});
+```
+
+`drawSVG: 0` means "start with nothing drawn." `drawSVG: '0% 50%'` draws from the start to the midpoint. You can scrub a DrawSVG animation the same way as any other ScrollTrigger — setting `scrub: true` lets the user "draw" the path by scrolling, which works well for process diagrams and flowcharts.
+
+MorphSVG is for shape-to-shape transitions. The two paths must have the same number of points for clean morphing — if they don't, GSAP will interpolate but the result may not look intentional. I use MorphSVG sparingly: logo transitions, icon state changes, and the occasional hero illustration that shifts between states. For most Webflow work it's a nice-to-have, not a necessity.
+
+One practical limitation: SVG animations on mobile are expensive if the SVG is complex. Keep stroked paths simple (under 20 nodes) for scroll-scrubbed versions. Complex paths that play once on entry are fine; complex paths that update on every scroll event will drop frames on lower-end Android devices.
+
+## Performance: keep it cheap
+
+GSAP itself is lean. The performance problem on GSAP-heavy Webflow sites is almost never the library — it's the properties being animated.
+
+The GPU-composited properties are `transform` (translate, scale, rotate) and `opacity`. These can animate at 60fps on mobile without touching the main thread's layout calculations. Everything else — `width`, `height`, `top`, `left`, `margin`, `padding`, `border-radius` when it affects layout — forces a layout recalculation on every frame. On desktop this is usually invisible. On a mid-range Android phone scrolling through a page with twelve simultaneously-animated layout properties, it will drop to 20fps and feel broken.
+
+<Callout type="warning">
+Never animate `width`, `height`, `top`, `left`, `margin`, or `padding` inside a ScrollTrigger `scrub`. These are layout-triggering properties — the browser has to recalculate the entire document layout on every scroll event. Even a single element doing this on scroll will show jank on mobile. Use `scaleX`/`scaleY` instead of `width`/`height`, and `translateX`/`translateY` instead of `left`/`top`. The visual result is identical; the performance impact is not.
+</Callout>
+
+The same rule applies to ScrollTrigger's `scrub` animations more broadly. A scrubbed parallax that moves five elements simultaneously using `transform` is fine. A scrubbed animation that also changes `font-size` or `border-radius` on the same scroll handler will be visible in the DevTools performance trace.
+
+For a full performance audit framework that covers GSAP as one factor among several, [the Webflow slow site guide](/blog/webflow-site-slow) runs through every layer — images, scripts, interactions, and hosting — in the order they matter.
+
+Batching is another lever. Instead of creating one ScrollTrigger per element on a staggered list, use `ScrollTrigger.batch()`:
+
+```js
+ScrollTrigger.batch('.card', {
+  onEnter: batch => {
+    gsap.from(batch, {
+      opacity: 0,
+      y: 30,
+      stagger: 0.08,
+      duration: 0.5,
+      ease: 'power2.out',
+    });
+  },
+  start: 'top 85%',
+});
+```
+
+This fires one animation per group of elements that enter the viewport together, rather than one trigger per card. On a grid of 24 cards, the difference in ScrollTrigger instance count is significant.
+
+## Fallbacks when JS fails
+
+GSAP requires JavaScript. On a Webflow site, that's almost always available — but "almost always" isn't good enough for elements that carry real content.
+
+The pattern I use: set the initial state via GSAP's `gsap.set()` at the bottom of the script, but also set it in CSS with a `no-js` fallback. If JavaScript fails (CSP block, script error, slow connection), the element should be visible in its final state, not invisible.
+
+```css
+.animate-on-scroll {
+  /* Visible by default — JS will override this */
+  opacity: 1;
+  transform: none;
+}
+```
+
+```js
+// JS overrides to initial animation state
+gsap.set('.animate-on-scroll', { opacity: 0, y: 40 });
+```
+
+This way the CSS default is "visible." GSAP immediately sets it to "hidden" and then animates it in. If the script doesn't run, the element stays visible from CSS. This is a better fallback than `visibility: hidden` in CSS with a `visibility: visible` reveal via JavaScript — that pattern leaves users with blocked scripts on a blank page.
+
+For content that must be readable regardless — body copy, navigation, contact information — don't animate the element itself. Wrap it in an animation container and animate the container. The text inside stays accessible even if the animation layer fails.
+
+## GSAP licensing in 2026
+
+The licensing structure matters before you bill this to a client.
+
+| Plan | Cost | Includes |
+|---|---|---|
+| Free (npm/CDN) | $0 | GSAP core, ScrollTrigger, Draggable, Flip, MotionPath, Observer, TextPlugin — commercial use permitted |
+| Club GSAP | $99/year | Everything free + SplitText, MorphSVG, DrawSVG, GSDevTools, ScrambleText, CustomEase, CustomBounce, CustomWiggle |
+| Club GSAP Business | $299/year | Club GSAP plus OEM redistribution rights (for SaaS products or themes where the plugin is embedded in something you sell) |
+
+The free tier is genuinely useful and commercially licensed. If you're doing standard marketing sites with scroll reveals and parallax, you'll never need Club GSAP. The paid tier becomes relevant the moment a client asks for SplitText character animation, SVG drawing effects, or MorphSVG transitions — all of which require the Club plugins.
+
+One thing worth knowing: the Club GSAP license covers you as a developer. If you're building on behalf of clients, your one license covers your use of the plugins in client work. You don't need to buy a separate license per client site. The OEM tier only applies if the plugin is embedded in a product you're redistributing — a Webflow template sold on the marketplace, a component library distributed to other developers.
+
+The practical advice: buy Club GSAP once, expense it, and stop thinking about it. The character animation and SVG plugins alone pay for the license on the first project that needs them.
+
+---
+
+The framework I work from: reach for Webflow Interactions first, every time. When you hit pinning, character-level text, or SVG drawing, switch to GSAP for that specific element or section. Never mix the two on the same element. Clean up ScrollTrigger instances on page exit. Animate only `transform` and `opacity` on scroll. Everything else is a performance tax you'll have to explain to your client when their mobile Lighthouse score drops.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="consult" />

@@ -1,0 +1,172 @@
+---
+title: "Webflow for Agencies: Client-Proof Setup"
+description: "The Webflow setup I ship to design agencies building client sites — handoff templates, Editor training, retainer structure, and the billing model."
+pubDate: 2026-07-24
+tags: ["agency", "industry"]
+heroImage: "https://images.unsplash.com/photo-1529336953128-a85760f58cb5?w=1600&q=80&auto=format&fit=crop"
+heroAlt: "A design agency team reviewing a Webflow client site"
+cluster: "agency"
+faq:
+  - q: "Should a design agency build Webflow sites in-house or subcontract?"
+    a: "Subcontract until you consistently do 10+ Webflow sites a year. Building in-house is a 2-person minimum commitment (a developer who knows Webflow deeply, plus QA). Below that volume, a specialist freelancer costs less and ships better work."
+  - q: "What's the best Webflow class naming convention for agency work?"
+    a: "Client-First from Finsweet is the de-facto standard. It's verbose but predictable — any Webflow dev picking up the project can read the class structure within an hour. Rolling your own convention creates handoff friction that costs more than it saves."
+  - q: "How should agencies bill Webflow work to clients?"
+    a: "Fixed price for the build, retainer for ongoing. Avoid hourly for new builds — it penalizes you for efficiency. For retainers, charge 2–3x your subcontractor cost; that's where agency margin lives."
+  - q: "Do agencies need to own the Webflow workspace or should the client?"
+    a: "Client should own it. Set up the project in the client's workspace, add the agency as a collaborator. On project end, remove the agency. This avoids the 'I built your site but you can't leave me' dynamic that erodes trust."
+  - q: "How do agencies train clients on the Webflow Editor?"
+    a: "One 60-minute Loom covering: adding a blog post, updating homepage copy, changing team member photos, publishing. Plus a PDF cheat sheet. Live training sessions rarely stick — recordings plus written reference do."
+  - q: "What's the ideal Webflow retainer structure for agency clients?"
+    a: "10–40 hour monthly bands ($1,500–$5,000/mo). Include: minor content updates, A/B tests, small design tweaks, Editor support. Exclude: new pages, new CMS collections, integrations — those are change requests with a separate quote."
+---
+
+import Callout from '@/components/blog/Callout.astro';
+import CtaCard from '@/components/blog/CtaCard.astro';
+import FaqSchema from '@/components/blog/FaqSchema.astro';
+
+If your agency is doing Webflow for agencies work — building client sites, handing them off, and keeping them alive after launch — the way you set up that workflow determines whether the relationship is profitable or painful. I've been the specialist on the other side of this for years, and the setup problems agencies run into are almost always the same ones. This post is the setup I actually recommend, from workspace ownership to retainer tiers, so you can stop reinventing it project by project.
+
+If you want a broader look at how agencies compare to freelancers as a model, [freelancer vs. agency for Webflow work](/blog/webflow-freelancer-vs-agency) covers that decision in detail. And if you're thinking about the white-label side — subcontracting Webflow dev under your own brand — [white-label Webflow development](/blog/white-label-webflow-development) is worth reading first. [Get in touch](/contact) if you'd rather talk through your specific setup than read a whole framework.
+
+## The 3 models: reseller, subcontractor, partner
+
+Agencies doing Webflow work tend to fall into one of three operating models, and mixing them up is the fastest way to create confusion on billing, ownership, and accountability.
+
+| Model | Agency does | Specialist does | Margin |
+|---|---|---|---|
+| Reseller | Sales, PM, strategy, design | Full Webflow build, QA, handoff | 30–50% markup on dev |
+| Subcontractor | Sales, PM, design, QA | Webflow build only | 20–35% markup on dev |
+| Partner | Sales, PM | Design + Webflow build end-to-end | Rev share or referral fee |
+
+**Reseller** is the most common. You own the client relationship, price the project, deliver design in Figma, and subcontract the Webflow build to a specialist. You mark up the dev cost and keep margin on PM and QA. The risk: your margin disappears if the specialist is slow or requires heavy revision rounds.
+
+**Subcontractor** is lighter. You handle everything except the Webflow build itself. The specialist plugs into your project in a defined lane and hands back on completion. Less coordination overhead, thinner margin.
+
+**Partner** model works when you refer rather than resell. A specialist handles the full engagement under their own brand; you take a referral fee or rev share. Zero execution risk, but no retained client relationship on the dev side.
+
+Most agencies I work with operate in the reseller or subcontractor model. The key is deciding which model applies before scoping, not halfway through.
+
+## Project setup that makes handoff easy
+
+The single biggest source of post-launch pain for agencies is bad project setup at the start. If you get this right on day one, everything downstream — training, retainers, handoff to another developer — becomes much simpler.
+
+**Workspace ownership: always the client.** The project should live in the client's Webflow workspace, not the agency's. Add the agency (or specialist) as an Admin collaborator. When the project ends, remove the collaborator access. This protects the client's access to their own site regardless of what happens to the agency relationship. An agency that owns the workspace creates a lock-in dynamic that clients will eventually notice and resent.
+
+**One project, one site plan.** Don't share site plans across clients in an agency workspace to save money. When the client eventually needs workspace-level access or you need to transfer the project, you'll hit friction that costs more to unwind than you saved.
+
+**Staging domain from day one.** Every Webflow project should have a password-protected staging subdomain set up before any client-facing review. Publishing to the live URL for feedback rounds is a habit that will eventually cause a visible breaking change at exactly the wrong moment.
+
+**Style guide page inside the Webflow project.** Build a page called "Style Guide" or "/style" as part of every project. It lives in the Webflow Designer, never gets published, and contains every type style, color swatch, button state, card variant, and form element. This page is what keeps consistency across contributors and makes onboarding a new developer fast. My [recent work](/work) consistently includes this as a deliverable.
+
+**Document custom embeds immediately.** Every time a custom code embed goes into the project — tracking scripts, third-party widgets, form handlers — document it in a running notes page or shared doc: what it is, why it's there, which pages it's on. Agencies that skip this step spend hours reverse-engineering their own sites six months later.
+
+For a full project setup checklist I use before handoff, [Webflow handoff checklist](/blog/webflow-handoff-checklist) goes through every step.
+
+## Client Editor training
+
+The Webflow Editor is genuinely accessible for non-technical users — but only if they've been shown how to use it correctly. Agencies that skip training generate a constant stream of low-value support requests after launch. Agencies that train well turn clients into self-sufficient content managers.
+
+The format that works: one 60-minute Loom walkthrough, recorded once per project type, plus a two-page PDF cheat sheet specific to that client's site.
+
+The Loom should cover: logging in to the Editor (not the Designer), adding a blog post, updating homepage copy, swapping a team member photo, publishing changes, and what to do if something looks wrong.
+
+The PDF cheat sheet covers the same content in step-by-step format with annotated screenshots. It lives in Google Drive, linked from the client's onboarding email.
+
+What does not work: live training sessions as the only reference. Clients forget most of what was said within a week. The Loom and PDF persist; the live call doesn't. If a client is anxious about using the CMS, offer one 30-minute live call as an add-on after they've watched the recording — not instead of it.
+
+One pattern worth building into the project itself: use descriptive field labels and helper text on every CMS field. "Featured Image (1200x675px, JPG or PNG)" is better than "Image." It reduces the chance a client uploads a 4MB TIFF and wonders why the page is slow.
+
+## Class naming conventions that scale across projects
+
+This is the area where agencies most often try to do it their own way, and most often regret it. The argument for a custom convention is always "we know our own system." The argument against it is that every developer you bring onto a project — including yourself, six months later — has to learn your system from scratch.
+
+<Callout type="tip">
+Use Client-First from Finsweet as your agency's default class naming convention. It is the de-facto standard in the Webflow professional community, it is documented, it is predictable, and any Webflow developer you hire already knows it. Rolling your own convention creates handoff friction that compounds across projects and costs more over time than it saves.
+</Callout>
+
+Client-First structures class names around layout role and content type: `section_hero`, `container_medium`, `text_rich-text`, `button_primary`. The verbosity is intentional — you can read a class name and know what it does without opening the styles panel. That readability is worth a lot when a new developer joins a project or a client's site needs emergency work at 10pm.
+
+Conventions that layer well on top of Client-First:
+
+**Utility classes for one-off overrides.** When a single element needs a value that doesn't belong in a reusable class, prefix it: `u-margin-top-24`, `u-max-width-400`. Never put utility-style overrides in a component class — it makes the component unpredictable.
+
+**CMS wrapper classes that mirror collection names.** If the CMS collection is `Case Studies`, the wrapper class is `case-study_item`, the title is `case-study_title`, the card is `case-study_card`. This makes CMS-related styles immediately identifiable in the style panel.
+
+**No `div-block-14` or `container-6` in production.** Every element that gets custom styling should get a named class before the project ships. Unnamed classes in production are a signal that the developer was working fast and not thinking about maintenance. Make it a QA checklist item.
+
+Put this in a written one-pager for every specialist you work with, and add a naming audit to your launch QA process.
+
+## Template libraries and style guides
+
+Agencies building more than 3–4 Webflow sites per year should be maintaining a private template library. The ROI compounds quickly: if a component you built once gets reused five times, the original build cost was amortized five times over.
+
+What belongs in a template library:
+
+**Section components.** The 8–10 section patterns that appear across most client sites: hero with CTA, feature grid, testimonial carousel, pricing table, team grid, FAQ accordion, contact form section. Build each one clean and responsive. Copy and adapt per project.
+
+**CMS collection templates.** A pre-built Blog Post collection, a Case Study collection, a Team Member collection. Getting the schema right once means not having to think through it again.
+
+**Global style page.** Every template ships with a style guide page. It becomes the starting point for each client's style guide, updated with their specific tokens.
+
+**Interactions library.** Webflow IX2 interactions refined across projects: fade-up on scroll, navbar scroll behavior, accordion open/close, modal open/close. Copy into new projects rather than rebuilding.
+
+Store templates as cloneable Webflow projects in a private workspace. Name them: `[Agency Name] — [Template Type] — [Date Last Updated]`. The date matters because Webflow evolves and older templates may miss newer features.
+
+## Retainer and ongoing support structure
+
+The build is a one-time event. The retainer is where agency relationships get durable. Most agencies undercharge for retainers and then resent the client requests they get under them. The fix is to price the retainer correctly from the start and be explicit about what it includes.
+
+For more on the strategic question of retainer vs. project-based structure, [Webflow retainer vs. project](/blog/webflow-retainer-vs-project) covers the tradeoffs in detail. For practical structure, here's the tier model I recommend:
+
+| Tier | Hours/mo | Price | Includes |
+|---|---|---|---|
+| Maintenance | 10 hrs | $1,500/mo | Content updates, bug fixes, minor copy edits, Editor support |
+| Growth | 20 hrs | $2,800/mo | Above + small design tweaks, A/B test setup, SEO updates, new blog templates |
+| Scale | 40 hrs | $5,000/mo | Above + new landing pages, CMS collection additions, integrations support |
+
+All tiers exclude: new page designs from scratch, new CMS collections with schema changes, new third-party integrations, and rebrand work. Those are scoped separately as change requests with a fixed quote before work starts.
+
+The most common agency retainer mistake is underscoping what "content updates" means. A client who wants to "update some copy" may actually want a full page redesign. Defining what a content update is in the contract — "text and image changes to existing content within existing layout and design" — prevents scope creep before it starts.
+
+Rollover policy for unused hours: none. Hours don't roll over. This incentivizes clients to use their retainer productively and prevents a balloon of unused hours becoming a liability on your books.
+
+Reporting: a brief monthly report sent before the invoice. What was done, hours used, remaining capacity, anything flagged for next month. Clients who see evidence of the work being done are clients who renew.
+
+## Billing and reseller pricing
+
+The billing model that works: fixed price for the build, retainer for ongoing. Hourly billing for new builds is a trap.
+
+<Callout type="warning">
+Billing new Webflow builds hourly penalizes you for efficiency and rewards slow work. The faster you get at Webflow, the less you earn per project on an hourly model — which is backwards. Fixed-price billing means your margin improves as your team gets better. Quote the outcome, not the hours.
+</Callout>
+
+For reseller pricing: take your specialist's cost and mark up 30–50%. A build that costs $6,000 in specialist fees should be priced at $8,500–$9,000. The markup covers your sales time, PM, QA, and revision coordination. If you're doing all that for 10% margin, you're pricing wrong.
+
+Retainer markup should be 2–3x your subcontractor cost. If the specialist charges $150/hr, your retainer equivalent should be $300–$450/hr. That gap covers account management, QA overhead, scope risk, and profit.
+
+Don't provide itemized build cost breakdowns to clients. You're selling an outcome. "The 10-page site with CMS and two integrations is $9,500" is a complete scope statement — itemizing invites line-item negotiation with no upside.
+
+Get 50% upfront on every fixed-price build, 50% on delivery before publishing to live. Retainers bill on the 1st of the month. No work starts without a signed contract and payment received.
+
+## When to bring in a specialist
+
+The right time to bring in a specialist is before you've made architectural mistakes, not after. The most expensive specialist engagements I've been involved in were cleanups — rearchitecting a CMS that was built wrong, rebuilding responsive behavior that was hacked together, untangling a class structure where 200 elements had inline styles.
+
+Bring in a specialist when:
+
+**Your project scope has complexity you haven't shipped before.** Webflow Memberships plus a custom logic flow, a multi-language site with Weglot, a CMS with 5+ collection types and cross-references, animations at the level of a product marketing site — if you haven't done it, get someone who has. Complexity you underestimate in scope creates overruns you absorb.
+
+**You're entering a vertical with specific Webflow requirements.** SaaS marketing sites have specific performance and A/B testing patterns. E-commerce hybrids with Shopify have specific technical constraints. Agency work for professional services firms has specific SEO and CMS needs. A specialist who has built five sites in your client's vertical will scope it more accurately and ship it faster than a generalist.
+
+**You have a fixed deadline that can't slip.** A specialist can move faster on a Webflow project than someone doing it as 20% of their time. If launch is tied to a funding announcement or a conference, that's not the time to have your in-house designer learning Webflow on the job.
+
+**The client is large enough to care about ongoing quality.** Clients who will be on a $3,000+/month retainer are clients where the quality of the initial build directly affects your agency's credibility for the next 12 months. Don't compromise that for the margin of doing the build in-house.
+
+For a detailed framework on when specialists are worth it versus in-house, [how to hire a Webflow developer in 2026](/blog/hire-webflow-developer-2026) covers the evaluation process end-to-end.
+
+The agencies I work with long-term aren't ones that subcontract out of laziness. They're ones that know which projects need specialist depth, build the systems to manage that partnership, and keep the client relationship under their own roof. That's what makes a Webflow-for-agencies model work at scale.
+
+<FaqSchema items={frontmatter.faq} />
+
+<CtaCard variant="hire" />
