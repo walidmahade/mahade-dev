@@ -338,6 +338,134 @@ export const serviceLandings: ServiceLanding[] = [
     },
   },
   {
+    slug: 'white-label-webflow-development',
+    name: 'White Label Webflow Development',
+    tagline: 'Ship Webflow work under your agency brand, on your timeline.',
+    icon: 'whiteLabel',
+    href: '/services/white-label-webflow-development',
+    content: {
+      hero: {
+        eyebrow: 'For agencies',
+        heading: 'White label Webflow development that ships under your agency brand.',
+        sub: 'You win the pitch, you own the client relationship, you keep the margin. I build the Webflow site in the background — invisibly, reliably, on your deadlines — and you hand it off to your client with zero mention of a subcontractor. Fully NDA-backed. Credited to your studio. Staging on your subdomains. Slack channels with your branding.',
+      },
+      whoFor: [
+        'Design agencies that win Webflow work but do not staff full-time Webflow developers',
+        'Branding studios who pitch full identity packages and need a build partner for the website leg',
+        'Marketing agencies running SEO, paid, or content retainers who want to bolt on Webflow builds without hiring',
+        'Creative shops whose in-house devs are backed up and need overflow capacity for a specific launch',
+        'Solo freelancers who close bigger deals than they can deliver alone and need a trusted second pair of hands',
+        'Web design consultancies scaling from boutique to mid-market and testing partner-led delivery before hiring in-house',
+      ],
+      deliverables: [
+        {
+          title: 'Invisible subcontracting',
+          body: 'I never contact your client directly, never appear on their invoices, and never reference my name on any deliverable. The site ships credited to your agency, not mine.',
+        },
+        {
+          title: 'Your-branded staging',
+          body: 'Staging URLs live on subdomains you control (e.g. staging.youragency.com) with your favicon and a password gate if you need it. No cal.com/mahade links leaking through.',
+        },
+        {
+          title: 'Signed mutual NDA',
+          body: 'Every engagement starts with a two-way NDA covering client names, site content, strategy documents, and source files. Returned signed within 24 hours of your request.',
+        },
+        {
+          title: 'Agency-facing Slack channel',
+          body: 'A dedicated Shared Channel with your team — your logo, your naming convention. Your client never sees it. I match your working hours and your communication cadence.',
+        },
+        {
+          title: 'Production-ready Webflow builds',
+          body: 'Pixel-accurate from your Figma, CMS-modeled for your client to maintain, Lighthouse 95+ out of the gate, SEO + schema + sitemap baked in, launch checklist run on every handoff.',
+        },
+        {
+          title: 'Handoff documentation you can rebrand',
+          body: 'Loom walkthroughs of the CMS, component library, and publish workflow — recorded with neutral narration you can forward to your client, or re-record and badge as your own.',
+        },
+        {
+          title: 'Retainer or per-project billing',
+          body: 'Pay flat monthly if you have steady Webflow flow, or per-project if you have spiky demand. Same quality, same NDAs, same invisible delivery either way.',
+        },
+        {
+          title: 'Handover without lock-in',
+          body: 'If your client ever needs to work with a different developer after launch, they can — the Webflow workspace is transferred clean, the components are documented, and nothing about the build depends on me being available.',
+        },
+      ],
+      process: [
+        { step: 'Discovery call with your agency', body: 'A 30-minute Loom + live call, no client present. We walk the brief, the deadline, the Figma (if it exists), the content status, and the budget you have priced for development. I tell you up front whether the scope is realistic — before you commit.' },
+        { step: 'NDA + partnership docs', body: 'Mutual NDA executed, contractor agreement signed, payment terms locked. Typically done within 24 hours. I add your brand to my invoicing templates so my invoices never cross your client\'s desk.' },
+        { step: 'Kickoff on your tools', body: 'I join your Slack / Asana / Notion / Linear — whatever your agency runs on. I do not stand up parallel tools. Your PM can see my progress the same way they see any other team member\'s.' },
+        { step: 'Staging on your subdomain', body: 'First page goes live on staging.youragency.com (or whatever URL you choose) within 48 hours of Figma handoff. You review, you send Loom to your client, I iterate based on your consolidated feedback — not client-direct.' },
+        { step: 'Launch + handoff', body: 'Launch checklist run: SEO, Core Web Vitals, analytics, 301 redirects, forms, schema, sitemap, accessibility. Workspace transferred to your client\'s Webflow account (or kept in yours, your call). I record the CMS walkthrough in neutral voiceover so you can forward it or re-record.' },
+        { step: 'Ongoing support via your agency', body: 'Post-launch tickets route through your team to me. If your client needs changes, they email you; you forward to me. The client never learns a subcontractor exists. You add your margin on top of my rate and pocket the difference.' },
+      ],
+      pricingAnchor: {
+        label: 'Agency retainer or per-project',
+        price: '$1,999',
+        cadence: '/month',
+        bullets: [
+          'Unlimited white-label Webflow builds on retainer',
+          'Per-project billing also available for spiky demand',
+          'NDA + agency-branded staging on every engagement',
+          'No minimum commitment, pause or cancel any time',
+        ],
+        cta: { label: 'Book a discovery call', href: site.links.cal, external: true },
+      },
+      faq: [
+        {
+          q: 'Will my client ever find out you are a subcontractor?',
+          a: 'Not unless you tell them. I use your branded staging URLs, I join your Slack under a neutral display name if you want, my invoices go to your agency and never to your client, and I decline any direct contact the client attempts to make. The only way they learn about me is if you disclose it.',
+        },
+        {
+          q: 'Can you match our agency\'s process and tools?',
+          a: 'Yes — I work inside Slack, Asana, Notion, Linear, ClickUp, Basecamp, Trello, Jira, and anything else you run. I do not require you to adopt my tools. For file management I match your Figma / Google Drive / Dropbox setup. For time tracking I log against your ticket IDs so your PMs can report up the stack.',
+        },
+        {
+          q: 'What if our client wants to meet the developer on a call?',
+          a: 'We plan for it up front. Options: I join the call as an "agency Webflow specialist" under a neutral handle (no personal branding), you relay questions async and I respond via Loom for you to forward, or you bring me on-camera with full disclosure — your call, case-by-case.',
+        },
+        {
+          q: 'How do you handle Figma files we did not create?',
+          a: 'Same as any engagement — I walk the file on Loom and flag missing states, mobile breakpoints, hover and error screens, and content gaps before I write a line of code. If your designer or your client\'s designer needs to fill gaps, I hand you a written list you can forward. I never email their designer directly.',
+        },
+        {
+          q: 'Do you sign contracts directly with our agency or with our client?',
+          a: 'With your agency, always. You are the prime contractor, you hold the client relationship, and you pay me. I never have a direct contract with your client unless you explicitly arrange it — and even then, under your agency\'s framing.',
+        },
+        {
+          q: 'What is your turnaround time on agency work?',
+          a: 'On retainer: 48-hour turnaround per request, one active at a time, same as direct clients. Per-project: a typical 5–10 page marketing site is 2–3 weeks, a 15–25 page CMS-heavy site is 4–5 weeks. Rush slots available at a 50% surcharge if I have the capacity.',
+        },
+        {
+          q: 'How do you handle scope creep from our end client?',
+          a: 'Your PM handles the client conversation; I handle the technical estimate. When your client asks for "one more page" or "can we add this feature," you ping me in Slack, I scope it in hours or sprints, you decide whether to absorb it or re-price it with the client. The handoff between us is always async and documented so your margin stays protected.',
+        },
+        {
+          q: 'Will the Webflow site be easy for our client to edit post-launch?',
+          a: 'Yes. CMS collections are modeled cleanly, style guide components are named and documented, the Editor role is set up for non-technical staff, and I record a 10–20 minute Loom walking every editable region. Your client can hire any Webflow developer in the future without reverse-engineering the build.',
+        },
+        {
+          q: 'Can you join our AE or sales calls as a technical advisor before the project is won?',
+          a: 'Yes — I do pre-sale scoping calls with agency partners on retainer, at no extra charge. I help you scope Webflow projects accurately during the pitch phase so you quote with confidence and avoid under-pricing. Turnaround on scoping asks is 24 hours.',
+        },
+        {
+          q: 'How is this different from hiring a full-time Webflow developer?',
+          a: 'No salary, no benefits, no ramp time, no bench when the pipeline dips, no recruiting cost, no management overhead. You get senior Webflow capacity the week you need it and you pause it when the pipeline slows. For agencies doing 2–10 Webflow projects a year, the retainer is cheaper than one full-time hire and more flexible.',
+        },
+      ],
+      keywords: [
+        'white label webflow',
+        'white label webflow developer',
+        'white label webflow development',
+        'webflow subcontractor',
+        'webflow for agencies',
+        'agency webflow partner',
+        'outsource webflow development',
+        'hire white label webflow developer',
+      ],
+    },
+  },
+  {
     slug: 'upwork',
     name: 'Hire me on Upwork',
     tagline: 'Escrow-backed hourly engagements via my Top-Rated Upwork profile.',

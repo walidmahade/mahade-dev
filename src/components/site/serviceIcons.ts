@@ -3,4 +3,5 @@ export type ServiceIconName =
   | 'audit'
   | 'consult'
   | 'retainer'
+  | 'whiteLabel'
   | 'upwork';
