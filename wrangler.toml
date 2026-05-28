@@ -1,2 +1,3 @@
 name = "mahade-dev"
 compatibility_date = "2026-04-28"
+workers_dev = true
