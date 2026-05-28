@@ -10,14 +10,14 @@ const copy = {
   hire: {
     eyebrow: 'Work with me',
     heading: 'Need a Webflow developer who actually ships?',
-    body: 'I build fast, SEO-friendly Webflow sites for founders and design agencies. Book a 30-minute call and tell me what you need.',
+    body: 'I build fast, SEO-friendly Webflow sites for founders and design agencies. <a class="text-brand underline underline-offset-2" href="/">Hire a Webflow developer</a> on a flat monthly retainer, or book a 30-minute call below.',
     cta: 'Book a call',
     href: site.links.cal,
   },
   consult: {
     eyebrow: 'Getting stuck?',
     heading: 'Want a second pair of eyes on this?',
-    body: "If you are hitting a wall on Webflow SEO, performance, or CMS structure, I can review your setup and tell you what to fix.",
+    body: 'If you are hitting a wall on Webflow SEO, performance, or CMS structure, I can <a class="text-brand underline underline-offset-2" href="/services/webflow-audits">review your setup</a> and tell you what to fix.',
     cta: 'Get in touch',
     href: '/contact',
   },
@@ -35,7 +35,7 @@ const c = copy[variant];
 <aside class="mt-12 rounded-lg border border-line bg-paper-tint p-6 md:p-8 not-prose">
   <p class="text-eyebrow text-brand">{c.eyebrow}</p>
   <h3 class="mt-2 text-heading-lg text-ink">{c.heading}</h3>
-  <p class="mt-3 text-body text-ink-muted">{c.body}</p>
+  <p class="mt-3 text-body text-ink-muted" set:html={c.body}></p>
   <a
     href={c.href}
     class="mt-5 inline-flex items-center gap-2 rounded-md bg-ink px-5 py-2.5 text-paper font-medium hover:gap-3 transition-all"
