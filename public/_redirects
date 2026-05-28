@@ -1,3 +1,7 @@
 # Legacy routes from the old PHP site
 /uses       /about     301
 /index.php  /          301
+
+# Consolidate duplicate comparison stubs into their fuller posts (avoid cannibalization)
+/blog/webflow-vs-wordpress  /blog/webflow-vs-wordpress-2026     301
+/blog/webflow-vs-shopify    /blog/webflow-ecommerce-vs-shopify  301
