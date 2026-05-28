@@ -26,7 +26,7 @@ export const tools: Tool[] = [
     name: 'Webflow Cost Calculator',
     tagline: 'Estimate your Webflow project cost in under a minute.',
     description:
-      'Get a transparent price range for a Webflow site based on your page count, CMS needs, migration scope, and SEO requirements. No email required.',
+      'How much does a Webflow site cost? This free Webflow pricing calculator gives a transparent price range from your page count, CMS, migration, and SEO needs — no email required.',
     category: 'Pricing',
     icon: 'calculator',
     keywords: ['webflow cost', 'webflow pricing', 'how much does webflow cost'],
