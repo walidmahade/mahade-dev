@@ -17,6 +17,7 @@ import { faq } from '@/data/faq';
 const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'Service',
+  name: 'Webflow Developer for Hire',
   provider: {
     '@type': 'Person',
     name: site.name,
@@ -25,7 +26,7 @@ const serviceSchema = {
   serviceType: 'Webflow Development',
   areaServed: { '@type': 'Place', name: 'Worldwide' },
   description:
-    'Professional Webflow development for agencies and in-house teams. Unlimited pages on a flat monthly retainer, or hourly engagements via Upwork.',
+    'Hire an expert Webflow developer for agencies and in-house teams. Unlimited pages on a flat monthly retainer, or hourly engagements via Upwork.',
   offers: [
     {
       '@type': 'Offer',
@@ -62,8 +63,8 @@ const faqSchema = {
 };
 ---
 <Layout
-  title="Webflow Developer — Mahade Walid"
-  description="Professional Webflow development for agencies and teams. Unlimited pages on a flat monthly retainer, or hourly via Upwork."
+  title="Hire a Webflow Developer — Mahade Walid"
+  description="Hire an expert Webflow developer for agencies & SaaS teams. Unlimited pages on a flat monthly retainer, or hourly via Upwork. Fast, SEO-ready builds."
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />

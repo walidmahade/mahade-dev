@@ -49,11 +49,22 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 2, name: service.name, item: `${site.url}${service.href}` },
   ],
 };
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: content.faq.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
 <Layout title={pageTitle} description={pageDescription}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
 
   <Section size="hero" tone="paper">

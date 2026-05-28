@@ -5,6 +5,14 @@ export type FaqItem = {
 
 export const faq: FaqItem[] = [
   {
+    q: 'How much does it cost to hire a Webflow developer?',
+    a: 'Two ways to work with me: a flat $1,999/mo retainer for unlimited pages (one request at a time), or hourly via Upwork. Most one-off marketing sites land between $3k–$8k depending on scope.',
+  },
+  {
+    q: 'Should I hire a freelance Webflow developer or an agency?',
+    a: 'A freelance Webflow developer gets you senior, hands-on work without agency overhead or account managers in the loop. For agencies, I work white-label as your behind-the-scenes Webflow developer.',
+  },
+  {
     q: 'How long does a typical project take?',
     a: 'A standard marketing site (5–10 pages) takes 2–3 weeks from Figma to launch. Retainer work turns around in 48 hours per request.',
   },
