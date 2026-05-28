@@ -38,7 +38,7 @@ When you publish a Webflow form, the platform applies HTML5 native validation. T
 - **Phone input type.** `input[type="tel"]` shows a numeric keyboard on mobile but does not enforce a format — any string passes.
 - **A generic error state.** When validation fails, Webflow shows its built-in form error block (the red block you can style in the Designer). One message for all errors. No field-level feedback.
 
-That's it. The error message is customizable in the Designer, but it applies to the whole form, not to individual fields. A user who fills in nine fields correctly and makes a typo in the tenth gets told "please fill in all required fields" with no indication of which field is the problem.
+That's it. The error message is customizable in the Designer, but it applies to the whole form, not to individual fields. A user who fills in nine fields correctly and makes a typo in the tenth gets told "please fill in all required fields" with no indication of which field is the problem. That single generic error is the validation complaint I get hired to fix most often — real leads abandon the form because they cannot tell what they did wrong.
 
 For a landing page with a two-field form — name and email — native validation is fine. For anything more complex, it's not.
 

@@ -33,7 +33,7 @@ If you're still deciding whether to stay on one platform or go hybrid, the [Webf
 
 ## The hybrid pattern in one paragraph
 
-Webflow is published to your root domain (example.com). Shopify is published to either a subfolder (example.com/shop) or a subdomain (shop.example.com), depending on how you configure the DNS. Product listing and checkout live in Shopify. Product story pages — the SEO-optimized, richly designed pages that explain what a product is and why someone should buy it — live in Webflow as CMS collection items. Those pages link out to Shopify's cart for the actual add-to-cart action. Shopify webhooks or a scheduled sync script keep the Webflow CMS current with Shopify's product catalog. The visitor never sees the seam.
+Webflow is published to your root domain (example.com). Shopify is published to either a subfolder (example.com/shop) or a subdomain (shop.example.com), depending on how you configure the DNS. Product listing and checkout live in Shopify. Product story pages — the SEO-optimized, richly designed pages that explain what a product is and why someone should buy it — live in Webflow as CMS collection items. Those pages link out to Shopify's cart for the actual add-to-cart action. Shopify webhooks or a scheduled sync script keep the Webflow CMS current with Shopify's product catalog. The visitor never sees the seam. On the builds I've shipped, that seam is exactly where the project succeeds or fails — get the DNS and sync right and it's invisible; get them wrong and Google sees two sites arguing over the same products.
 
 ## When it pays off
 

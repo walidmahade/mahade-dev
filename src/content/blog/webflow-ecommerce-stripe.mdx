@@ -32,7 +32,7 @@ If you are building a store from scratch, read [Webflow Ecommerce in 2026](/blog
 
 ## Native Stripe in Webflow Ecommerce
 
-Webflow's Ecommerce plans ship with Stripe as the default and only native payment processor. The connection is handled via Stripe Connect — you authorize Webflow to charge through your Stripe account, and Webflow manages the checkout session, order creation, and confirmation emails. You do not hand off your customer to Stripe's hosted page; the transaction happens inside Webflow's checkout flow while Stripe handles the money.
+Webflow's Ecommerce plans ship with Stripe as the default and only native payment processor. The connection is handled via Stripe Connect — you authorize Webflow to charge through your Stripe account, and Webflow manages the checkout session, order creation, and confirmation emails. You do not hand off your customer to Stripe's hosted page; the transaction happens inside Webflow's checkout flow while Stripe handles the money. The first thing I check on any handover is whether the client connected their own Stripe account or someone wired up a personal one during a rushed launch — untangling that after live orders have flowed through is genuinely painful.
 
 To connect: open your Webflow project, go to **Ecommerce > Settings > Checkout**, and click **Connect with Stripe**. You will be redirected to Stripe's OAuth flow, authorize, and land back in Webflow with the connection active. Total time: under five minutes.
 

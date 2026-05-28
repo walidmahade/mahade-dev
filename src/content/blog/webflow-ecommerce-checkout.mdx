@@ -26,7 +26,7 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-Webflow checkout customization has one real answer: you can control nearly everything visual and most of the copy, but the core transaction structure — fields, step sequence, URL, and payment flow — is fixed. If you go in understanding that boundary, you can build a checkout that converts well. If you go in expecting Shopify-level extensibility, you will hit walls within the first hour.
+Webflow checkout customization has one real answer: you can control nearly everything visual and most of the copy, but the core transaction structure — fields, step sequence, URL, and payment flow — is fixed. If you go in understanding that boundary, you can build a checkout that converts well. If you go in expecting Shopify-level extensibility, you will hit walls within the first hour. I've shipped this checkout on a dozen stores, and it's the one part clients are most surprised by — they assume the page they see in the Designer is as open as every other Webflow page. It isn't.
 
 This post maps exactly what falls on each side of that line, which Custom Code tricks are safe, and when the right move is to replace Webflow's checkout altogether. If you're still evaluating whether Webflow Ecommerce fits your store at all, start with the [Webflow Ecommerce overview for 2026](/blog/webflow-ecommerce-2026) first, then come back here for the checkout detail. And if you already know you need a custom checkout built properly, [get in touch](/contact).
 
@@ -143,7 +143,7 @@ Color contrast deserves a dedicated pass. Helper text, placeholder text, and pri
 
 ## When to move off Webflow checkout
 
-The honest answer: Webflow's checkout is good enough for a straightforward DTC store selling physical or digital products with standard Stripe payment methods, a single currency, and no B2B requirements. If that describes your store, the checkout is not a constraint — it is a managed solution that saves you real engineering time.
+The honest answer: Webflow's checkout is good enough for a straightforward DTC store selling physical or digital products with standard Stripe payment methods, a single currency, and no B2B requirements. If that describes your store, the checkout is not a constraint — it is a managed solution that saves you real engineering time. I push back when clients want to abandon it for cosmetic reasons: it is almost always cheaper to live within the locked structure than to rebuild the entire payment flow elsewhere. Move off it for capability gaps, not styling ones.
 
 You should replace it when your requirements hit the locked list. Specifically:
 

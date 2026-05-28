@@ -31,7 +31,7 @@ Webflow lazy loading images by default is a good thing. The platform adds `loadi
 
 When Webflow publishes your site, it injects `loading="lazy"` onto every `<img>` tag that comes from a Webflow Image element. That is the native browser lazy-loading attribute, available in all modern browsers. It tells the browser: don't start fetching this image until it's within a certain threshold of the viewport — typically 1,200px on a fast connection, closer to 2,500px on a slow one.
 
-This is the right default for most images. A blog post with ten images in the body doesn't need all ten fetched immediately. The browser fetches the first two or three visible ones, then queues the rest as the user scrolls. Bandwidth saved, page load faster.
+This is the right default for most images. A blog post with ten images in the body doesn't need all ten fetched immediately. The browser fetches the first two or three visible ones, then queues the rest as the user scrolls. Bandwidth saved, page load faster. On nearly every slow site I've audited, the defaults were fine — the real LCP damage came from the one hero image that should never have been lazy-loaded in the first place.
 
 What Webflow does not lazy-load: background images set via CSS. A `background-image` in a style rule has different loading behavior entirely — it's requested only after the CSS is parsed and the element is determined to be visible, which can actually make it arrive later than a properly lazy-loaded `<img>` would. If you're using a large background image in a section (common for hero sections with a parallax background), that image is not under Webflow's lazy-loading control at all. It follows CSS loading rules.
 
