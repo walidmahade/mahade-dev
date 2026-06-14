@@ -1,4 +1,4 @@
-export type ToolCategory = 'Pricing' | 'SEO' | 'Performance' | 'Launch' | 'Design';
+export type ToolCategory = 'Pricing' | 'SEO' | 'Performance' | 'Launch' | 'Design' | 'Status';
 
 export type Tool = {
   slug: string;
@@ -16,7 +16,10 @@ export type Tool = {
     | 'gauge'
     | 'bot'
     | 'checkSquare'
-    | 'contrast';
+    | 'contrast'
+    | 'languages'
+    | 'link'
+    | 'activity';
   keywords: string[];
 };
 
@@ -128,6 +131,36 @@ export const tools: Tool[] = [
     category: 'Design',
     icon: 'contrast',
     keywords: ['color contrast checker', 'wcag contrast', 'accessibility color'],
+  },
+  {
+    slug: 'is-webflow-down',
+    name: 'Is Webflow Down?',
+    tagline: 'Live Webflow status, pulled from the official feed.',
+    description:
+      'Is Webflow down right now? Live Webflow status — hosting, CMS, Designer, and forms — from the official status feed, plus what to check if your site is affected.',
+    category: 'Status',
+    icon: 'activity',
+    keywords: ['is webflow down', 'webflow status', 'webflow outage', 'webflow down'],
+  },
+  {
+    slug: 'hreflang-generator',
+    name: 'Hreflang Tag Generator',
+    tagline: 'Build valid hreflang tags for multilingual sites.',
+    description:
+      'Generate valid hreflang link tags for multilingual and multi-region sites. Add each URL and language/region and copy the <link> tags, with x-default handled for you.',
+    category: 'SEO',
+    icon: 'languages',
+    keywords: ['hreflang generator', 'hreflang tag generator', 'hreflang tags', 'hreflang for webflow'],
+  },
+  {
+    slug: 'slug-generator',
+    name: 'URL Slug Generator',
+    tagline: 'Turn any title into a clean, SEO-friendly slug.',
+    description:
+      'Turn any title into a clean, SEO-friendly URL slug — lowercase, hyphenated, and accent-stripped. Paste one title or a whole list and copy the results.',
+    category: 'SEO',
+    icon: 'link',
+    keywords: ['slug generator', 'url slug generator', 'slugify', 'webflow slug'],
   },
 ];
 

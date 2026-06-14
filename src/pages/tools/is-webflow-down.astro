@@ -1,0 +1,71 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import WebflowStatus from '@/components/tools/WebflowStatus';
+import { tools } from '@/data/tools';
+import { jsonLd } from '@/lib/jsonld';
+
+const tool = tools.find((t) => t.slug === 'is-webflow-down')!;
+
+const faqs = [
+  {
+    q: 'Is it Webflow that’s down, or just my site?',
+    a: 'If the status above says all systems operational, the problem is almost certainly on your end — connection, DNS, browser cache, or a custom-domain misconfiguration. Hard-refresh, try another network or device, and check your domain’s DNS. If Hosting or CMS shows degraded, it’s Webflow.',
+  },
+  {
+    q: 'What should I do when Webflow is down?',
+    a: 'During a Webflow-side incident there’s no fix on your end. Published sites are served from a global CDN and usually stay online even when the Designer or Dashboard is degraded. Don’t republish or force-save mid-incident — subscribe to updates on status.webflow.com and wait for the all-clear.',
+  },
+  {
+    q: 'Where do Webflow outages actually show up?',
+    a: 'The status feed separates the Designer, Hosted Websites (your live site), CMS, Forms, and the Dashboard. A Designer outage does not necessarily mean your published site is down, and vice versa — check the specific component in the list above to see what’s affected.',
+  },
+  {
+    q: 'How often does Webflow go down?',
+    a: 'Published-site hosting on Webflow’s CDN is highly reliable; most incidents are short Designer or Dashboard degradations rather than live-site outages. The component breakdown above tells you whether visitors are actually affected or just editors.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<ToolLayout tool={tool}>
+  <WebflowStatus client:load />
+
+  <div slot="body" class="prose-page">
+    <script type="application/ld+json" set:html={jsonLd(faqSchema)} />
+
+    <h2>How this checker works</h2>
+    <p>
+      The status above is read live from Webflow&rsquo;s official status feed
+      (<a href="https://status.webflow.com" target="_blank" rel="noopener">status.webflow.com</a>) the
+      moment you load the page — nothing is cached or guessed. Green means Webflow is reporting no
+      issues; amber or red means there&rsquo;s an active incident, with the affected component called
+      out in the list.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    {faqs.map((f) => (
+      <>
+        <h3>{f.q}</h3>
+        <p>{f.a}</p>
+      </>
+    ))}
+
+    <h2>Site loading but feeling slow?</h2>
+    <p>
+      A slow site isn&rsquo;t an outage — it&rsquo;s usually unoptimized images, heavy scripts, or
+      layout shift. Run a free <a href="/tools/core-web-vitals/">Core Web Vitals check</a>, or read
+      the <a href="/blog/webflow-site-slow/">7 fixes I run on every slow Webflow site</a>.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>

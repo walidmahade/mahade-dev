@@ -1,0 +1,43 @@
+---
+import ToolLayout from '@/components/tools/ToolLayout.astro';
+import ToolCta from '@/components/tools/ToolCta.astro';
+import SlugGenerator from '@/components/tools/SlugGenerator';
+import { tools } from '@/data/tools';
+
+const tool = tools.find((t) => t.slug === 'slug-generator')!;
+---
+<ToolLayout tool={tool}>
+  <SlugGenerator client:load />
+
+  <div slot="body" class="prose-page">
+    <h2>What makes a good URL slug</h2>
+    <p>
+      A slug is the human-readable tail of a URL — the <code>webflow-cms-structure</code> in{' '}
+      <code>/blog/webflow-cms-structure</code>. Good slugs are short, lowercase, hyphen-separated,
+      and built from your target keyword with the filler words stripped. This generator lowercases,
+      removes accents and punctuation, collapses spaces to hyphens, and trims the ends — exactly what
+      a clean slug needs.
+    </p>
+
+    <h2>Slug rules worth knowing</h2>
+    <ul>
+      <li><strong>Hyphens, not underscores.</strong> Google treats hyphens as word separators; underscores join words.</li>
+      <li><strong>Lowercase only.</strong> Some servers treat <code>/About</code> and <code>/about</code> as different URLs.</li>
+      <li><strong>Keep it lean.</strong> Drop stop words (a, the, of, to) unless they change the meaning.</li>
+      <li><strong>Don&rsquo;t stuff dates or IDs</strong> unless the content is genuinely time-bound.</li>
+    </ul>
+
+    <h2>Changing a slug? Redirect it first</h2>
+    <p>
+      In Webflow, the CMS auto-generates a slug from the item name, but you can override it per item.
+      If you rename a published slug, add a 301 from the old path before you publish or you&rsquo;ll
+      lose the rankings and break inbound links. My{' '}
+      <a href="/blog/webflow-sitemap-robots-canonical/">Webflow sitemap, robots & canonical guide</a>{' '}
+      covers redirect handling, and the{' '}
+      <a href="/blog/webflow-cms-structure/">CMS structure guide</a> covers naming collections and
+      slugs so you don&rsquo;t have to rename them later.
+    </p>
+
+    <ToolCta />
+  </div>
+</ToolLayout>
