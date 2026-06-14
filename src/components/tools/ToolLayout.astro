@@ -7,7 +7,6 @@ import DisplayHeading from '@/components/layout/DisplayHeading.astro';
 import ToolIcon from './ToolIcon.astro';
 import ToolCta from './ToolCta.astro';
 import { tools, getRelatedTools, type Tool } from '@/data/tools';
-import { site } from '@/data/site';
 
 interface Props {
   tool: Tool;
@@ -15,33 +14,17 @@ interface Props {
 
 const { tool } = Astro.props;
 const related = getRelatedTools(tool.slug);
-
-const softwareSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: tool.name,
-  description: tool.description,
-  applicationCategory: 'BusinessApplication',
-  operatingSystem: 'All',
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  url: `${site.url}/tools/${tool.slug}`,
-  creator: { '@type': 'Person', name: site.name, url: site.url },
-};
 ---
 <Layout
   title={`${tool.name} — Free ${tool.category} Tool | Mahade Walid`}
   description={tool.description}
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
-  </Fragment>
-
   <Section size="page-head" tone="paper">
     <Container>
       <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
         <a href="/" class="hover:text-ink transition-colors">Home</a>
         <span aria-hidden="true"> / </span>
-        <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+        <a href="/tools/" class="hover:text-ink transition-colors">Tools</a>
         <span aria-hidden="true"> / </span>
         <span class="text-ink-muted">{tool.name}</span>
       </nav>
@@ -85,7 +68,7 @@ const softwareSchema = {
       <div class="mt-6 grid gap-4 md:grid-cols-3">
         {related.map((r) => (
           <a
-            href={`/tools/${r.slug}`}
+            href={`/tools/${r.slug}/`}
             class="group rounded-lg border border-line bg-paper p-5 hover:border-line-strong transition-colors"
           >
             <div class="flex items-center gap-3">

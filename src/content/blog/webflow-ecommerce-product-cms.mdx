@@ -28,9 +28,9 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The right **webflow ecommerce product cms** structure takes about two hours to design and about two weeks to rebuild when you get it wrong. I've rebuilt it. Here's how to get it right the first time.
 
-Webflow Ecommerce is a capable platform for stores under a few thousand SKUs — but it's opinionated in ways that will punish you if you don't understand them before you start building. I've covered the [broader Webflow CMS structure decisions](/blog/webflow-cms-structure) and the [hard limits you'll hit at scale](/blog/webflow-cms-limits), and ecommerce adds another layer: variants, SKUs, inventory states, and the question of whether you're still on the right platform for your store's size. I've also gone deep on [whether Webflow Ecommerce makes sense for your project in 2026](/blog/webflow-ecommerce-2026) if you haven't settled that question yet.
+Webflow Ecommerce is a capable platform for stores under a few thousand SKUs — but it's opinionated in ways that will punish you if you don't understand them before you start building. I've covered the [broader Webflow CMS structure decisions](/blog/webflow-cms-structure/) and the [hard limits you'll hit at scale](/blog/webflow-cms-limits/), and ecommerce adds another layer: variants, SKUs, inventory states, and the question of whether you're still on the right platform for your store's size. I've also gone deep on [whether Webflow Ecommerce makes sense for your project in 2026](/blog/webflow-ecommerce-2026/) if you haven't settled that question yet.
 
-If you already know you're building on Webflow Ecom and you want the structure right, keep reading. And if you want a second opinion on your specific schema before you build it, [get in touch](/contact).
+If you already know you're building on Webflow Ecom and you want the structure right, keep reading. And if you want a second opinion on your specific schema before you build it, [get in touch](/contact/).
 
 ## Product vs Collection: the key distinction
 
@@ -70,11 +70,11 @@ The system breaks for configurable products with four or more option axes. A cus
 Webflow's 100-variant ceiling per product is a hard limit, not a soft recommendation. If your catalog includes products with more than 100 possible SKU combinations, you need to either restructure the product (split it into multiple Webflow products filed under a shared parent) or accept that the native variant system won't cover it. Design around this before you start building, not after.
 </Callout>
 
-The [Webflow CMS limits post](/blog/webflow-cms-limits) covers collection-level caps. At the product level, the variant ceiling is the constraint that hits stores first.
+The [Webflow CMS limits post](/blog/webflow-cms-limits/) covers collection-level caps. At the product level, the variant ceiling is the constraint that hits stores first.
 
 ## Categories, tags, and collections
 
-This is where most Webflow Ecom stores get structurally messy, and it's also where the multi-reference field is most valuable. I covered [multi-reference fields in depth here](/blog/webflow-multi-reference-fields) — the short version for ecommerce is this: use a single-reference field for the primary category and a multi-reference field for every secondary axis.
+This is where most Webflow Ecom stores get structurally messy, and it's also where the multi-reference field is most valuable. I covered [multi-reference fields in depth here](/blog/webflow-multi-reference-fields/) — the short version for ecommerce is this: use a single-reference field for the primary category and a multi-reference field for every secondary axis.
 
 The pattern that works:
 

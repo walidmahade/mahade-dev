@@ -29,9 +29,9 @@ A squarespace to webflow migration is a design rebuild, not a platform transfer.
 
 Squarespace is a genuinely good platform for its use case: small-business owners who want a presentable site without hiring a developer. It has real constraints — limited layout flexibility, a CMS that caps at fixed collection types, no custom code at the component level, and a performance floor that's hard to clear above 75 Lighthouse. If you've hit those walls and want something you can actually build marketing operations on top of, Webflow is the right destination.
 
-If you're still deciding whether Webflow is actually better for your use case, I have a detailed breakdown in [Webflow vs Squarespace](/blog/webflow-vs-squarespace) that covers both platforms honestly. For migrations coming from a different platform, the [WordPress to Webflow migration](/blog/wordpress-to-webflow-migration) guide covers the CMS-heavy version of these same issues.
+If you're still deciding whether Webflow is actually better for your use case, I have a detailed breakdown in [Webflow vs Squarespace](/blog/webflow-vs-squarespace/) that covers both platforms honestly. For migrations coming from a different platform, the [WordPress to Webflow migration](/blog/wordpress-to-webflow-migration/) guide covers the CMS-heavy version of these same issues.
 
-If you already know what you need and want to get it scoped properly, [get in touch](/contact).
+If you already know what you need and want to get it scoped properly, [get in touch](/contact/).
 
 ## The honest answer on scope
 
@@ -101,7 +101,7 @@ Add every Squarespace URL to the left column, map its Webflow destination to the
 Squarespace's `/s/` prefix is the biggest SEO trap in a Commerce migration. When Squarespace serves its store, cart, and checkout, many of those paths get indexed with `/s/` prepended — `/s/store`, `/s/store/product-slug`, `/s/checkout`. These indexed URLs will 404 on Webflow unless you explicitly redirect them. Check Google Search Console's Coverage report for your current site before migration and look for any `/s/` paths with impressions. Every one needs a redirect.
 </Callout>
 
-For the technical SEO setup on the Webflow side, my [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) covers every setting you need to verify at launch. For sitemap and robots.txt configuration specifically, [Webflow sitemap, robots.txt, and canonical tags](/blog/webflow-sitemap-robots-canonical) is the detailed reference.
+For the technical SEO setup on the Webflow side, my [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) covers every setting you need to verify at launch. For sitemap and robots.txt configuration specifically, [Webflow sitemap, robots.txt, and canonical tags](/blog/webflow-sitemap-robots-canonical/) is the detailed reference.
 
 ## Squarespace ecommerce — Webflow Ecom or move to Shopify
 
@@ -150,7 +150,7 @@ Launch day is when the real migration risk exists. The Squarespace site goes dar
 
 Keep the Squarespace subscription active for at least 60 days post-launch. You may need to reference original page content, check original URLs, or roll back in an emergency. Canceling immediately to save one billing cycle is not worth the risk.
 
-The migration is complete when Search Console shows stable or improving impressions on your primary keywords, no new 404s are appearing, and all forms and integrations are confirmed working on real traffic. That typically takes two weeks post-launch if the redirect work was done properly before DNS cutover. See the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) for the complete post-launch SEO verification steps.
+The migration is complete when Search Console shows stable or improving impressions on your primary keywords, no new 404s are appearing, and all forms and integrations are confirmed working on real traffic. That typically takes two weeks post-launch if the redirect work was done properly before DNS cutover. See the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) for the complete post-launch SEO verification steps.
 
 A Squarespace to Webflow migration done right delivers a site with meaningfully better performance, more layout flexibility, a CMS you can actually scale, and no platform ceiling on what your marketing team can build. Done without proper redirect work and scope planning, it's a few weeks of regression before you're back where you started. The difference is almost entirely in the preparation — redirect map, CMS schema, content delivery schedule, and QA plan — not in the build itself.
 

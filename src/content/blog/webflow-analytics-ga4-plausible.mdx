@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow analytics is a solved problem, but most people solve it wrong. They either install GA4 without a consent banner (a GDPR landmine) or they reach for Plausible without knowing what it can't do. This post cuts through the noise: here's what each tool actually does, what it costs, what it breaks, and what I install for each project type.
 
-Before diving in: analytics is the lens through which everything else makes sense. Once you have good data, you'll want to act on it — fix slow pages, improve SEO, tighten up forms. If you haven't already checked the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026), start there. And if you want a second pair of eyes on your analytics setup or anything else on your Webflow build, [get in touch](/contact).
+Before diving in: analytics is the lens through which everything else makes sense. Once you have good data, you'll want to act on it — fix slow pages, improve SEO, tighten up forms. If you haven't already checked the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/), start there. And if you want a second pair of eyes on your analytics setup or anything else on your Webflow build, [get in touch](/contact/).
 
 ## The one-line verdict per use case
 
@@ -65,7 +65,7 @@ Installing GA4 on a Webflow site without a cookie consent manager is a complianc
 
 Plausible is a privacy-first analytics tool that ships a script under 1 KB — roughly one-fiftieth the size of the GA4 tag. It collects pageviews, referrers, top pages, devices, countries, and custom events without setting a single cookie or collecting personally identifiable information.
 
-The script weight matters on Webflow. A Webflow site's JavaScript payload is already non-trivial between the interactions runtime, custom embeds, and third-party tools. Adding a 45 KB GA4 tag moves the needle on Total Blocking Time. Plausible doesn't. If you've dug into why a Webflow site feels sluggish, [script weight is frequently the culprit](/blog/webflow-site-slow) — and analytics tags are the easiest thing to swap.
+The script weight matters on Webflow. A Webflow site's JavaScript payload is already non-trivial between the interactions runtime, custom embeds, and third-party tools. Adding a 45 KB GA4 tag moves the needle on Total Blocking Time. Plausible doesn't. If you've dug into why a Webflow site feels sluggish, [script weight is frequently the culprit](/blog/webflow-site-slow/) — and analytics tags are the easiest thing to swap.
 
 What Plausible can't do:
 
@@ -117,7 +117,7 @@ The "no cookie banner needed with Plausible" position is not legal advice and yo
 
 If you do need a consent banner for GA4, use a Consent Mode v2–compatible CMP. Options worth considering: Cookieyes, Axeptio, or Klaro. Wire them to Webflow via the Custom Code head embed. Do not build your own consent logic with a custom JavaScript flag — it will fail an audit.
 
-If you're integrating with tools that extend beyond analytics — HubSpot, for instance — the consent picture gets more complex. My post on the [Webflow HubSpot integration](/blog/webflow-hubspot-integration) covers how to handle consent across both tools without creating conflicting gate logic.
+If you're integrating with tools that extend beyond analytics — HubSpot, for instance — the consent picture gets more complex. My post on the [Webflow HubSpot integration](/blog/webflow-hubspot-integration/) covers how to handle consent across both tools without creating conflicting gate logic.
 
 ## Event tracking: clicks, form submits, scroll depth
 

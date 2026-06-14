@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow + Next.js is one of those architectures that sounds clever in theory and regularly disappoints in practice when it's picked for the wrong reasons. I've built it, maintained it, and inherited it from other developers who thought it was the sophisticated choice. My honest read: it's the right call for a narrow set of situations, and a significant overcomplication for most marketing sites. Here's exactly when it pays off and when it doesn't.
 
-If you already know this is what you need and want help scoping it, [reach out](/contact) and we can cut straight to the architecture conversation.
+If you already know this is what you need and want help scoping it, [reach out](/contact/) and we can cut straight to the architecture conversation.
 
 ## The problem this solves
 
@@ -37,7 +37,7 @@ The Webflow + Next.js hybrid solves a specific version of that tension: your con
 
 The gap it fills is not "we need faster pages." Webflow's CDN is fast. The gap is editorial workflow meets engineering control — those two requirements on the same domain, under the same team's management. That's not a common requirement, but when it's the real requirement, this architecture earns its complexity.
 
-That's also why this is a different conversation from the one in [Webflow vs. WordPress in 2026](/blog/webflow-vs-wordpress-2026) — this hybrid isn't about escaping Webflow's limitations entirely; it's about extending them deliberately.
+That's also why this is a different conversation from the one in [Webflow vs. WordPress in 2026](/blog/webflow-vs-wordpress-2026/) — this hybrid isn't about escaping Webflow's limitations entirely; it's about extending them deliberately.
 
 ## Architecture: Webflow CMS as headless source
 
@@ -54,7 +54,7 @@ The structure is simpler than it sounds. Webflow runs as a pure CMS — content 
 
 Nothing magic happens here. Next.js calls Webflow's API at build time or on-demand, builds pages, serves them. The editorial experience is entirely unchanged from what a pure Webflow setup gives the content team — and that's the entire point.
 
-For well-structured CMS collections, this works cleanly. For poorly structured ones, the API surface becomes painful fast. I wrote a detailed guide to [Webflow CMS structure](/blog/webflow-cms-structure) if you're not confident the collection schema is solid before you build the rendering layer on top of it — get that right first, or you'll be refactoring the API calls every time the schema evolves.
+For well-structured CMS collections, this works cleanly. For poorly structured ones, the API surface becomes painful fast. I wrote a detailed guide to [Webflow CMS structure](/blog/webflow-cms-structure/) if you're not confident the collection schema is solid before you build the rendering layer on top of it — get that right first, or you'll be refactoring the API calls every time the schema evolves.
 
 ## Webflow API access and rate limits
 
@@ -87,7 +87,7 @@ Incremental static regeneration (ISR) is the right choice when you need content 
 
 Server-side rendering (`getServerSideProps` or route handlers with no caching) is rarely the right call for Webflow-sourced content. It adds cold-start latency on every request, costs more in compute, and the content is static enough that the freshness tradeoff doesn't justify it. The only place I've seen it make sense is on pages that need to combine Webflow CMS content with real-time data from another source — user-specific data, live inventory, that kind of thing.
 
-For custom code handling in the Next.js environment — especially when migrating scripts that were previously running inside Webflow's code embed blocks — the patterns from [Webflow custom code](/blog/webflow-custom-code) apply, just inverted: instead of managing script loading inside Webflow's publish model, you're managing it inside Next.js's `<Script>` component and layout system.
+For custom code handling in the Next.js environment — especially when migrating scripts that were previously running inside Webflow's code embed blocks — the patterns from [Webflow custom code](/blog/webflow-custom-code/) apply, just inverted: instead of managing script loading inside Webflow's publish model, you're managing it inside Next.js's `<Script>` component and layout system.
 
 ## Publishing flow and staging
 
@@ -138,11 +138,11 @@ That's not an argument against the hybrid. It's an argument for only choosing it
 
 Pure Webflow is better — and often dramatically better — for most marketing sites. If you have under 50 pages, a content team without engineering support, a timeline under eight weeks, or a budget that needs to stay lean, pure Webflow delivers faster and with less ongoing maintenance. The gap in flexibility is real, but for the vast majority of marketing sites the flexibility you're trading for is flexibility you'll never use.
 
-I covered the Webflow vs. WordPress comparison in depth over at [Webflow vs. WordPress in 2026](/blog/webflow-vs-wordpress-2026) — the same logic applies here: added infrastructure should solve a real, present problem, not a theoretical future one.
+I covered the Webflow vs. WordPress comparison in depth over at [Webflow vs. WordPress in 2026](/blog/webflow-vs-wordpress-2026/) — the same logic applies here: added infrastructure should solve a real, present problem, not a theoretical future one.
 
 Pure Next.js (headless with a different CMS) is better when the content team doesn't need Webflow's specific editorial UI, when you need CMS capabilities Webflow doesn't support (complex relational data, user-generated content, content workflows with approval stages), or when the site is primarily a web application with some content marketing attached. Sanity, Contentful, and Payload CMS are all strong choices in those scenarios, and they're built from the ground up for headless use in ways Webflow's API is not.
 
-For e-commerce, neither Webflow + Next.js nor pure Webflow is the obvious choice for complex shops. That's a separate decision tree — I worked through it in [Webflow ecommerce vs. Shopify](/blog/webflow-ecommerce-vs-shopify) if that's the context you're evaluating.
+For e-commerce, neither Webflow + Next.js nor pure Webflow is the obvious choice for complex shops. That's a separate decision tree — I worked through it in [Webflow ecommerce vs. Shopify](/blog/webflow-ecommerce-vs-shopify/) if that's the context you're evaluating.
 
 The hybrid earns its place when three things are true simultaneously: your content team has genuine Webflow attachment and doesn't want to learn a new CMS, your engineering team has the Next.js skills and bandwidth to build and maintain the integration, and you have a real requirement (dynamic server-side content, single-domain app/marketing split, complex per-user rendering) that pure Webflow can't meet. Remove any one of those three and the simpler option wins.
 

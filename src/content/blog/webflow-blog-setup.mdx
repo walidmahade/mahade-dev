@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Here is the complete Webflow blog setup I use on every client project: six Collections, a field schema that doesn't need rearchitecting six months in, an SEO layer that actually gets pages indexed, and an editor workflow that doesn't require a developer every time someone wants to publish a post.
 
-Most Webflow blogs I inherit are built the same wrong way — one Posts Collection, a plain-text category field, no authors, and SEO fields that are either empty or copy-pasted from the homepage. It works until the client hires a content team, or wants category pages, or asks why none of the posts rank. Then someone calls me to fix it. I'd rather you don't end up in that situation. [Get in touch](/contact) if you want this set up right from the start.
+Most Webflow blogs I inherit are built the same wrong way — one Posts Collection, a plain-text category field, no authors, and SEO fields that are either empty or copy-pasted from the homepage. It works until the client hires a content team, or wants category pages, or asks why none of the posts rank. Then someone calls me to fix it. I'd rather you don't end up in that situation. [Get in touch](/contact/) if you want this set up right from the start.
 
 The foundation of a good Webflow blog setup is the CMS structure. Everything downstream — filtering, author pages, related posts, schema — depends on getting that right first. Let me walk through it in the order you'd build it.
 
@@ -48,7 +48,7 @@ This is the schema I use as a baseline for every blog I build. You won't always 
 
 Posts is your hub. Every other Collection is a spoke. If you find yourself wanting to put structured data directly on the Post record that really belongs to a person, a topic grouping, or a sequence — that's your signal to create a spoke Collection instead.
 
-For a deeper look at how these pieces connect at the platform level, [Webflow CMS structure](/blog/webflow-cms-structure) is worth reading before you open the Designer.
+For a deeper look at how these pieces connect at the platform level, [Webflow CMS structure](/blog/webflow-cms-structure/) is worth reading before you open the Designer.
 
 ## Post fields that matter (and the ones to skip)
 
@@ -89,7 +89,7 @@ The distinction between categories and tags is not aesthetic. It is structural, 
 The most common mistake I see on inherited Webflow blogs: 30+ categories with two posts each. That is not a category system — it is a flat tag list masquerading as a hierarchy. It fragments your content, dilutes your category archive pages, and makes filtering useless because every "category" has almost nothing in it. If you can't confidently put every planned post into one of 8–12 categories, stop and redesign the taxonomy before building.
 </Callout>
 
-For the mechanics of how multi-reference fields behave in Webflow — filtering, nested references, the 20-item display limit and how to work around it — [Webflow multi-reference fields](/blog/webflow-multi-reference-fields) covers the edge cases in detail.
+For the mechanics of how multi-reference fields behave in Webflow — filtering, nested references, the 20-item display limit and how to work around it — [Webflow multi-reference fields](/blog/webflow-multi-reference-fields/) covers the edge cases in detail.
 
 ## Author pages and bios
 
@@ -113,7 +113,7 @@ There are two ways to do related posts in Webflow CMS, and which one you use dep
 
 **Manual multi-reference field (editorial):** Add a "Related Posts" multi-reference field on the Posts Collection. Editors pick 2–3 posts explicitly when publishing. The drawback: editors often forget to fill it, leaving the section empty, and it requires updating old posts when new relevant content is published.
 
-My preference is the filtered approach as the default, with the manual field as an override. Set up the Collection List to fall back gracefully — if the filtered list returns fewer than 3 items, show whatever it finds rather than showing an empty state. For the mechanics of building that filter logic, [Webflow multi-reference fields](/blog/webflow-multi-reference-fields) has the exact steps for nesting a multi-reference filter on a template page.
+My preference is the filtered approach as the default, with the manual field as an override. Set up the Collection List to fall back gracefully — if the filtered list returns fewer than 3 items, show whatever it finds rather than showing an empty state. For the mechanics of building that filter logic, [Webflow multi-reference fields](/blog/webflow-multi-reference-fields/) has the exact steps for nesting a multi-reference filter on a template page.
 
 One Webflow CMS caveat worth knowing: you cannot filter a Collection List by a multi-reference field on the current item using a "contains" match in all Webflow plan tiers. Test this during schema planning, not after the template is built.
 
@@ -127,7 +127,7 @@ A Webflow blog post has three layers of SEO configuration. Miss any of them and 
 
 **Layer 3: BlogPosting schema.** Add a Code Embed to the post template and populate it with a `BlogPosting` JSON-LD block, binding fields through Webflow's embed variable system. At minimum include `headline`, `description`, `datePublished`, `dateModified`, `author` (with name from the Author reference), and `image`. This is what powers rich results and gives search engines the structured data they need to understand post relationships.
 
-For a complete walkthrough of building that schema block with the right field bindings and a working embed pattern, [Webflow schema markup](/blog/webflow-schema-markup) has the code and the setup steps. And for the full SEO checklist that covers sitemaps, canonical tags, and post-launch verification, [Webflow SEO checklist 2026](/blog/webflow-seo-checklist-2026) is the companion reference.
+For a complete walkthrough of building that schema block with the right field bindings and a working embed pattern, [Webflow schema markup](/blog/webflow-schema-markup/) has the code and the setup steps. And for the full SEO checklist that covers sitemaps, canonical tags, and post-launch verification, [Webflow SEO checklist 2026](/blog/webflow-seo-checklist-2026/) is the companion reference.
 
 Webflow generates canonical tags automatically for CMS collection pages. You do not need to add them manually. What you do need to verify is that drafts are excluded from the sitemap — Webflow handles this for items in Draft status, but items set to "live" with a future publish date are sometimes included before they're meant to be visible.
 
@@ -160,7 +160,7 @@ Before any post goes live, I run through the same list. It takes five minutes an
 
 Print this and tape it near the editor's monitor if you have to. Every item on this list corresponds to something that has gone wrong on a live site I've inherited. The slug one alone is responsible for a surprising number of duplicate content problems where posts were published with auto-generated slugs that changed on reimport.
 
-For a full [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) that extends this into site-wide setup — sitemaps, robots.txt, redirect handling — that post covers the complete picture.
+For a full [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) that extends this into site-wide setup — sitemaps, robots.txt, redirect handling — that post covers the complete picture.
 
 The setup described here is not complicated, but it requires building in the right order: Collections first, field schema second, templates third, SEO bindings fourth, editor workflow last. Build any of those out of sequence and you'll be redoing work. Get it right and you'll have a Webflow blog that can handle hundreds of posts, multiple authors, and a real content team without anyone needing to call a developer to fix the CMS structure.
 

@@ -31,7 +31,7 @@ If you are trying to decide between Webflow vs WordPress for your startup or Saa
 
 I have built 40+ projects across both platforms. I have migrated sites from WordPress to Webflow and from Webflow to headless setups. I am not neutral, and I am not pretending to be. Webflow is my primary platform. But I have watched teams pick the wrong tool for their situation enough times that I'd rather give you the honest breakdown than a balanced-but-useless comparison that ends with "it depends on your needs."
 
-If you already know what you need and want to talk through the right fit for your specific situation, [reach out](/contact) and we can work through it in a call.
+If you already know what you need and want to talk through the right fit for your specific situation, [reach out](/contact/) and we can work through it in a call.
 
 ## The TL;DR
 
@@ -86,7 +86,7 @@ WordPress with Gutenberg is more flexible but more dangerous for the same reason
 
 The 20-field limit per Webflow Collection is a real constraint. I have hit it building case study templates that needed to store project metadata, before-and-after images, client details, timeline data, and outcome metrics. The workaround is auxiliary Collections with reference fields, which works but adds complexity to your data model. If your CMS schema is naturally complex — think a real estate listing with 35 data points per property — WordPress is the cleaner choice.
 
-The item limit is the harder constraint. Webflow's CMS caps at [10,000 items per Collection on the CMS plan, 20,000 on Business](/blog/webflow-cms-limits). If you are building a blog that will publish three times per week, you have roughly 8–12 years of runway before you hit the limit. If you are building a directory or aggregator, you will hit the wall much sooner. Past those numbers, you are looking at either WordPress or a headless Webflow setup with an external data source.
+The item limit is the harder constraint. Webflow's CMS caps at [10,000 items per Collection on the CMS plan, 20,000 on Business](/blog/webflow-cms-limits/). If you are building a blog that will publish three times per week, you have roughly 8–12 years of runway before you hit the limit. If you are building a directory or aggregator, you will hit the wall much sooner. Past those numbers, you are looking at either WordPress or a headless Webflow setup with an external data source.
 
 ## Performance and Core Web Vitals
 
@@ -96,7 +96,7 @@ The floor is higher on Webflow. The ceiling is approximately equal.
 
 With a properly configured WordPress setup — Kinsta or WP Engine, a lightweight theme (GeneratePress or Kadence), no bloated page builder, WP Rocket or similar caching, and Cloudflare in front of it — you can match Webflow's Core Web Vitals numbers. I have seen both platforms hit 95+ on mobile Lighthouse when properly optimized. The difference is that reaching that ceiling on WordPress requires intentional developer work; on Webflow you start much closer to it.
 
-The specific Webflow performance issues that trip people up are interactions and video. GSAP-style interactions in the Webflow Designer, if built carelessly, will cause Cumulative Layout Shift and raise your Interaction to Next Paint scores. Lottie animations over 100kb hurt Time to Interactive on slow connections. Auto-playing background videos without a lightweight fallback destroy mobile performance. These are build-time decisions, not platform limitations — a good Webflow developer avoids all of them. I cover the specific techniques in detail in [Webflow Core Web Vitals fixes](/blog/webflow-core-web-vitals).
+The specific Webflow performance issues that trip people up are interactions and video. GSAP-style interactions in the Webflow Designer, if built carelessly, will cause Cumulative Layout Shift and raise your Interaction to Next Paint scores. Lottie animations over 100kb hurt Time to Interactive on slow connections. Auto-playing background videos without a lightweight fallback destroy mobile performance. These are build-time decisions, not platform limitations — a good Webflow developer avoids all of them. I cover the specific techniques in detail in [Webflow Core Web Vitals fixes](/blog/webflow-core-web-vitals/).
 
 WordPress's common performance killers are different: unnecessary plugin JavaScript loading sitewide, unoptimized image pipelines (WordPress's default image handling is not great), render-blocking scripts from third-party embeds, and database queries that scale poorly as post count grows. Again, all solvable — just requiring ongoing attention.
 
@@ -114,7 +114,7 @@ Where WordPress still wins: programmatic SEO at scale. If you are building thous
 The most common SEO mistake when choosing between these two platforms is optimizing for the wrong variable. Teams spend time comparing Yoast vs Webflow's SEO panel, then go live with a WordPress site that takes 4.8 seconds to load on mobile and wonder why rankings don't improve. Page speed is a ranking factor. Technical SEO hygiene is a ranking factor. Both platforms can be fast or slow — the platform choice is less important than the implementation quality. Pick the platform your team will actually maintain correctly.
 </Callout>
 
-The areas to look at carefully when evaluating SEO: site speed (covered above), structured data implementation (Webflow requires custom code embeds; WordPress has plugins for this), and internal link architecture (both platforms make this entirely your responsibility — neither helps you avoid orphan pages). For a complete technical SEO setup on Webflow, I have a [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) that walks through every setting and configuration worth checking.
+The areas to look at carefully when evaluating SEO: site speed (covered above), structured data implementation (Webflow requires custom code embeds; WordPress has plugins for this), and internal link architecture (both platforms make this entirely your responsibility — neither helps you avoid orphan pages). For a complete technical SEO setup on Webflow, I have a [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) that walks through every setting and configuration worth checking.
 
 ## Plugins and extensibility: Webflow's gap vs WordPress's plugin hell
 
@@ -130,7 +130,7 @@ Webflow's extensibility model is different: you can embed custom code anywhere, 
 
 Where Webflow integrations frequently cause problems: when the third-party product updates its API and the custom embed breaks; when you are debugging a form that goes through Webflow's native form handler, then Zapier, then HubSpot, and somewhere in that chain the data is not landing correctly; when you need to do something that is slightly non-standard and there is no plugin to handle it — you are writing JavaScript, not installing a plugin.
 
-For a straightforward marketing site — form capture to CRM, analytics, chat widget, A/B testing via an external tool — Webflow handles integrations well. For anything complex, plan the integration requirements carefully before committing to the platform. A developer who has done your specific integration before is worth paying for upfront to avoid the investigation cost later. For help matching the right platform to your specific stack, [hiring a Webflow developer](/blog/hire-webflow-developer-2026) who has solved the problem before is often the fastest path to a clear answer.
+For a straightforward marketing site — form capture to CRM, analytics, chat widget, A/B testing via an external tool — Webflow handles integrations well. For anything complex, plan the integration requirements carefully before committing to the platform. A developer who has done your specific integration before is worth paying for upfront to avoid the investigation cost later. For help matching the right platform to your specific stack, [hiring a Webflow developer](/blog/hire-webflow-developer-2026/) who has solved the problem before is often the fastest path to a clear answer.
 
 ## Pricing: total cost of ownership across 1, 3, and 5 years
 
@@ -170,7 +170,7 @@ After 40+ projects and migrations in both directions, the pattern is consistent 
 - You are building a large-scale directory, aggregator, or database-driven site. WordPress with custom tables or a headless setup handles high item counts without platform-enforced limits.
 - You need multisite, complex user roles, or an LMS. WordPress has plugins for all of these that Webflow simply cannot replicate.
 
-For a migration from one platform to the other, read through [WordPress to Webflow migration](/blog/wordpress-to-webflow-migration) before committing to the timeline. The technical work is manageable; the URL and redirect mapping is where projects go wrong.
+For a migration from one platform to the other, read through [WordPress to Webflow migration](/blog/wordpress-to-webflow-migration/) before committing to the timeline. The technical work is manageable; the URL and redirect mapping is where projects go wrong.
 
 ## What a migration actually looks like
 

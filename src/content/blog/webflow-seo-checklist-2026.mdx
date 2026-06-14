@@ -27,9 +27,9 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow SEO is not complicated. The platform handles a lot of the fundamentals — clean HTML output, global CDN, automatic HTTPS, sitemap generation — better than most WordPress setups do out of the box. The problems I see on sites that aren't ranking are almost always in the 20% of decisions the developer or site owner still has to make deliberately: heading hierarchy, page titles, canonical setup, schema markup, and image optimization.
 
-This checklist covers all of it. I've built 40+ Webflow sites across SaaS, agency, e-commerce, and professional services. These are the exact items I run through on every project before and after launch — 60+ checks organized by category so you can work through them without doubling back. If you want to understand where Webflow sits relative to WordPress on these fundamentals, I wrote a direct comparison in [Webflow vs WordPress 2026](/blog/webflow-vs-wordpress-2026).
+This checklist covers all of it. I've built 40+ Webflow sites across SaaS, agency, e-commerce, and professional services. These are the exact items I run through on every project before and after launch — 60+ checks organized by category so you can work through them without doubling back. If you want to understand where Webflow sits relative to WordPress on these fundamentals, I wrote a direct comparison in [Webflow vs WordPress 2026](/blog/webflow-vs-wordpress-2026/).
 
-If you already know you need someone to run through this on your site rather than doing it yourself, [get in touch](/contact).
+If you already know you need someone to run through this on your site rather than doing it yourself, [get in touch](/contact/).
 
 ## The 5-minute Webflow SEO sanity check (run this first)
 
@@ -71,7 +71,7 @@ Webflow's global title template (Site Settings → SEO → Title Tag) lets you s
 
 Schema markup tells search engines what your content means, not just what it says. Webflow doesn't generate it automatically — you add it via custom code embeds or a CMS-driven script tag. The page types that benefit most: service pages (Service schema), blog posts (BlogPosting), FAQ sections (FAQPage), testimonial pages (Review), and case studies (CreativeWork).
 
-The fastest way to add schema in Webflow is a `<script type="application/ld+json">` block in the Page Settings → Custom Code → Head section. For CMS-driven pages, you can reference CMS fields in the schema using Webflow's template syntax. For a full walkthrough of every schema type and how to wire each one up in Webflow, the dedicated post on [Webflow schema markup](/blog/webflow-schema-markup) covers it with copy-paste templates.
+The fastest way to add schema in Webflow is a `<script type="application/ld+json">` block in the Page Settings → Custom Code → Head section. For CMS-driven pages, you can reference CMS fields in the schema using Webflow's template syntax. For a full walkthrough of every schema type and how to wire each one up in Webflow, the dedicated post on [Webflow schema markup](/blog/webflow-schema-markup/) covers it with copy-paste templates.
 
 The one I add to every project without exception: FAQPage schema on any page with an FAQ section. It's 20 minutes of work and has a meaningful chance of earning an FAQ rich result in SERPs — expanding your listing's vertical footprint without earning a new position.
 
@@ -81,7 +81,7 @@ Webflow auto-generates an XML sitemap at `/sitemap.xml` when you enable it in Si
 
 Two things that break Webflow sitemaps that aren't obvious: first, CMS collection pages only appear in the sitemap if the collection is set to "Create a page for each item." If you've built a CMS collection purely for reference data (say, a team members collection that doesn't have its own template page), those items won't appear, which is correct. Second, pages with "Exclude from search" enabled in Page Settings won't appear in the sitemap — verify that setting is off for everything you want indexed.
 
-Webflow's default `robots.txt` allows all bots and points to the sitemap. You can't edit it directly. If you need to block a specific directory (like a client preview path), use a meta robots tag on individual pages rather than trying to modify robots.txt. For a detailed breakdown of sitemap edge cases, canonical setup, and how to handle CMS pagination, the [Webflow sitemap and robots guide](/blog/webflow-sitemap-robots-canonical) covers the specifics.
+Webflow's default `robots.txt` allows all bots and points to the sitemap. You can't edit it directly. If you need to block a specific directory (like a client preview path), use a meta robots tag on individual pages rather than trying to modify robots.txt. For a detailed breakdown of sitemap edge cases, canonical setup, and how to handle CMS pagination, the [Webflow sitemap and robots guide](/blog/webflow-sitemap-robots-canonical/) covers the specifics.
 
 ## Canonicals and duplicate content
 
@@ -107,7 +107,7 @@ Webflow's CDN and clean HTML output mean you start from a better baseline than m
 
 **CLS failures** in Webflow almost always come from fonts loading late and causing layout shifts (set `font-display: swap` in your custom font CSS), or from images without explicit width and height attributes. Every `<img>` tag should have width and height set so the browser reserves space before the image loads.
 
-The deeper fixes — lazy loading, interaction weight, third-party script management — are in the dedicated [Core Web Vitals fixes for Webflow](/blog/webflow-core-web-vitals) guide. If your site is slow and you're not sure why, start with [why your Webflow site is slow](/blog/webflow-site-slow) before working through the CWV post.
+The deeper fixes — lazy loading, interaction weight, third-party script management — are in the dedicated [Core Web Vitals fixes for Webflow](/blog/webflow-core-web-vitals/) guide. If your site is slow and you're not sure why, start with [why your Webflow site is slow](/blog/webflow-site-slow/) before working through the CWV post.
 
 ## Image optimization for SEO
 
@@ -117,7 +117,7 @@ Images are the single most reliable quick win on Webflow SEO audits. Most sites 
 
 **Alt text.** Every `<img>` needs a descriptive alt attribute. In Webflow CMS, that means adding an Image field for each image with a dedicated alt text field alongside it — not relying on the image file name. For decorative images (icons, dividers, background textures served as img tags), set alt to an empty string (`alt=""`), not to the filename.
 
-**Format and loading.** Webflow will serve WebP in modern browsers when you upload WebP files. For CMS images uploaded by editors, add a note in your content guide reminding them to export WebP. For images below the fold, Webflow's lazy loading handles most cases — but verify it's on in the Designer for each image element. The full [Webflow image optimization guide](/blog/webflow-image-optimization) covers srcset, responsive sizes, and the cases where Webflow's built-in optimization falls short.
+**Format and loading.** Webflow will serve WebP in modern browsers when you upload WebP files. For CMS images uploaded by editors, add a note in your content guide reminding them to export WebP. For images below the fold, Webflow's lazy loading handles most cases — but verify it's on in the Designer for each image element. The full [Webflow image optimization guide](/blog/webflow-image-optimization/) covers srcset, responsive sizes, and the cases where Webflow's built-in optimization falls short.
 
 **Filename SEO.** Before uploading, rename image files to be descriptive: `webflow-cms-collection-screenshot.webp` is better than `image-47.webp`. It's a minor signal but a free one.
 
@@ -137,13 +137,13 @@ The principle is simple: your highest-authority pages (typically the homepage an
 
 CMS-driven pages require extra attention because one template controls the SEO for potentially hundreds of pages. Getting the template right multiplies across your entire collection.
 
-**Collection URL structure.** In Webflow, collection URLs follow the pattern `/collection-name/item-slug`. For blog posts, that's `/blog/post-slug`. For case studies, `/work/project-slug`. Choose collection names that are keyword-friendly and don't change them after indexing — changing the collection URL path is a breaking change that requires 301 redirects on every item. I've written about how to plan this upfront in the [Webflow CMS structure guide](/blog/webflow-cms-structure).
+**Collection URL structure.** In Webflow, collection URLs follow the pattern `/collection-name/item-slug`. For blog posts, that's `/blog/post-slug`. For case studies, `/work/project-slug`. Choose collection names that are keyword-friendly and don't change them after indexing — changing the collection URL path is a breaking change that requires 301 redirects on every item. I've written about how to plan this upfront in the [Webflow CMS structure guide](/blog/webflow-cms-structure/).
 
 **Dynamic meta fields.** In the CMS Template page settings, set the SEO Title and Meta Description to pull from CMS fields, not hardcoded text. Create a dedicated "SEO Title" text field and "Meta Description" text field in your collection schema — separate from the post title — so editors can write optimized meta independently from the headline. If those fields are empty, fall back to the post title (most collections support conditional logic in the template meta binding).
 
 **Open Graph for CMS.** Set the OG image field to the CMS item's hero image. Set OG title and description to the same dedicated meta fields. Social shares of CMS pages with a blank OG image — or Webflow's default thumbnail — are a missed opportunity.
 
-For a full walkthrough of CMS collection setup from an SEO perspective, the [Webflow blog setup guide](/blog/webflow-blog-setup) covers the blog-specific decisions in detail.
+For a full walkthrough of CMS collection setup from an SEO perspective, the [Webflow blog setup guide](/blog/webflow-blog-setup/) covers the blog-specific decisions in detail.
 
 **Slug uniqueness.** Webflow enforces unique slugs within a collection but not across collections. A blog post and a case study can share the same slug at different paths — that's fine. What causes problems is changing a slug after indexing. If you must change a slug, add a 301 redirect from the old URL to the new one in Site Settings → Redirects immediately.
 
@@ -180,7 +180,7 @@ This is the list I run through on every site in the 48 hours before publishing t
 
 If you're migrating from another CMS, item 10 is the one that bites hardest. A redirect map that misses high-authority pages can drop organic traffic 30–40% even on a technically cleaner site. Build the redirect map before launch, not after you notice the traffic drop.
 
-For more on diagnosing performance issues before they go live, see [why your Webflow site is slow](/blog/webflow-site-slow).
+For more on diagnosing performance issues before they go live, see [why your Webflow site is slow](/blog/webflow-site-slow/).
 
 ## Post-launch: Search Console, monitoring, and the first 30 days
 

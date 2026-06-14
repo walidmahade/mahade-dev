@@ -29,7 +29,7 @@ The **Webflow Shopify hybrid** works like this: Webflow owns the marketing surfa
 
 I've set up this architecture for several brands that outgrew Webflow Ecommerce without wanting to bet their entire marketing site on Shopify's templating constraints. I've also seen it botched — duplicate content penalties, broken attribution, and sync jobs that fall over silently while the Webflow CMS shows stale products. This post is about doing it right.
 
-If you're still deciding whether to stay on one platform or go hybrid, the [Webflow Ecommerce vs Shopify](/blog/webflow-ecommerce-vs-shopify) comparison will give you the fuller picture before you commit to the added complexity here. If you already know the hybrid is your answer and want someone to wire it up, [get in touch](/contact).
+If you're still deciding whether to stay on one platform or go hybrid, the [Webflow Ecommerce vs Shopify](/blog/webflow-ecommerce-vs-shopify/) comparison will give you the fuller picture before you commit to the added complexity here. If you already know the hybrid is your answer and want someone to wire it up, [get in touch](/contact/).
 
 ## The hybrid pattern in one paragraph
 
@@ -108,7 +108,7 @@ The hybrid creates three SEO risks that need active management. Ignore any of th
 
 **Duplicate content.** Webflow's product pages and Shopify's product pages describe the same products. If they share body copy — which they will, unless you deliberately write separate content for each — Google sees two nearly identical pages on (potentially) two separate domains or subfolders. The solution is canonical tags. Webflow product pages should include a `<link rel="canonical">` pointing to the Webflow URL. Shopify product pages should include a `<link rel="canonical">` pointing to the Webflow URL if the Webflow page is the primary SEO surface, or to the Shopify URL if Shopify is. Be consistent. Pick one and stick to it. Webflow as the canonical is usually right if the Webflow page has the richer content and you want the SEO credit to land there.
 
-For a detailed walkthrough of canonical tag configuration in Webflow, the [sitemap, robots, and canonical guide](/blog/webflow-sitemap-robots-canonical) covers the implementation specifics.
+For a detailed walkthrough of canonical tag configuration in Webflow, the [sitemap, robots, and canonical guide](/blog/webflow-sitemap-robots-canonical/) covers the implementation specifics.
 
 <Callout type="warning">
 The most common SEO mistake in hybrid setups: the Shopify product pages end up indexed because Shopify's default robots.txt doesn't block them and no canonical tag points away from them. You end up with two indexed versions of every product — one on Webflow, one on Shopify — competing against each other. Google's crawler doesn't pick the one you intended. Always audit Shopify's indexation after launch with a Search Console coverage report filtered to the Shopify domain or subfolder.
@@ -124,7 +124,7 @@ The hybrid creates an attribution gap. A visitor lands on a Webflow product page
 
 Fixing this requires cross-domain tracking and consistent GA4 configuration on both sides.
 
-For a detailed walkthrough of setting up GA4 across domains and managing the Webflow analytics integration, the [Webflow analytics and GA4 setup guide](/blog/webflow-analytics-ga4-plausible) covers the implementation.
+For a detailed walkthrough of setting up GA4 across domains and managing the Webflow analytics integration, the [Webflow analytics and GA4 setup guide](/blog/webflow-analytics-ga4-plausible/) covers the implementation.
 
 The key steps specific to the hybrid:
 

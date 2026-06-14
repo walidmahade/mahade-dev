@@ -25,9 +25,9 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-The answer to "should I use GSAP in Webflow" is almost always no — until it becomes obviously yes. For the standard marketing site with fade-ins, staggered card reveals, and a parallax hero, Webflow Interactions handles everything and you never need to open a code editor. GSAP earns its place in a narrow set of situations: pinned scroll sequences, character-level text animation, SVG path drawing, and timeline logic that needs to respond to user state. Outside that set, you're adding complexity without adding value. [Get in touch](/contact) if you're building something that might belong in that set.
+The answer to "should I use GSAP in Webflow" is almost always no — until it becomes obviously yes. For the standard marketing site with fade-ins, staggered card reveals, and a parallax hero, Webflow Interactions handles everything and you never need to open a code editor. GSAP earns its place in a narrow set of situations: pinned scroll sequences, character-level text animation, SVG path drawing, and timeline logic that needs to respond to user state. Outside that set, you're adding complexity without adding value. [Get in touch](/contact/) if you're building something that might belong in that set.
 
-If you're not yet fluent with what Interactions can do natively, read [the full Webflow Interactions 2.0 guide](/blog/webflow-interactions-2-guide) first. That post covers the full IX2 capability set, including action types that most developers never discover. GSAP makes sense as an extension of that knowledge, not a replacement for it.
+If you're not yet fluent with what Interactions can do natively, read [the full Webflow Interactions 2.0 guide](/blog/webflow-interactions-2-guide/) first. That post covers the full IX2 capability set, including action types that most developers never discover. GSAP makes sense as an extension of that knowledge, not a replacement for it.
 
 ## The line where Interactions stop
 
@@ -47,7 +47,7 @@ Everything else — fade in on load, hover lift, stagger a grid on scroll entry 
 
 ## Installing GSAP cleanly
 
-The fastest path to GSAP on a Webflow site is a CDN script in the project footer. Open Project Settings, go to Custom Code, and paste your scripts before `</body>`. This is also covered in the [Webflow custom code guide](/blog/webflow-custom-code) if you need the full walkthrough on placement and load order.
+The fastest path to GSAP on a Webflow site is a CDN script in the project footer. Open Project Settings, go to Custom Code, and paste your scripts before `</body>`. This is also covered in the [Webflow custom code guide](/blog/webflow-custom-code/) if you need the full walkthrough on placement and load order.
 
 <Callout type="tip">
 Load GSAP from jsDelivr rather than the official CDN. jsDelivr is consistently faster globally and has better cache headers. Use a pinned version number — `gsap@3.13.0` — not `@latest`. Unpinned CDN loads can break your site silently when a major version ships. If you're on Club GSAP, you can self-host the bonus plugins directly from the npm package.
@@ -199,7 +199,7 @@ Never animate `width`, `height`, `top`, `left`, `margin`, or `padding` inside a 
 
 The same rule applies to ScrollTrigger's `scrub` animations more broadly. A scrubbed parallax that moves five elements simultaneously using `transform` is fine. A scrubbed animation that also changes `font-size` or `border-radius` on the same scroll handler will be visible in the DevTools performance trace.
 
-For a full performance audit framework that covers GSAP as one factor among several, [the Webflow slow site guide](/blog/webflow-site-slow) runs through every layer — images, scripts, interactions, and hosting — in the order they matter.
+For a full performance audit framework that covers GSAP as one factor among several, [the Webflow slow site guide](/blog/webflow-site-slow/) runs through every layer — images, scripts, interactions, and hosting — in the order they matter.
 
 Batching is another lever. Instead of creating one ScrollTrigger per element on a staggered list, use `ScrollTrigger.batch()`:
 

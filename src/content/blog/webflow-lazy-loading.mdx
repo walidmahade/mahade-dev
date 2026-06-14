@@ -25,7 +25,7 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-Webflow lazy loading images by default is a good thing. The platform adds `loading="lazy"` to every Image element automatically, and for most below-the-fold images that is exactly right. Where Webflow falls short is at the edges: above-the-fold images that should never be lazy-loaded, third-party embeds that block the main thread, and custom components where the browser has no idea what to defer. If your [Core Web Vitals](/blog/webflow-core-web-vitals) are struggling or your site just feels slow on mobile, there is a good chance the loading strategy is the first thing worth auditing. This post covers what the defaults get right, where they go wrong, and how to fix both without leaving the Webflow ecosystem. [Get in touch](/contact) if you want me to audit your specific setup.
+Webflow lazy loading images by default is a good thing. The platform adds `loading="lazy"` to every Image element automatically, and for most below-the-fold images that is exactly right. Where Webflow falls short is at the edges: above-the-fold images that should never be lazy-loaded, third-party embeds that block the main thread, and custom components where the browser has no idea what to defer. If your [Core Web Vitals](/blog/webflow-core-web-vitals/) are struggling or your site just feels slow on mobile, there is a good chance the loading strategy is the first thing worth auditing. This post covers what the defaults get right, where they go wrong, and how to fix both without leaving the Webflow ecosystem. [Get in touch](/contact/) if you want me to audit your specific setup.
 
 ## How Webflow lazy-loads (the default)
 
@@ -51,7 +51,7 @@ The fix is straightforward. In the Webflow Designer, select your hero Image elem
 
 Do this for every image that is visible on initial viewport load: hero images, above-the-fold logos, the first product image in a showcase. Everything else can stay lazy.
 
-A note on background images used as heroes: if your hero is a `div` with a CSS background image rather than a Webflow Image element, the lazy/eager toggle doesn't apply. You need to ensure that background image URL is referenced early in the document — ideally with a `<link rel="preload">` tag in the `<head>` via Custom Code — so the browser fetches it at high priority. I cover this in more detail in the [Webflow image optimization](/blog/webflow-image-optimization) post.
+A note on background images used as heroes: if your hero is a `div` with a CSS background image rather than a Webflow Image element, the lazy/eager toggle doesn't apply. You need to ensure that background image URL is referenced early in the document — ideally with a `<link rel="preload">` tag in the `<head>` via Custom Code — so the browser fetches it at high priority. I cover this in more detail in the [Webflow image optimization](/blog/webflow-image-optimization/) post.
 
 ## Fetchpriority: the 1-line LCP fix
 
@@ -81,7 +81,7 @@ The selector `.hero-image img` should match whatever class you've given your her
 
 One caution: `fetchpriority="high"` on too many images defeats its own purpose. The browser's prioritization logic works because most resources are normal priority. Mark your one LCP image as high priority, and leave everything else alone.
 
-For a complete treatment of image format, compression, and sizing in Webflow — the other half of the image performance equation — see [Webflow image optimization](/blog/webflow-image-optimization).
+For a complete treatment of image format, compression, and sizing in Webflow — the other half of the image performance equation — see [Webflow image optimization](/blog/webflow-image-optimization/).
 
 ## Lazy-loading iframes, videos, and Lottie
 
@@ -143,7 +143,7 @@ The `rootMargin: '200px'` means the callback fires when the element is within 20
 
 `obs.unobserve(entry.target)` is important. Without it, the callback fires every time the element enters the viewport — you don't want the animation loading twice.
 
-This same pattern applies to any expensive third-party embed: chat widgets, Typeform forms, Calendly schedules. If the user might not scroll to it on every visit, defer it. If it's interactive and the user needs to see it without clicking, set a generous `rootMargin`. If you are not sure how much these embeds affect your overall scores, the [Webflow site slow](/blog/webflow-site-slow) post has a diagnostic checklist for finding the culprits quickly.
+This same pattern applies to any expensive third-party embed: chat widgets, Typeform forms, Calendly schedules. If the user might not scroll to it on every visit, defer it. If it's interactive and the user needs to see it without clicking, set a generous `rootMargin`. If you are not sure how much these embeds affect your overall scores, the [Webflow site slow](/blog/webflow-site-slow/) post has a diagnostic checklist for finding the culprits quickly.
 
 ## When to turn lazy loading OFF
 

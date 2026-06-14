@@ -27,9 +27,9 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The webflow multi reference field is one of those features that most people underuse because the name is a little dry and the documentation is thin. Once you understand it, it unlocks the CMS patterns that separate a basic blog from a genuinely structured content site.
 
-Short answer: a multi-reference field lets one CMS item link to many items in another Collection. A single-reference field links one post to one author. A multi-reference field links one post to five tags, or one case study to three services, or one team page to twelve contributors. If you've been fighting Webflow's [CMS structure](/blog/webflow-cms-structure) to represent many-to-many relationships, this is the tool you've been missing.
+Short answer: a multi-reference field lets one CMS item link to many items in another Collection. A single-reference field links one post to one author. A multi-reference field links one post to five tags, or one case study to three services, or one team page to twelve contributors. If you've been fighting Webflow's [CMS structure](/blog/webflow-cms-structure/) to represent many-to-many relationships, this is the tool you've been missing.
 
-This post walks through five real uses I've built across client sites, with field configuration for each, plus the gotchas that will trip you up if you don't know they're coming. If you want help architecting any of this for a specific project, [get in touch](/contact).
+This post walks through five real uses I've built across client sites, with field configuration for each, plus the gotchas that will trip you up if you don't know they're coming. If you want help architecting any of this for a specific project, [get in touch](/contact/).
 
 ## What a Webflow multi-reference field actually is
 
@@ -82,7 +82,7 @@ In the Webflow Designer, here is the pattern that works:
 4. Inside the Collection List item, add a text element and bind it to the Tag Name field.
 5. Style as pills, links, or plain labels.
 
-The full [Webflow blog setup guide](/blog/webflow-blog-setup) covers how to structure the Tags Collection itself, including whether to add a color field (useful if you want colored category pills without custom code).
+The full [Webflow blog setup guide](/blog/webflow-blog-setup/) covers how to structure the Tags Collection itself, including whether to add a color field (useful if you want colored category pills without custom code).
 
 One nuance worth knowing: the Collection List bound to a multi-reference field inherits the 20-item display limit that applies to all Webflow Collection Lists. If a post somehow has more than 20 tags (rare, but possible if you're migrating from another CMS), the remainder won't render without a workaround.
 
@@ -167,7 +167,7 @@ Collections
 
 On the Blog Post template, the "related posts" section is a Collection List sourced from Blog Posts, filtered by: "Topics contains [any topic from the current post's Topics field]." In practice this means: show me other posts that are tagged with at least one of the same topics as the current post.
 
-The spoke is the individual post. The hub is the Topic. Every post connects outward to the hub, and the hub connects back down to every other post tagged with it. This is the architecture behind any well-linked CMS site, and it's also good for SEO — [Webflow CMS limits](/blog/webflow-cms-limits) explains where this pattern hits its ceiling and when to break it into separate Collections instead.
+The spoke is the individual post. The hub is the Topic. Every post connects outward to the hub, and the hub connects back down to every other post tagged with it. This is the architecture behind any well-linked CMS site, and it's also good for SEO — [Webflow CMS limits](/blog/webflow-cms-limits/) explains where this pattern hits its ceiling and when to break it into separate Collections instead.
 
 One caveat: you can't sort the related posts by relevance (number of shared topics) natively in Webflow. They'll sort by date or name. If relevance sorting matters for your use case, that's a Finsweet Attributes job.
 

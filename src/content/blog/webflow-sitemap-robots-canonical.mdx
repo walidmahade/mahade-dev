@@ -29,7 +29,7 @@ The Webflow sitemap, robots.txt, and canonical tags are not optional extras — 
 
 The short answer: turn on Webflow's auto-generated sitemap, write a lean robots.txt that points to it, and leave canonicals alone unless you have a specific reason to override them. That handles 95% of sites. The remaining 5% — migrations, multi-template builds, CMS-heavy sites with lots of utility pages — is where this guide earns its keep.
 
-Before diving in, make sure your baseline technical SEO is solid. I covered the full checklist in the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026). If you want to talk through your setup directly, [get in touch](/contact).
+Before diving in, make sure your baseline technical SEO is solid. I covered the full checklist in the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/). If you want to talk through your setup directly, [get in touch](/contact/).
 
 ## Auto-generated sitemap vs custom sitemap in Webflow
 
@@ -80,9 +80,9 @@ After a migration or a major rebuild, resubmit the sitemap manually even if it w
 
 Check the sitemap report in Search Console weekly for the first month after launch. The two numbers to watch are "Discovered" and "Indexed." A large gap between them — say, 80 discovered but only 30 indexed — means Google is finding the pages but choosing not to index them. That's a content quality signal, not a technical error, and it won't be fixed by adjusting the sitemap.
 
-If you are coming from WordPress, this step is especially important. I covered the full indexing resubmission workflow in the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration) — the post-migration Search Console steps alone are worth reading before you cut over DNS.
+If you are coming from WordPress, this step is especially important. I covered the full indexing resubmission workflow in the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration/) — the post-migration Search Console steps alone are worth reading before you cut over DNS.
 
-For structured data on indexed pages, the [Webflow schema markup guide](/blog/webflow-schema-markup) covers how to add JSON-LD that gives Google richer signals beyond just the URL.
+For structured data on indexed pages, the [Webflow schema markup guide](/blog/webflow-schema-markup/) covers how to add JSON-LD that gives Google richer signals beyond just the URL.
 
 ## Robots.txt: Webflow's default vs when you need custom
 
@@ -150,15 +150,15 @@ Do this before you launch. On existing sites, do it now and resubmit your sitema
 
 ## Common sitemap mistakes
 
-**Forgetting to turn it on.** The toggle is off by default. Every Webflow project I've inherited as part of a [migration or audit engagement](/contact) has had this off. Check it first, before anything else.
+**Forgetting to turn it on.** The toggle is off by default. Every Webflow project I've inherited as part of a [migration or audit engagement](/contact/) has had this off. Check it first, before anything else.
 
-**Not resubmitting after a migration.** If your URL structure changed — old site had `/blog/post-title`, new site has `/blog/post-title/` with a trailing slash, or paths changed completely — the old URLs are still in Google's index. A sitemap resubmission combined with 301 redirects is how you collapse the old index down to the new one. Without it, the transition takes much longer than it needs to. See the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration) for the full redirect and reindex workflow.
+**Not resubmitting after a migration.** If your URL structure changed — old site had `/blog/post-title`, new site has `/blog/post-title/` with a trailing slash, or paths changed completely — the old URLs are still in Google's index. A sitemap resubmission combined with 301 redirects is how you collapse the old index down to the new one. Without it, the transition takes much longer than it needs to. See the [WordPress to Webflow migration guide](/blog/wordpress-to-webflow-migration/) for the full redirect and reindex workflow.
 
 **Including CMS items that are thin or draft-quality.** More URLs is not better. A sitemap with 200 published CMS items that are three sentences each is worse than a sitemap with 80 items that are genuinely useful. Google uses sitemap signals to understand site quality — a long list of thin pages trains it to undervalue the whole domain. Publish complete, useful CMS items before including them.
 
 **Setting robots.txt to block assets.** I've seen this on migrated sites where the original developer copied an old-school robots.txt that blocked `/wp-content/` and similar paths, then adapted it loosely for Webflow. Blocking asset paths breaks Googlebot's ability to render pages and will damage your rankings. The right robots.txt is simple, as shown in the section above.
 
-**Relying on the sitemap to fix indexing problems.** A sitemap tells Google where to look. It does not guarantee indexing. If pages are not being indexed, the problem is almost always content quality, internal linking, or a no-index flag — not a missing sitemap entry. The [Webflow schema markup guide](/blog/webflow-schema-markup) is worth reading alongside this one: structured data gives Google contextual signals that improve indexing confidence for content pages.
+**Relying on the sitemap to fix indexing problems.** A sitemap tells Google where to look. It does not guarantee indexing. If pages are not being indexed, the problem is almost always content quality, internal linking, or a no-index flag — not a missing sitemap entry. The [Webflow schema markup guide](/blog/webflow-schema-markup/) is worth reading alongside this one: structured data gives Google contextual signals that improve indexing confidence for content pages.
 
 ---
 

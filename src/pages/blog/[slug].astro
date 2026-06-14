@@ -6,6 +6,7 @@ import Eyebrow from '@/components/layout/Eyebrow.astro';
 import RelatedPosts from '@/components/blog/RelatedPosts.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { site } from '@/data/site';
+import { jsonLd } from '@/lib/jsonld';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -42,16 +43,16 @@ const articleSchema = {
     name: site.name,
     url: site.url,
   },
-  url: `${site.url}/blog/${post.id}`,
+  url: `${site.url}/blog/${post.id}/`,
 };
 ---
 <Layout
-  title={`${post.data.title} | Mahade Walid`}
+  title={post.data.title}
   description={post.data.description}
   ogImage={post.data.heroImage}
 >
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+    <script type="application/ld+json" set:html={jsonLd(articleSchema)} />
   </Fragment>
 
   <article>
@@ -60,7 +61,7 @@ const articleSchema = {
         <nav class="text-body-sm text-ink-subtle" aria-label="Breadcrumb">
           <a href="/" class="hover:text-ink transition-colors">Home</a>
           <span aria-hidden="true"> / </span>
-          <a href="/blog" class="hover:text-ink transition-colors">Blog</a>
+          <a href="/blog/" class="hover:text-ink transition-colors">Blog</a>
         </nav>
 
         <div class="mt-5">
@@ -77,8 +78,8 @@ const articleSchema = {
           <figure class="mt-10">
             <img
               src={post.data.heroImage}
-              alt={post.data.heroAlt ?? ''}
-              class="w-full rounded-lg border border-line"
+              alt={post.data.heroAlt ?? post.data.heroImageAlt ?? ''}
+              class="w-full max-h-[500px] rounded-lg border border-line object-cover"
               loading="eager"
               decoding="async"
             />
@@ -86,18 +87,6 @@ const articleSchema = {
         )}
       </Container>
     </Section>
-
-    {post.data.heroImage && (
-      <Section tone="tint" size="compact">
-        <Container>
-          <img
-            src={post.data.heroImage}
-            alt={post.data.heroImageAlt ?? ''}
-            class="mx-auto w-full max-w-[1080px] rounded-xl border border-line"
-          />
-        </Container>
-      </Section>
-    )}
 
     <Section tone="paper" size="compact">
       <Container width="prose">
@@ -111,7 +100,7 @@ const articleSchema = {
     <Section tone="tint" size="compact">
       <Container width="prose">
         <a
-          href="/blog"
+          href="/blog/"
           class="inline-flex items-center gap-2 text-brand font-medium hover:gap-3 transition-all"
         >
           ← Back to all posts

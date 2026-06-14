@@ -25,9 +25,9 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-The figma auto layout webflow translation problem comes up on every single handoff I touch. The answer is: most of it maps cleanly, the 10% that doesn't will ruin your layout if you're not watching for it, and the cheat sheet below covers all of it. If you're still figuring out the broader handoff workflow, start with [Figma to Webflow handoff](/blog/figma-to-webflow-handoff) before coming back here.
+The figma auto layout webflow translation problem comes up on every single handoff I touch. The answer is: most of it maps cleanly, the 10% that doesn't will ruin your layout if you're not watching for it, and the cheat sheet below covers all of it. If you're still figuring out the broader handoff workflow, start with [Figma to Webflow handoff](/blog/figma-to-webflow-handoff/) before coming back here.
 
-This post is a reference, not an introduction. I'm going to go property by property, show you the Figma side and the Webflow side, and flag every gotcha I've hit. [Reach out](/contact) if you need someone to run the translation for you.
+This post is a reference, not an introduction. I'm going to go property by property, show you the Figma side and the Webflow side, and flag every gotcha I've hit. [Reach out](/contact/) if you need someone to run the translation for you.
 
 ## Why the translation isn't 1-to-1
 
@@ -110,7 +110,7 @@ Fill container is the one that causes the most confusion. In Figma, you toggle "
 
 Wrap thresholds are another translation challenge. In Figma, wrap just wraps. In CSS, wrapping behavior depends on child widths: if children have `flex-grow: 1` and no minimum width, they never wrap because they always shrink to fit. To force wrapping at a target column count, set a `min-width` on children (e.g. `min-width: 280px` for a 3-up card grid that wraps to 1-up on mobile). This is a decision that doesn't exist in Figma but must be made explicitly in Webflow.
 
-For more complex layout decisions — particularly when to use components for wrapping patterns — the post on [Webflow components vs symbols](/blog/webflow-components-vs-symbols) covers how to structure repeating elements so wrap behavior stays consistent across instances.
+For more complex layout decisions — particularly when to use components for wrapping patterns — the post on [Webflow components vs symbols](/blog/webflow-components-vs-symbols/) covers how to structure repeating elements so wrap behavior stays consistent across instances.
 
 ## Auto Layout vs Flex vs Grid: when to switch
 
@@ -134,7 +134,7 @@ The overall principle: translate Auto Layout to Flex first, then audit the resul
 
 ---
 
-If you're working on agency projects where these handoffs happen at scale, [white-label Webflow development](/blog/white-label-webflow-development) covers how I handle translation for design-to-build pipelines where the designer and developer are different people with different tools.
+If you're working on agency projects where these handoffs happen at scale, [white-label Webflow development](/blog/white-label-webflow-development/) covers how I handle translation for design-to-build pipelines where the designer and developer are different people with different tools.
 
 The short version of everything above: direction maps cleanly, gap maps cleanly, padding maps cleanly, alignment requires understanding which axis is which in flex direction, and fill-container/wrap require explicit decisions that Figma never forced you to make. The 90% that maps directly will take you 10 minutes. The 10% that doesn't will take you as long as it takes to find it — which is why having a cheat sheet beats figuring it out on each project.
 

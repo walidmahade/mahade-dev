@@ -29,8 +29,7 @@ export const pricing: PricingTier[] = [
   },
   {
     name: 'Hourly',
-    // TODO: user fills final hourly rate before launch.
-    price: 'From $__',
+    price: '$50',
     cadence: '/hour',
     description:
       'Scoped one-off projects billed by the hour through Upwork.',

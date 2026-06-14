@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 If your Webflow CMS structure is wrong, everything downstream breaks — filters don't work, templates can't scale, editors make a mess, and you end up rebuilding the whole thing six months in. The right webflow cms structure is one you design before you build, not one you discover by adding fields until something breaks.
 
-I've rebuilt enough CMS architectures on client sites to know exactly where the problems start. Most of them start in the first hour of a project, when someone opens a blank Collection and just starts adding fields without thinking about what shape the content actually takes. This guide walks through every structural decision that matters, in the order you'll face them. [Get in touch](/contact) if you're dealing with a CMS rebuild and need someone to help scope it.
+I've rebuilt enough CMS architectures on client sites to know exactly where the problems start. Most of them start in the first hour of a project, when someone opens a blank Collection and just starts adding fields without thinking about what shape the content actually takes. This guide walks through every structural decision that matters, in the order you'll face them. [Get in touch](/contact/) if you're dealing with a CMS rebuild and need someone to help scope it.
 
 ## The three most common CMS structure mistakes
 
@@ -67,13 +67,13 @@ Once you have content objects defined, fields become obvious. Use your real exam
 
 Ten fields, all motivated by real content needs. Notice what's not here: a "category" single-reference field that someone would inevitably want to expand into multiple categories later. If categories are real, they go in a multi-reference from the start.
 
-For a full walkthrough of setting up a blog, including template page architecture, [Webflow blog setup](/blog/webflow-blog-setup) covers the end-to-end.
+For a full walkthrough of setting up a blog, including template page architecture, [Webflow blog setup](/blog/webflow-blog-setup/) covers the end-to-end.
 
 ## Reference vs multi-reference: when to use each
 
 This is the decision that breaks the most CMS structures. Getting it wrong means rebuilding fields (and potentially re-importing content) later. Getting it right means your filters, lists, and conditional display work the way you expect.
 
-[Webflow multi-reference fields](/blog/webflow-multi-reference-fields) covers the full mechanics, but the decision framework is straightforward:
+[Webflow multi-reference fields](/blog/webflow-multi-reference-fields/) covers the full mechanics, but the decision framework is straightforward:
 
 | Scenario | Single-ref | Multi-ref |
 |---|---|---|
@@ -102,7 +102,7 @@ Static pages are for: custom layouts that can't be templatized, pages where CMS 
 
 The point where people make mistakes: pulling CMS data into a static page via a Collection list is fine and common. The error is treating this as a substitute for a proper template. If you have 50 case studies and each one needs a dedicated URL with its own content, those go in a Collection with a template page — not 50 static pages.
 
-One underused pattern: nested template pages. You can have a Blog Category template page that lists all posts within that category, where the category itself is a CMS item. This gives you `/blog/category/seo` as a real page driven entirely by CMS data, which is excellent for SEO. [Webflow schema markup](/blog/webflow-schema-markup) covers how to emit per-page structured data from CMS template fields, which is where this pattern pays off most.
+One underused pattern: nested template pages. You can have a Blog Category template page that lists all posts within that category, where the category itself is a CMS item. This gives you `/blog/category/seo` as a real page driven entirely by CMS data, which is excellent for SEO. [Webflow schema markup](/blog/webflow-schema-markup/) covers how to emit per-page structured data from CMS template fields, which is where this pattern pays off most.
 
 ## Slug strategy and URL planning
 
@@ -150,7 +150,7 @@ CMS plan limits are a constraint worth knowing before you design, not after you 
 | Up to 10,000 items | Business plan | 40 Collections max; pagination and filtering become critical |
 | 10,000+ items | Enterprise | Custom limits; dedicated support; usually requires Webflow's API for bulk operations |
 
-For the full breakdown of limits by plan, [Webflow CMS limits](/blog/webflow-cms-limits) covers item counts, field counts, and Collection caps in detail.
+For the full breakdown of limits by plan, [Webflow CMS limits](/blog/webflow-cms-limits/) covers item counts, field counts, and Collection caps in detail.
 
 A few things that bite people as they scale:
 
@@ -180,7 +180,7 @@ The high-level process:
 
 **Step 6: cut over and clean up.** Publish. Add 301 redirects for any URLs that changed. Verify old Collection pages redirect correctly. Then — and only then — delete the old Collections.
 
-For sites migrating from outside Webflow entirely, [WordPress to Webflow migration](/blog/wordpress-to-webflow-migration) covers the data mapping and content import process in more detail. The CMS rebuild process is similar whether you're restructuring within Webflow or bringing content in from outside.
+For sites migrating from outside Webflow entirely, [WordPress to Webflow migration](/blog/wordpress-to-webflow-migration/) covers the data mapping and content import process in more detail. The CMS rebuild process is similar whether you're restructuring within Webflow or bringing content in from outside.
 
 A realistic timeline: a 500-item site with a well-understood content structure takes 1–2 weeks to rebuild and migrate properly. Add a week if the existing structure is a mess and the content audit itself takes time. Add another week if there are template pages that require significant redesign alongside the CMS work.
 

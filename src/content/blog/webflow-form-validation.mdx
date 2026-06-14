@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow form validation out of the box covers the basics and stops there. Required fields, email format, and phone input type — that's the full list. Everything else — regex patterns, inline per-field errors, async checks, spam prevention, server-side verification — requires custom code. The gap is real and it matters, because a form that lets bad data through (or frustrates a real lead with a generic error message) is a broken form, whatever the designer looks like.
 
-This is the breakdown I give clients who want to ship [multi-step forms](/blog/webflow-multi-step-forms) or anything more sophisticated than a basic contact form. If you want me to handle the implementation, [book a call](/contact).
+This is the breakdown I give clients who want to ship [multi-step forms](/blog/webflow-multi-step-forms/) or anything more sophisticated than a basic contact form. If you want me to handle the implementation, [book a call](/contact/).
 
 ## What Webflow validates by default
 
@@ -109,7 +109,7 @@ The approach is a `blur` event listener that calls a validation API or your own 
 
 The request flow: user types an email and tabs away, your script fires a `fetch` to a validation endpoint, the endpoint checks the domain MX record (or uses a service like Mailcheck.js, Kickbox, or ZeroBounce), the response comes back, and you show an error or clear it.
 
-Wire it through Webflow Logic's webhook action or a Cloudflare Worker that proxies the external API call — this keeps your API key off the client. You're already routing submissions through an external handler if you're doing [HubSpot integration](/blog/webflow-hubspot-integration), and the same handler can do this check before the contact is created.
+Wire it through Webflow Logic's webhook action or a Cloudflare Worker that proxies the external API call — this keeps your API key off the client. You're already routing submissions through an external handler if you're doing [HubSpot integration](/blog/webflow-hubspot-integration/), and the same handler can do this check before the contact is created.
 
 One caveat: async validation adds latency. If the API takes 800ms to respond, the user may have already started typing in the next field. Fire the check on blur, not on every keystroke, and show a loading indicator on the email field so the user knows something is happening.
 
@@ -176,7 +176,7 @@ In Webflow, add a `data-validate` attribute to each form you want this to apply 
 
 This works alongside native HTML5 constraints — the `input.validity.valid` check respects `required`, `pattern`, `type`, `min`, `max`, and `maxlength` without you having to re-implement any of those checks.
 
-For [custom code basics and where to put scripts](/blog/webflow-custom-code), that post covers the page-level vs. project-level tradeoff in detail.
+For [custom code basics and where to put scripts](/blog/webflow-custom-code/), that post covers the page-level vs. project-level tradeoff in detail.
 
 ## Pattern 4: honeypot and server-side checks
 
@@ -196,7 +196,7 @@ In Webflow, use a Custom Embed for the honeypot input to avoid it appearing in t
 
 **Server-side validation.** Wire your form through Webflow Logic (built-in, limited) or a webhook to Cloudflare Workers / a backend of your choice. At the handler level: validate required fields again, check email format, check the honeypot, rate-limit by IP (one submission per minute from the same IP is a reasonable floor), and reject anything that looks like injection — a "name" field containing `<script>` or SQL keywords.
 
-For HubSpot-connected sites, [HubSpot's form processing](/blog/webflow-hubspot-integration) does some of this automatically — it has its own spam filtering and deduplication. But you still want the honeypot in place before submissions reach HubSpot, because every spam submission that gets through counts against your contact limit.
+For HubSpot-connected sites, [HubSpot's form processing](/blog/webflow-hubspot-integration/) does some of this automatically — it has its own spam filtering and deduplication. But you still want the honeypot in place before submissions reach HubSpot, because every spam submission that gets through counts against your contact limit.
 
 ## Accessibility considerations
 

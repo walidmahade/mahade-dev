@@ -25,7 +25,7 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-Using **lottie webflow** is one of those decisions that looks simple until it isn't. A Lottie can be the right call — lightweight, resolution-independent, interactive. It can also be a 300KB JSON blob that fires on page load, stalls your LCP, and jank-scrolls on every mid-range Android. The difference between those two outcomes is almost entirely about decisions you make before and after you upload the file. This post covers those decisions. If you'd rather have someone else make them on your project, [get in touch](/contact).
+Using **lottie webflow** is one of those decisions that looks simple until it isn't. A Lottie can be the right call — lightweight, resolution-independent, interactive. It can also be a 300KB JSON blob that fires on page load, stalls your LCP, and jank-scrolls on every mid-range Android. The difference between those two outcomes is almost entirely about decisions you make before and after you upload the file. This post covers those decisions. If you'd rather have someone else make them on your project, [get in touch](/contact/).
 
 ## What Lottie is (and isn't)
 
@@ -49,7 +49,7 @@ The most common misconception I encounter: "Lottie is small, so performance does
 
 The table tells you that Lottie wins on simple animations and competes with MP4 on mid-complexity ones. Where it loses: anything that tries to represent photorealism or dense particle effects. Those animations produce JSON files with thousands of shape layers, and Lottie-Web has to parse and render all of them on the main thread.
 
-The other thing the table doesn't show is download timing. A 150KB Lottie that loads at the same time as your hero image competes for bandwidth during the most LCP-sensitive window. That's why file size alone isn't the full story — [why your Webflow site is slow](/blog/webflow-site-slow) covers how these resources queue up and why the order matters.
+The other thing the table doesn't show is download timing. A 150KB Lottie that loads at the same time as your hero image competes for bandwidth during the most LCP-sensitive window. That's why file size alone isn't the full story — [why your Webflow site is slow](/blog/webflow-site-slow/) covers how these resources queue up and why the order matters.
 
 ## Optimizing a Lottie before upload
 
@@ -105,13 +105,13 @@ If your design calls for a Lottie in the hero, you have three options that don't
 
 **Option 3: Preload with fetchpriority.** Add a `<link rel="preload">` tag in the `<head>` with `fetchpriority="high"` pointing to the Lottie file. This front-loads the download so the library isn't waiting on the file when it initializes. Only use this for a single critical Lottie — preloading multiple assets defeats the purpose.
 
-For scroll-linked animations — where the Lottie scrubs based on scroll position — the performance model changes. Scroll-progress Lotties in Webflow use [Webflow Interactions 2.0](/blog/webflow-interactions-2-guide) under the hood. The playhead updates on scroll events, which runs on the main thread. Keep scroll-linked Lotties simple (under 40KB) and test on a real Android device, not just Chrome DevTools throttling. DevTools mobile simulation is optimistic.
+For scroll-linked animations — where the Lottie scrubs based on scroll position — the performance model changes. Scroll-progress Lotties in Webflow use [Webflow Interactions 2.0](/blog/webflow-interactions-2-guide/) under the hood. The playhead updates on scroll events, which runs on the main thread. Keep scroll-linked Lotties simple (under 40KB) and test on a real Android device, not just Chrome DevTools throttling. DevTools mobile simulation is optimistic.
 
 ## Lazy-loading Lotties
 
 Webflow's native Lottie element does not lazy-load by default. The `.lottie` or `.json` file is fetched as soon as the page loads, even if the element is below the fold and the user never scrolls to it. On a page with three Lotties in lower sections, that's potentially 150–300KB of animation data competing with your hero content on initial load.
 
-The standard fix is the Intersection Observer approach, covered in detail in [Webflow lazy loading](/blog/webflow-lazy-loading). The core pattern: store the Lottie file URL in a `data-src` attribute rather than the Webflow element's source field, then use a short JavaScript snippet to swap in the real URL only when the element enters the viewport. Webflow's Lottie element will re-initialize when the source attribute changes.
+The standard fix is the Intersection Observer approach, covered in detail in [Webflow lazy loading](/blog/webflow-lazy-loading/). The core pattern: store the Lottie file URL in a `data-src` attribute rather than the Webflow element's source field, then use a short JavaScript snippet to swap in the real URL only when the element enters the viewport. Webflow's Lottie element will re-initialize when the source attribute changes.
 
 The lazy-load script lives in the site's `</body>` custom code in Project Settings:
 

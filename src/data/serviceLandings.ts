@@ -5,6 +5,8 @@ export type ServiceLanding = {
   slug: string;
   name: string;
   tagline: string;
+  /** Longer, SERP-optimized description for the page <meta description>. */
+  metaDescription?: string;
   icon: ServiceIconName;
   href: string;
   content?: {
@@ -29,8 +31,10 @@ export const serviceLandings: ServiceLanding[] = [
     slug: 'figma-to-webflow',
     name: 'Figma to Webflow Development',
     tagline: 'Pixel-perfect Webflow builds from your Figma files.',
+    metaDescription:
+      'Figma to Webflow development, matched to your design within 2px. Hand off your Figma file and get a fast, CMS-ready, SEO-optimized Webflow site.',
     icon: 'figmaToWebflow',
-    href: '/services/figma-to-webflow',
+    href: '/services/figma-to-webflow/',
     content: {
       hero: {
         eyebrow: 'Service',
@@ -107,8 +111,10 @@ export const serviceLandings: ServiceLanding[] = [
     slug: 'webflow-audits',
     name: 'Webflow Audits',
     tagline: 'A deep review of your Webflow site with a fix roadmap.',
+    metaDescription:
+      'A deep Webflow audit covering SEO, speed, accessibility, and structure — delivered as a prioritized Loom walkthrough plus a written fix roadmap.',
     icon: 'audit',
-    href: '/services/webflow-audits',
+    href: '/services/webflow-audits/',
     content: {
       hero: {
         eyebrow: 'Service',
@@ -185,8 +191,10 @@ export const serviceLandings: ServiceLanding[] = [
     slug: 'webflow-consultations',
     name: 'Webflow Consultations',
     tagline: 'One-on-one sessions to unblock your Webflow project.',
+    metaDescription:
+      'Book a focused 60- or 90-minute Webflow consultation. I dig into your specific problem, record a walkthrough, and hand you a written action plan.',
     icon: 'consult',
-    href: '/services/webflow-consultations',
+    href: '/services/webflow-consultations/',
     content: {
       hero: {
         eyebrow: 'Service',
@@ -263,8 +271,10 @@ export const serviceLandings: ServiceLanding[] = [
     slug: 'webflow-retainer',
     name: 'Webflow Retainer',
     tagline: 'Unlimited Webflow pages on a flat monthly subscription.',
+    metaDescription:
+      'A flat monthly Webflow retainer — unlimited pages, one request at a time, 48-hour turnaround, with SEO and speed included. Pause or cancel anytime.',
     icon: 'retainer',
-    href: '/services/webflow-retainer',
+    href: '/services/webflow-retainer/',
     content: {
       hero: {
         eyebrow: 'Service',
@@ -341,8 +351,10 @@ export const serviceLandings: ServiceLanding[] = [
     slug: 'white-label-webflow-development',
     name: 'White Label Webflow Development',
     tagline: 'Ship Webflow work under your agency brand, on your timeline.',
+    metaDescription:
+      'White-label Webflow development for agencies. I build under your brand, on your deadlines — NDA-backed, credited to your studio, invisible to your client.',
     icon: 'whiteLabel',
-    href: '/services/white-label-webflow-development',
+    href: '/services/white-label-webflow-development/',
     content: {
       hero: {
         eyebrow: 'For agencies',
@@ -470,7 +482,7 @@ export const serviceLandings: ServiceLanding[] = [
     name: 'Hire me on Upwork',
     tagline: 'Escrow-backed hourly engagements via my Top-Rated Upwork profile.',
     icon: 'upwork',
-    href: '/services/upwork',
+    href: '/services/upwork/',
     // No content block — the Upwork page is bespoke.
   },
 ];

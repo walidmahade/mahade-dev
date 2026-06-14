@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow schema markup is not something you do once you've launched and have time. It's something you build in at the start — or spend twice as long retrofitting later. This guide shows you the exact JSON-LD blocks I use on Webflow projects, where to drop them, and how to verify they work, covering every schema type that actually produces rich results: Organization, Article/BlogPosting, Product, FAQ, and Breadcrumb.
 
-Before we get into code: if you haven't covered the basics yet, start with the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026). Schema is layer two. Canonical tags, clean URL slugs, a working sitemap, and proper meta titles are layer one. [Get in touch](/contact) if you want schema and the rest of SEO handled correctly from day one.
+Before we get into code: if you haven't covered the basics yet, start with the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/). Schema is layer two. Canonical tags, clean URL slugs, a working sitemap, and proper meta titles are layer one. [Get in touch](/contact/) if you want schema and the rest of SEO handled correctly from day one.
 
 ## Why schema matters more in 2026 than 2022
 
@@ -51,7 +51,7 @@ The key distinction is whether the schema values change per page. Your Organizat
 
 One limitation: Webflow's Custom Code fields do not execute JavaScript at build time, so you cannot generate schema programmatically via scripts in the head. JSON-LD is static text with optional CMS field bindings. That's fine for 95% of what you need. For truly dynamic schema (e.g., aggregate ratings that change hourly), you'd need a separate solution — but for a marketing site or blog, static JSON-LD with CMS field bindings covers everything.
 
-See [Webflow sitemap, robots, and canonical setup](/blog/webflow-sitemap-robots-canonical) for the rest of the technical foundation that schema builds on.
+See [Webflow sitemap, robots, and canonical setup](/blog/webflow-sitemap-robots-canonical/) for the rest of the technical foundation that schema builds on.
 
 ## Organization schema (site-wide)
 
@@ -139,7 +139,7 @@ Here is the full template with placeholder CMS bindings shown as comments:
 
 In practice, the Webflow Embed outputs something like `"headline": "How I Built a 94-Score Webflow Site"` — the binding substitutes the field value directly into the JSON string.
 
-For the actual CMS architecture that makes this work cleanly — field naming, collection structure, keeping the template maintainable — [Webflow CMS structure](/blog/webflow-cms-structure) covers the decisions that make or break dynamic embeds like this. And if you're setting up the blog from scratch, [Webflow blog setup](/blog/webflow-blog-setup) has the full walk-through.
+For the actual CMS architecture that makes this work cleanly — field naming, collection structure, keeping the template maintainable — [Webflow CMS structure](/blog/webflow-cms-structure/) covers the decisions that make or break dynamic embeds like this. And if you're setting up the blog from scratch, [Webflow blog setup](/blog/webflow-blog-setup/) has the full walk-through.
 
 ## Product schema (ecommerce sites)
 

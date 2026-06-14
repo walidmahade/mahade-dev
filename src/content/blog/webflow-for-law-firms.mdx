@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow for law firms works — cleanly, compliantly, and without the bloat that makes WordPress the default choice. I've built law firm sites on both platforms, and the honest answer for solo practitioners through mid-size firms (10–30 attorneys) is that Webflow handles every core requirement: visual polish, practice-area CMS, local SEO control, attorney profiles, and the disclaimer patterns that keep your state bar happy. Where Webflow falls short is at the enterprise end: if you need client portals, matter management integrations, or document-signing workflows, you're in custom-stack territory. For everything below that threshold, here's how I build it.
 
-If you already know you need someone to build this for you, [get in touch](/contact) and we can scope it out.
+If you already know you need someone to build this for you, [get in touch](/contact/) and we can scope it out.
 
 ## Why law firms over-index on WordPress (and why it's wrong)
 
@@ -65,7 +65,7 @@ In Webflow, I implement these as global symbols: the footer disclaimer is in the
 
 ## CMS: attorneys, practice areas, case results
 
-The CMS structure for a law firm site is more important to get right upfront than on most other project types, because the data relationships are non-trivial. The three core collections are Attorneys, Practice Areas, and Case Results. They reference each other, so getting the fields right before you start building saves a painful rearchitecture later. I wrote about general Webflow CMS architecture principles in [this post on CMS structure](/blog/webflow-cms-structure) — the law firm pattern is one of the more complex applications of those principles.
+The CMS structure for a law firm site is more important to get right upfront than on most other project types, because the data relationships are non-trivial. The three core collections are Attorneys, Practice Areas, and Case Results. They reference each other, so getting the fields right before you start building saves a painful rearchitecture later. I wrote about general Webflow CMS architecture principles in [this post on CMS structure](/blog/webflow-cms-structure/) — the law firm pattern is one of the more complex applications of those principles.
 
 The Practice Areas collection is the one that most law firms underspecify. Here's the full field set I use:
 
@@ -125,11 +125,11 @@ Here's the `LegalService` JSON-LD block I embed in the site's global `<head>` vi
 </script>
 ```
 
-For `areaServed`, use the most specific geographic type that's accurate: `City`, `State`, or an array of both if the firm has multiple offices. Don't claim national coverage if you're barred in two states. I walk through the full Webflow schema implementation workflow, including how to use the custom code embed for collection-level schema, in [Webflow schema markup](/blog/webflow-schema-markup).
+For `areaServed`, use the most specific geographic type that's accurate: `City`, `State`, or an array of both if the firm has multiple offices. Don't claim national coverage if you're barred in two states. I walk through the full Webflow schema implementation workflow, including how to use the custom code embed for collection-level schema, in [Webflow schema markup](/blog/webflow-schema-markup/).
 
 For practice-area pages specifically, I also add a `Service` schema block on each practice area template page, referencing the parent `LegalService` entity. This signals to Google that the firm's personal injury page, for example, is a specific offering of the firm's legal services rather than a standalone entity.
 
-The rest of the local SEO checklist for law firm sites — title tag patterns, NAP consistency, citation building, Google Business Profile optimization — I cover in the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026). The schema work above is the piece most law firm sites are missing.
+The rest of the local SEO checklist for law firm sites — title tag patterns, NAP consistency, citation building, Google Business Profile optimization — I cover in the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/). The schema work above is the piece most law firm sites are missing.
 
 ## Contact form + intake pattern
 
@@ -171,7 +171,7 @@ Those ranges assume design is included. If the firm already has Figma files, sub
 
 The one thing that consistently pushes law firm projects over budget is content delivery. Attorneys are busy, partner review cycles are slow, and "we'll have the attorney bios to you by Tuesday" rarely means Tuesday. Build a realistic content delivery schedule into the contract with explicit holds: if content is more than two weeks late, the timeline shifts and a delay fee applies. This is a standard clause in my law firm contracts and it makes the project run on schedule.
 
-If you're comparing developers for this kind of engagement, [hire-webflow-developer-2026](/blog/hire-webflow-developer-2026) covers what to look for, what to pay, and the questions that separate actual specialists from people who've watched the tutorials.
+If you're comparing developers for this kind of engagement, [hire-webflow-developer-2026](/blog/hire-webflow-developer-2026/) covers what to look for, what to pay, and the questions that separate actual specialists from people who've watched the tutorials.
 
 Webflow handles law firm websites well. The compliance requirements are patterns, not problems — once they're templated in your component library, they never get missed. The CMS structure above scales. The schema signals to Google that you're a legitimate local legal service provider. And the design output looks like a firm worth hiring, not a site spun up by a legal marketing factory.
 

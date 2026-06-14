@@ -23,9 +23,10 @@ const isActive = pathname.startsWith('/services');
 
   <div
     id="services-menu-panel"
-    class="services-menu__panel absolute left-0 top-full mt-2 w-[480px] max-w-[calc(100vw-3rem)] rounded-lg border border-line-strong bg-paper p-2"
+    class="services-menu__panel absolute left-0 top-full w-[480px] max-w-[calc(100vw-3rem)] pt-2"
     role="menu"
   >
+    <div class="rounded-lg border border-line-strong bg-paper p-2">
     {serviceLandings.map((svc) => {
       const isLast = svc.slug === 'upwork';
       return (
@@ -56,6 +57,7 @@ const isActive = pathname.startsWith('/services');
         </Fragment>
       );
     })}
+    </div>
   </div>
 </div>
 

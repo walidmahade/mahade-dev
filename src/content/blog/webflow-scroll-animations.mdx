@@ -29,9 +29,9 @@ Webflow scroll animation is one of those features that looks stunning in a sales
 
 I've built scroll animations on dozens of client sites, from simple fade-ins on landing pages to complex sequenced reveals on SaaS marketing sites. Here are the seven patterns that hold up under real traffic, with specific performance notes on each, and the ones I've stopped using entirely.
 
-If you're deciding whether to use Webflow Interactions or GSAP at all, I cover that decision in detail in my [Webflow Interactions 2 guide](/blog/webflow-interactions-2-guide). This post assumes you've made that call and you're in the pattern-selection phase.
+If you're deciding whether to use Webflow Interactions or GSAP at all, I cover that decision in detail in my [Webflow Interactions 2 guide](/blog/webflow-interactions-2-guide/). This post assumes you've made that call and you're in the pattern-selection phase.
 
-[Get in touch](/contact) if you want a scroll animation implementation that ships fast and stays clean.
+[Get in touch](/contact/) if you want a scroll animation implementation that ships fast and stays clean.
 
 ## Why most scroll animations look bad
 
@@ -91,7 +91,7 @@ The sticky pattern works best for desktop feature sections. I typically break th
 
 Horizontal scroll moves a row of content — typically cards or images — laterally as the user scrolls vertically. The effect is strong for portfolios, case study showcases, or feature comparisons where the horizontal metaphor maps to progression.
 
-This is where you leave Webflow Interactions and reach for [GSAP ScrollTrigger](/blog/gsap-in-webflow). Webflow Interactions can fake horizontal scroll with opacity and transforms, but true horizontal translation tied to vertical scroll position — where the content stays legible and the math holds across viewport widths — requires ScrollTrigger's `pin` and `scrub` configuration.
+This is where you leave Webflow Interactions and reach for [GSAP ScrollTrigger](/blog/gsap-in-webflow/). Webflow Interactions can fake horizontal scroll with opacity and transforms, but true horizontal translation tied to vertical scroll position — where the content stays legible and the math holds across viewport widths — requires ScrollTrigger's `pin` and `scrub` configuration.
 
 The basic setup: a containing div with `overflow: hidden` and a pinned inner div that translates from `x: 0` to `x: -(total width - viewport width)` as the scroll position moves through the pinned section.
 
@@ -105,7 +105,7 @@ Text reveal animations expose characters, words, or lines progressively as the u
 
 Two implementation paths. The simpler path: per-paragraph fade-ins with a stagger, triggering each paragraph as it enters the viewport. This works for most client sites, is fast to implement in Webflow Interactions, and performs cleanly at 60fps on both desktop and mobile.
 
-The more sophisticated path: per-word or per-character reveals using [GSAP SplitText with ScrollTrigger](/blog/gsap-in-webflow). SplitText wraps each character or word in a span, then ScrollTrigger fires a staggered opacity+translateY animation across all spans as the parent element enters view. This produces the "text writing itself in" effect common on premium portfolio and agency sites.
+The more sophisticated path: per-word or per-character reveals using [GSAP SplitText with ScrollTrigger](/blog/gsap-in-webflow/). SplitText wraps each character or word in a span, then ScrollTrigger fires a staggered opacity+translateY animation across all spans as the parent element enters view. This produces the "text writing itself in" effect common on premium portfolio and agency sites.
 
 The sophisticated path has two gotchas. First, SplitText requires the GSAP Club license for commercial use — not free. Second, splitting a paragraph into individual characters creates hundreds of DOM nodes, which can bloat layout recalculation time on weaker devices if applied to large blocks of text. Apply it selectively: hero headlines, section titles, key callouts. Not body paragraphs.
 
@@ -151,7 +151,7 @@ The one implementation mistake to avoid: using `width: X%` to update the bar rat
 
 The perf cost column reflects main-thread time per scroll event on a mid-range device. Use it as a budget guide, not a ceiling. If you're combining sticky pin + text reveal on the same section, expect the costs to add.
 
-For a full picture of how scroll animations interact with your overall Webflow performance score, read my breakdown on [why Webflow sites run slow](/blog/webflow-site-slow) — scroll interactions are one of five categories covered there.
+For a full picture of how scroll animations interact with your overall Webflow performance score, read my breakdown on [why Webflow sites run slow](/blog/webflow-site-slow/) — scroll interactions are one of five categories covered there.
 
 The short version: pick two or three patterns per page. Use fade-up everywhere as the base. Add one of the heavier patterns (horizontal scroll, image sequence, sticky pin) as the centerpiece of one section. Keep mobile clean — most of your traffic will thank you.
 

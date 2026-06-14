@@ -27,11 +27,11 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Every Webflow CMS limits conversation I have with clients starts the same way: they've either already hit a wall mid-build, or they're about to and don't know it. This post maps out the actual webflow cms limits in 2026 — which are hard stops enforced server-side, which are soft defaults you can route around, and what to do when the architecture you planned runs straight into one.
 
-If you're planning a CMS-heavy build and want a second opinion on the structure before you're three weeks in, [get in touch](/contact). Getting this right at the schema stage is an hour of conversation. Fixing it after launch is a week of migration.
+If you're planning a CMS-heavy build and want a second opinion on the structure before you're three weeks in, [get in touch](/contact/). Getting this right at the schema stage is an hour of conversation. Fixing it after launch is a week of migration.
 
 The short version: for most marketing sites and blogs, Webflow's limits are not your problem. They become your problem at scale — programmatic SEO plays, knowledge bases, multi-product catalogues, or any site where the content volume is the product. That's when you need to know exactly where the ceilings are.
 
-For a deeper look at how to structure collections before you hit limits, my post on [Webflow CMS structure](/blog/webflow-cms-structure) covers the architectural decisions that determine how far your schema scales.
+For a deeper look at how to structure collections before you hit limits, my post on [Webflow CMS structure](/blog/webflow-cms-structure/) covers the architectural decisions that determine how far your schema scales.
 
 ## Limits by plan (2026)
 
@@ -96,7 +96,7 @@ The strategy for programmatic SEO on Webflow depends on your volume tier:
 
 **15,000+ items:** Webflow is probably not the right CMS for the content layer. You're in the territory where a headless CMS (Contentful, Sanity) feeding a static frontend starts to make more sense. Webflow's visual editor advantage erodes at this scale because you're not editing individual items in the Designer anyway — you're managing them via CSV or API.
 
-For a setup-from-scratch reference, the [Webflow blog setup guide](/blog/webflow-blog-setup) walks through CMS architecture decisions that also apply to any content-heavy collection type, not just blog posts.
+For a setup-from-scratch reference, the [Webflow blog setup guide](/blog/webflow-blog-setup/) walks through CMS architecture decisions that also apply to any content-heavy collection type, not just blog posts.
 
 ## Reference chain depth (3 levels, and why this matters)
 
@@ -114,7 +114,7 @@ The workarounds that hold up:
 
 **Flatten the taxonomy at the collection level.** Instead of a deeply nested reference chain, duplicate the field at the primary collection. If a Blog Post needs to display its Author's Region, add a Region reference field directly to Blog Post and populate it redundantly. The data lives in two places, which is impure, but Webflow's rendering model doesn't care about purity — it cares about what fields are accessible on the current template.
 
-**Use multi-reference fields strategically.** If the relationship is many-to-many, [Webflow multi-reference fields](/blog/webflow-multi-reference-fields) have their own depth limits but can sometimes replace a nested reference chain when what you really need is a set of tags, not a strict hierarchy.
+**Use multi-reference fields strategically.** If the relationship is many-to-many, [Webflow multi-reference fields](/blog/webflow-multi-reference-fields/) have their own depth limits but can sometimes replace a nested reference chain when what you really need is a set of tags, not a strict hierarchy.
 
 **Accept the limit and restructure.** If you're hitting depth limits repeatedly, the schema has grown organically past what a single reference chain can support. The fix is an architectural review, not a workaround hunt.
 
@@ -153,7 +153,7 @@ The approach that works best for large archives:
 
 **Supplemental sitemap entries.** For cases where pagination is unavoidable, ensure every individual post URL is in the Webflow-generated sitemap, not just the paginated archive pages. Webflow's sitemap generation handles this correctly by default for standard Collection templates — the issue only arises if you've excluded the Collection from the sitemap in settings.
 
-The SEO implications of CMS architecture decisions go deeper than pagination. My [Webflow blog setup guide](/blog/webflow-blog-setup) covers how to structure a CMS-driven blog so the URLs, internal linking, and sitemap are optimized from the start.
+The SEO implications of CMS architecture decisions go deeper than pagination. My [Webflow blog setup guide](/blog/webflow-blog-setup/) covers how to structure a CMS-driven blog so the URLs, internal linking, and sitemap are optimized from the start.
 
 ## When to split a site across projects
 
@@ -175,7 +175,7 @@ Bad reasons to split:
 
 **You think it'll be faster to build separately.** It won't. Cross-project coordination is harder than building in a single project, and the complexity cost compounds over time.
 
-The scaling ceiling question comes up in every [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026) comparison I have — WordPress's database-backed CMS theoretically has no hard item ceiling, which matters exactly when you're building at the volume where Webflow starts to strain. Below 20K items and 40 collections, Webflow wins on developer velocity, content editor UX, and hosting simplicity by a wide margin. Above that, the comparison gets more honest.
+The scaling ceiling question comes up in every [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026/) comparison I have — WordPress's database-backed CMS theoretically has no hard item ceiling, which matters exactly when you're building at the volume where Webflow starts to strain. Below 20K items and 40 collections, Webflow wins on developer velocity, content editor UX, and hosting simplicity by a wide margin. Above that, the comparison gets more honest.
 
 ---
 

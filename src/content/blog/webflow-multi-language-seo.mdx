@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Getting **webflow hreflang** right is the difference between Google showing German visitors your English page and showing them the actual German page they were looking for. The technical setup is not complicated — but it is unforgiving. Miss one reciprocal tag, pick the wrong URL structure, or skip the Search Console property setup, and your international traffic lands wherever Google guesses it should.
 
-This is the exact setup I use on multi-language Webflow projects: URL strategy first, then the tag implementation for both static pages and CMS templates, then the sitemap and Search Console work that completes the picture. If you haven't decided yet whether to use Webflow's native Localization or a third-party tool like Weglot, read my [Webflow Localization vs Weglot comparison](/blog/webflow-localization-vs-weglot) first — that decision determines which parts of this guide apply to you. If you want the broader SEO foundation before going international, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) is the right starting point. For implementation help, [get in touch](/contact).
+This is the exact setup I use on multi-language Webflow projects: URL strategy first, then the tag implementation for both static pages and CMS templates, then the sitemap and Search Console work that completes the picture. If you haven't decided yet whether to use Webflow's native Localization or a third-party tool like Weglot, read my [Webflow Localization vs Weglot comparison](/blog/webflow-localization-vs-weglot/) first — that decision determines which parts of this guide apply to you. If you want the broader SEO foundation before going international, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) is the right starting point. For implementation help, [get in touch](/contact/).
 
 ## URL strategy: subfolder vs subdomain vs ccTLD
 
@@ -43,7 +43,7 @@ Subfolders win for almost every Webflow project I've worked on. The domain autho
 
 If you're building with Webflow native Localization, the subfolder structure is what you get by default — Webflow appends `/de/`, `/fr/`, etc. to the primary domain automatically. For third-party tools or manual duplicates, you set this up yourself in DNS and hosting.
 
-For a deeper look at the international SEO implications of each approach before you commit, [Webflow international SEO](/blog/webflow-international-seo) covers the tradeoffs with Google's documentation behind them.
+For a deeper look at the international SEO implications of each approach before you commit, [Webflow international SEO](/blog/webflow-international-seo/) covers the tradeoffs with Google's documentation behind them.
 
 ## hreflang tags: where Webflow supports them
 
@@ -110,7 +110,7 @@ One Webflow-specific caveat: CMS field bindings in Page Settings Custom Head Cod
 
 Webflow auto-generates a sitemap.xml for each published locale when you use native Localization. You get a sitemap for `example.com/` and a separate one for `example.com/de/` — each listing the pages in that locale.
 
-For the full picture on how Webflow's sitemap generation works and where it falls short, [Webflow sitemap, robots, and canonical tags](/blog/webflow-sitemap-robots-canonical) covers the mechanics in detail.
+For the full picture on how Webflow's sitemap generation works and where it falls short, [Webflow sitemap, robots, and canonical tags](/blog/webflow-sitemap-robots-canonical/) covers the mechanics in detail.
 
 For multi-language specifically, the sitemap question is about Search Console submission, not the file itself. Submit each locale's sitemap as a separate property. Don't rely on Google discovering language variants through sitemap crawling alone — the sitemap helps Google find pages, but hreflang tags are what establish language relationships.
 
@@ -144,7 +144,7 @@ Submit the sitemap for each property. For the root domain, submit the root sitem
 
 One more thing: after you've completed the hreflang implementation and published, use Search Console's URL Inspection tool on both the English and German versions of a key page. The rendered HTML view will show you exactly what Google sees — including whether the hreflang tags are rendering with the correct URLs after Webflow publishes. This is faster than manually crawling and more reliable than trusting the Designer preview.
 
-For the broader Search Console and indexing strategy for a Webflow site, [Webflow international SEO](/blog/webflow-international-seo) covers the full property setup in the context of a live launch.
+For the broader Search Console and indexing strategy for a Webflow site, [Webflow international SEO](/blog/webflow-international-seo/) covers the full property setup in the context of a live launch.
 
 ## Common mistakes that tank international rankings
 

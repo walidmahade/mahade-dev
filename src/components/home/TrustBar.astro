@@ -2,26 +2,49 @@
 import Container from '../layout/Container.astro';
 import Eyebrow from '../layout/Eyebrow.astro';
 
-const clients = [
-  'Amply',
-  'Gartnerforbundet',
-  'Tixio',
-  'AI-Suitup',
-  'Ads by Joris',
-  'Tangerine Search',
-  'Bidder',
-  'Vadio',
-  'Trez',
-  'Charly Agency',
-  'Pretakst',
+type Client = {
+  name: string;
+  /**
+   * Brand logo under `public/images/clients/`. Logos are rendered as a uniform
+   * dark monochrome (brightness-0) so a heterogeneous set — white, dark, and
+   * colored marks — reads consistently on the light strip. Omit `logo` to fall
+   * back to the styled brand name.
+   */
+  logo?: string;
+};
+
+const clients: Client[] = [
+  { name: 'Amply', logo: '/images/clients/amply.svg' },
+  { name: 'Gartnerforbundet', logo: '/images/clients/gartnerforbundet.png' },
+  { name: 'Tixio', logo: '/images/clients/tixio.avif' },
+  { name: 'AI-Suitup', logo: '/images/clients/aisuitup.svg' },
+  { name: 'Ads by Joris', logo: '/images/clients/ads-by-joris.svg' },
+  { name: 'Charly Agency', logo: '/images/clients/charly-agency.svg' },
+  { name: 'Pretakst', logo: '/images/clients/pretakst.svg' },
+  { name: 'Vadio', logo: '/images/clients/vadio.svg' },
+  { name: 'Trez', logo: '/images/clients/trez.png' },
+  { name: 'Tangerine Search' },
+  { name: 'Bidder' },
 ];
 ---
 <div class="border-y border-line bg-paper py-10">
   <Container>
     <Eyebrow class="text-center mb-6">Teams I have built for</Eyebrow>
-    <ul class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-      {clients.map((name) => (
-        <li class="text-ink-muted font-medium tracking-tight">{name}</li>
+    <ul class="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+      {clients.map((client) => (
+        <li class="flex items-center">
+          {client.logo ? (
+            <img
+              src={client.logo}
+              alt={`${client.name} logo`}
+              loading="lazy"
+              decoding="async"
+              class="h-6 w-auto max-w-[140px] object-contain brightness-0 opacity-55 transition duration-200 hover:opacity-90"
+            />
+          ) : (
+            <span class="text-ink-muted font-medium tracking-tight">{client.name}</span>
+          )}
+        </li>
       ))}
     </ul>
   </Container>

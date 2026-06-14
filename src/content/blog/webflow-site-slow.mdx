@@ -29,7 +29,7 @@ If your Webflow site is slow, I can tell you right now what's causing it. After 
 
 The good news is that fixing a slow Webflow site is mostly mechanical. You don't need to rearchitect anything. You need to run through a checklist in the right order. This post is that checklist — the exact sequence I use on every site audit, with the tools, thresholds, and real-world impact for each fix.
 
-Before you touch anything, get a baseline reading. Run your homepage through [PageSpeed Insights](https://pagespeed.web.dev) in a fresh incognito window and note your mobile score. That number is your starting point. I'll also reference [Webflow Core Web Vitals](/blog/webflow-core-web-vitals) more deeply if you want to understand what each metric means for SEO — this post is about fixing them, not explaining them. For the SEO implications of the whole performance picture, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) is the companion read. Once you have your baseline, [reach out](/contact) if you want an expert audit rather than a DIY run-through.
+Before you touch anything, get a baseline reading. Run your homepage through [PageSpeed Insights](https://pagespeed.web.dev) in a fresh incognito window and note your mobile score. That number is your starting point. I'll also reference [Webflow Core Web Vitals](/blog/webflow-core-web-vitals/) more deeply if you want to understand what each metric means for SEO — this post is about fixing them, not explaining them. For the SEO implications of the whole performance picture, the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) is the companion read. Once you have your baseline, [reach out](/contact/) if you want an expert audit rather than a DIY run-through.
 
 ## The 7-fix sequence (run in this order)
 
@@ -63,7 +63,7 @@ Here's what image weight improvement typically looks like in practice:
 | After Squoosh (WebP, q82) | WebP | 1600 × 1067px | 187 kB |
 | Savings | — | — | ~96% reduction |
 
-For [Webflow image optimization](/blog/webflow-image-optimization) in detail — compression settings, when to use the native image element vs. CSS background, and how Webflow's srcset generation works — that post covers the full picture. For [Webflow lazy loading](/blog/webflow-lazy-loading), there's an equally important companion step: images below the fold should not load at all until the user scrolls toward them.
+For [Webflow image optimization](/blog/webflow-image-optimization/) in detail — compression settings, when to use the native image element vs. CSS background, and how Webflow's srcset generation works — that post covers the full picture. For [Webflow lazy loading](/blog/webflow-lazy-loading/), there's an equally important companion step: images below the fold should not load at all until the user scrolls toward them.
 
 <Callout type="tip">
 The fastest non-developer workflow for hero images: open [Squoosh](https://squoosh.app) in your browser (it's free, no account needed), drag in your original image, switch the output format to WebP, set quality to 82, resize to 1600px width, download. The whole process takes 90 seconds and the result is a file your browser downloads in under a second on a 4G connection. Do this for every hero and section background on the site before touching anything else.
@@ -142,7 +142,7 @@ Webflow's hosting infrastructure sits on AWS CloudFront — a global CDN with ed
 
 That said, there are a few hosting-layer things worth verifying. First, check that your site is published on a custom domain, not just the `.webflow.io` staging URL. Custom domains on Webflow get the full CloudFront treatment; staging URLs are sometimes routed differently. Second, confirm SSL is active and redirecting HTTP to HTTPS — an HTTP-to-HTTPS redirect adds a round-trip, and some Webflow projects have this misconfigured if they were set up before Webflow's one-click SSL was the default.
 
-The comparison point worth mentioning: this is an area where Webflow's hosting genuinely outperforms self-managed WordPress on shared or VPS hosting, and is broadly comparable to managed WordPress platforms like WP Engine or Kinsta. If you're evaluating platforms, the [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026) comparison breaks down hosting, performance defaults, and what each platform requires from a developer to reach competitive Lighthouse scores.
+The comparison point worth mentioning: this is an area where Webflow's hosting genuinely outperforms self-managed WordPress on shared or VPS hosting, and is broadly comparable to managed WordPress platforms like WP Engine or Kinsta. If you're evaluating platforms, the [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026/) comparison breaks down hosting, performance defaults, and what each platform requires from a developer to reach competitive Lighthouse scores.
 
 One caching consideration specific to Webflow: Webflow's CDN caches HTML pages at the edge after first request. This means the first visitor to a newly published page gets a slightly slower response (origin fetch) and subsequent visitors get the cached version. For sites with frequent publishing, this is worth knowing — don't run a Lighthouse test immediately after publishing. Wait 2–3 minutes for the cache to warm, then test.
 

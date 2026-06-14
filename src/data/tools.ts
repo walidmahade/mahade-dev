@@ -26,7 +26,7 @@ export const tools: Tool[] = [
     name: 'Webflow Cost Calculator',
     tagline: 'Estimate your Webflow project cost in under a minute.',
     description:
-      'How much does a Webflow site cost? This free Webflow pricing calculator gives a transparent price range from your page count, CMS, migration, and SEO needs — no email required.',
+      'How much does a Webflow site cost? This free Webflow pricing calculator gives a transparent price range from your page count, CMS, and SEO needs.',
     category: 'Pricing',
     icon: 'calculator',
     keywords: ['webflow cost', 'webflow pricing', 'how much does webflow cost'],
@@ -60,7 +60,7 @@ export const tools: Tool[] = [
     name: 'Meta Title & Description Preview',
     tagline: 'See your Google SERP snippet before you ship.',
     description:
-      'Preview exactly how your page will appear in Google search results. Live pixel-width truncation for title and description — the way Google actually measures them.',
+      'Preview how your page appears in Google search results, with live pixel-width truncation for title and description — the way Google measures them.',
     category: 'SEO',
     icon: 'search',
     keywords: ['meta description preview', 'google snippet preview', 'serp preview'],
@@ -90,7 +90,7 @@ export const tools: Tool[] = [
     name: 'Core Web Vitals Checker',
     tagline: 'Measure LCP, CLS, and INP for any URL.',
     description:
-      'Run a Google PageSpeed Insights test against any public URL and see the Core Web Vitals that drive your search rankings. Plus field data from real users when available.',
+      'Run a PageSpeed Insights test on any URL and see the Core Web Vitals — LCP, CLS, INP — that drive your Google rankings, plus real-user field data.',
     category: 'Performance',
     icon: 'gauge',
     keywords: ['core web vitals test', 'pagespeed insights', 'lighthouse test'],
@@ -124,7 +124,7 @@ export const tools: Tool[] = [
     name: 'Color Contrast Checker',
     tagline: 'Test any two colors against WCAG AA and AAA.',
     description:
-      'Pick any foreground and background color. Get the exact contrast ratio with AA and AAA verdicts for normal and large text, plus suggested adjustments if it fails.',
+      'Pick any foreground and background color and get the exact WCAG contrast ratio, with AA and AAA verdicts for normal and large text.',
     category: 'Design',
     icon: 'contrast',
     keywords: ['color contrast checker', 'wcag contrast', 'accessibility color'],

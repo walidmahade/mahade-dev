@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The Webflow HubSpot integration has one correct answer and two acceptable shortcuts, depending on how much design control you need and how much dev time you have. I'll give you all three, tell you which to pick first, and walk through the attribution plumbing that most tutorials skip — UTMs, cookies, progressive profiling, and consent.
 
-If you want someone to build this rather than read about it, [get in touch](/contact).
+If you want someone to build this rather than read about it, [get in touch](/contact/).
 
 ## Three ways to connect Webflow to HubSpot (picked fast)
 
@@ -171,7 +171,7 @@ The practical implementation: on page load, read the URL's query string for UTM 
 
 For Option 1 (API approach), those hidden field values go into your `fields` array in the HubSpot payload. For Option 3 (Zapier/Make), map those hidden fields in the automation. For Option 2 (embed), UTMs in the URL at submission time are handled automatically by HubSpot's tracking script.
 
-For a broader look at how attribution data flows through Webflow's analytics stack and where it breaks, [Webflow analytics: GA4 vs Plausible](/blog/webflow-analytics-ga4-plausible) covers the gaps.
+For a broader look at how attribution data flows through Webflow's analytics stack and where it breaks, [Webflow analytics: GA4 vs Plausible](/blog/webflow-analytics-ga4-plausible/) covers the gaps.
 
 ## Progressive profiling: multi-step forms that update contacts
 
@@ -199,7 +199,7 @@ If you have both a consent management platform (like Cookiebot, OneTrust, or Osa
 
 The right pattern: load HubSpot's tracking script conditionally, after consent. Most consent platforms fire a JavaScript callback when the visitor accepts analytics cookies — wrap the HubSpot script injection inside that callback. This also means that for visitors who reject analytics cookies, the `hubspotutk` cookie is never set. Form submissions from those visitors will still create contacts in HubSpot, but without session attribution.
 
-This is also a good moment to check your [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) — consent implementation has SEO implications if your consent banner is blocking the page render or injecting layout shifts that affect Core Web Vitals.
+This is also a good moment to check your [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) — consent implementation has SEO implications if your consent banner is blocking the page render or injecting layout shifts that affect Core Web Vitals.
 
 ## Testing the integration end-to-end
 
@@ -220,7 +220,7 @@ If step 5 fails, `context.pageUri` is missing or malformed in your API payload �
 
 Running this test when a new form deploys takes ten minutes and surfaces the silent failures that marketing teams find only when they pull a quarterly attribution report and nothing adds up.
 
-Pick your option, wire the tracking correctly, and the handoff from Webflow to HubSpot becomes reliable enough to build campaigns against. If you want this built properly rather than debugged later, my [Webflow development services](/blog/webflow-development-services) include HubSpot integration as a standard scope item — [let's talk](/contact).
+Pick your option, wire the tracking correctly, and the handoff from Webflow to HubSpot becomes reliable enough to build campaigns against. If you want this built properly rather than debugged later, my [Webflow development services](/blog/webflow-development-services/) include HubSpot integration as a standard scope item — [let's talk](/contact/).
 
 <FaqSchema items={frontmatter.faq} />
 

@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Building a webflow multi step form is one of those tasks where the right approach depends almost entirely on how complex your flow is. For a straight-line sequence with no branching, native Webflow Interactions handles it without a single line of code. For conditional logic where step 3 changes based on what someone picked in step 1, you need either a dedicated tool or custom JavaScript. For anything involving file uploads, unusual integrations, or full visual customization at every step, custom JS is the only option that won't fight you.
 
-I'll give you all three approaches, tell you when each one is the right pick, and walk through the details that most tutorials skip: validation between steps, progress indicators, partial submission saving, and drop-off analytics. If you want someone to build this rather than read about it, [get in touch](/contact).
+I'll give you all three approaches, tell you when each one is the right pick, and walk through the details that most tutorials skip: validation between steps, progress indicators, partial submission saving, and drop-off analytics. If you want someone to build this rather than read about it, [get in touch](/contact/).
 
 ## Why multi-step beats single-step on 6+ fields
 
@@ -71,7 +71,7 @@ The tradeoff with both tools is design control over validation states and error 
 
 ## Approach 3: custom JS for full control
 
-Custom JavaScript is the right call when you need something the first two approaches don't provide: file uploads across steps (which require different handling from text fields — see the [file uploads guide](/blog/webflow-file-uploads) for the upload mechanics), unusual third-party API integrations, step-level analytics that go beyond what native or tool-level tracking exposes, or complete control over validation logic and error presentation.
+Custom JavaScript is the right call when you need something the first two approaches don't provide: file uploads across steps (which require different handling from text fields — see the [file uploads guide](/blog/webflow-file-uploads/) for the upload mechanics), unusual third-party API integrations, step-level analytics that go beyond what native or tool-level tracking exposes, or complete control over validation logic and error presentation.
 
 The architecture is consistent regardless of specifics. You maintain a `currentStep` integer in state. Clicking Next increments it (after validating the current step's fields). Clicking Back decrements it. Each step div toggles `display` or `visibility` based on whether its index matches `currentStep`. On final submit, you gather all field values from across the step divs and POST them to your endpoint — Webflow's native form endpoint, a Logic flow, or a direct API call.
 
@@ -112,7 +112,7 @@ For custom JS, validation is straightforward. In `validateStep(index)`, query al
 
 For the native approach, you need a small script even though you're not using custom JS for the overall form structure. Intercept the Next button click event, validate the current step's fields manually, and only allow the Interactions trigger to fire (or fire it programmatically) if validation passes. The cleanest way is to cancel the Interactions trigger and fire it yourself via a custom event only after validation succeeds.
 
-For more detail on Webflow-specific validation patterns and how to display error states that match your design system, [the form validation guide](/blog/webflow-form-validation) covers the full approach.
+For more detail on Webflow-specific validation patterns and how to display error states that match your design system, [the form validation guide](/blog/webflow-form-validation/) covers the full approach.
 
 ## Progress indicators
 
@@ -132,7 +132,7 @@ Three patterns, in order of complexity:
 
 **localStorage per step.** After each successful step validation, serialize the current step's field values to `localStorage`. On page load, check for existing values and pre-populate them. This is simple and reliable for most cases. The limitation is that it's device-bound — if the user starts on desktop and continues on mobile, the saved data doesn't follow them.
 
-**HubSpot progressive profiling.** If you're already routing submissions to HubSpot, you can use HubSpot's progressive profiling to capture step-level data incrementally. Submit step 1's fields to HubSpot when the user clicks Next, then submit step 2's new fields on the next Next click. The contact record builds up progressively. The [HubSpot integration guide](/blog/webflow-hubspot-integration) has the full wiring for this. The limitation is that it's HubSpot-dependent — this only works if HubSpot is your CRM.
+**HubSpot progressive profiling.** If you're already routing submissions to HubSpot, you can use HubSpot's progressive profiling to capture step-level data incrementally. Submit step 1's fields to HubSpot when the user clicks Next, then submit step 2's new fields on the next Next click. The contact record builds up progressively. The [HubSpot integration guide](/blog/webflow-hubspot-integration/) has the full wiring for this. The limitation is that it's HubSpot-dependent — this only works if HubSpot is your CRM.
 
 **Your own backend endpoint.** POST each step's data to Supabase, Airtable, or any endpoint that returns a session token. Store the token in localStorage, fetch saved state on return visits. Most flexible, highest dev lift — plan four to six hours of backend setup.
 

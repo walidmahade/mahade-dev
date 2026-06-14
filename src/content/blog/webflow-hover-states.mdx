@@ -27,9 +27,9 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Most Webflow hover states fail in one of two ways: they're either invisible (no feedback, dead flat) or they're overdone (full Interactions trigger for a simple color change, jank on low-end devices, wrong easing). The good ones sit in the middle — fast, purposeful, and built with the right tool for the job.
 
-A **webflow hover state** is not just a style decision. It is a communication decision. It tells the user "this is interactive," "this is where to click," "this is what you get if you tap here." Get it wrong and conversion suffers. Get it right and it feels invisible — which is exactly where it should be. If you are new to how Webflow handles animation in general, the [Webflow Interactions 2.0 guide](/blog/webflow-interactions-2-guide) is worth reading before this one, since it covers when the Interactions panel earns its complexity over plain CSS.
+A **webflow hover state** is not just a style decision. It is a communication decision. It tells the user "this is interactive," "this is where to click," "this is what you get if you tap here." Get it wrong and conversion suffers. Get it right and it feels invisible — which is exactly where it should be. If you are new to how Webflow handles animation in general, the [Webflow Interactions 2.0 guide](/blog/webflow-interactions-2-guide/) is worth reading before this one, since it covers when the Interactions panel earns its complexity over plain CSS.
 
-If you have a live project where hover states are already causing QA headaches, [reach out](/contact) and I'll take a look.
+If you have a live project where hover states are already causing QA headaches, [reach out](/contact/) and I'll take a look.
 
 ## Why Webflow hover states feel off
 
@@ -59,7 +59,7 @@ The upward translate is what makes it feel physical. Without it, a background co
 Secondary buttons (ghost style, outlined) need a slightly different recipe: fill in the background on hover rather than darkening it, and keep the translate but skip the shadow. The shadow on a ghost button hover tends to look heavy against light backgrounds.
 
 <Callout type="tip">
-Combo classes are the right way to handle button hover variations in Webflow. Build one `btn` base class with all shared properties (padding, border-radius, font size, transition), then layer `btn-primary` and `btn-secondary` on top. The hover state goes on the combo class, not the base class. This means you change the hover recipe once, in one place, and it propagates everywhere that combo class is used. For a deeper look at how combo classes interact with Webflow's component model, see [Webflow components vs. symbols](/blog/webflow-components-vs-symbols) — the mental model there applies directly to hover architecture.
+Combo classes are the right way to handle button hover variations in Webflow. Build one `btn` base class with all shared properties (padding, border-radius, font size, transition), then layer `btn-primary` and `btn-secondary` on top. The hover state goes on the combo class, not the base class. This means you change the hover recipe once, in one place, and it propagates everywhere that combo class is used. For a deeper look at how combo classes interact with Webflow's component model, see [Webflow components vs. symbols](/blog/webflow-components-vs-symbols/) — the mental model there applies directly to hover architecture.
 </Callout>
 
 ## Card hovers with depth

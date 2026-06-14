@@ -25,9 +25,9 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-Webflow image optimization is better than most people think out of the box — and worse than most people think where it breaks down. If your [Webflow site is slow](/blog/webflow-site-slow), images are the first place to look, and understanding exactly where the platform helps you and where it quietly leaves you exposed is the difference between a 90+ Lighthouse score and a 58 that nobody can explain.
+Webflow image optimization is better than most people think out of the box — and worse than most people think where it breaks down. If your [Webflow site is slow](/blog/webflow-site-slow/), images are the first place to look, and understanding exactly where the platform helps you and where it quietly leaves you exposed is the difference between a 90+ Lighthouse score and a 58 that nobody can explain.
 
-This post covers everything: what Webflow automates, what it misses, how srcset actually works under the hood, the compression numbers I use on every project, and the 5-step audit I run before any image-heavy site goes live. If you want someone to handle this for you rather than DIY it, [get in touch](/contact).
+This post covers everything: what Webflow automates, what it misses, how srcset actually works under the hood, the compression numbers I use on every project, and the 5-step audit I run before any image-heavy site goes live. If you want someone to handle this for you rather than DIY it, [get in touch](/contact/).
 
 ## What Webflow does automatically
 
@@ -51,7 +51,7 @@ The gaps in Webflow's automatic optimization are specific and consistent. Knowin
 
 **CMS images are wild cards.** Images added through the CMS by content editors are served through Webflow's pipeline and get WebP conversion. But if an editor pastes a 4MB PNG into a rich text field, Webflow resizes and converts it — but the conversion pipeline won't save you from an image that was egregiously oversized to begin with. The garbage-in problem is yours to prevent with upload guidelines.
 
-**No built-in image dimensions in custom embeds.** If you use a code embed to display an image, Webflow sets no `width` or `height` attributes. Missing dimensions are a CLS (Cumulative Layout Shift) trigger — the browser doesn't know how much space to reserve until the image loads, which causes layout reflow. This is one of the most common [Webflow Core Web Vitals](/blog/webflow-core-web-vitals) issues I diagnose on sites handed to me after another developer's build.
+**No built-in image dimensions in custom embeds.** If you use a code embed to display an image, Webflow sets no `width` or `height` attributes. Missing dimensions are a CLS (Cumulative Layout Shift) trigger — the browser doesn't know how much space to reserve until the image loads, which causes layout reflow. This is one of the most common [Webflow Core Web Vitals](/blog/webflow-core-web-vitals/) issues I diagnose on sites handed to me after another developer's build.
 
 ## Responsive images: how Webflow's srcset actually works
 
@@ -96,11 +96,11 @@ Workflow: export from Figma or Lightroom at the target quality, run through Squo
 
 These three attributes get grouped together because they're all invisible to the eye and all matter for different reasons — alt text for SEO and accessibility, lazy loading for initial page weight, fetchpriority for LCP.
 
-Alt text in Webflow is set in two places: the Asset name field (global default) and the alt field on the placed image element. Override it per instance for any image reused in multiple contexts — a headshot in the hero needs different alt text than the same photo in the about section. Context matters for screen readers and for how search engines understand image relevance. This is why alt text is part of the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) I run on every launch.
+Alt text in Webflow is set in two places: the Asset name field (global default) and the alt field on the placed image element. Override it per instance for any image reused in multiple contexts — a headshot in the hero needs different alt text than the same photo in the about section. Context matters for screen readers and for how search engines understand image relevance. This is why alt text is part of the [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) I run on every launch.
 
 Lazy loading is automatic for images below the fold, but Webflow doesn't distinguish between images near the fold and those far below it. For images within the first two viewport heights — the hero and any above-the-fold media — verify `loading="lazy"` is not applied. It's rare in standard Image elements but can appear in custom code embeds. Check it in DevTools before publishing.
 
-[Webflow lazy loading](/blog/webflow-lazy-loading) covers how this interacts with scroll-triggered reveals and interaction delays — the edge cases that trip up most builds.
+[Webflow lazy loading](/blog/webflow-lazy-loading/) covers how this interacts with scroll-triggered reveals and interaction delays — the edge cases that trip up most builds.
 
 <Callout type="tip">
 To add `fetchpriority="high"` to your hero image in Webflow: replace the Image element with a Custom Embed block containing a hand-written `<img>` tag with `fetchpriority="high"`, `loading="eager"`, the correct `src`, `alt`, `width`, and `height`. It's 8 lines of HTML that often cuts 300–500ms from LCP.

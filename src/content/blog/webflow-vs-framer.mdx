@@ -34,7 +34,7 @@ I've shipped 40+ projects across both tools at this point. I'm not a Framer skep
 
 If you need to ship one marketing site or landing page and animation quality matters, Framer. If you need a blog, a case study library, a multi-template CMS, or any site above five pages that a non-developer will maintain, Webflow. Everything else in this post is nuance on those two sentences.
 
-If you're also weighing traditional CMS options, I've covered [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026) in depth. This post focuses specifically on the Framer question, which is a different comparison with different trade-offs.
+If you're also weighing traditional CMS options, I've covered [Webflow vs WordPress](/blog/webflow-vs-wordpress-2026/) in depth. This post focuses specifically on the Framer question, which is a different comparison with different trade-offs.
 
 ## Design-tool experience
 
@@ -82,7 +82,7 @@ Framer's CMS launched properly in 2024 and has improved steadily, but it's built
 Framer's CMS has a 10,000-item limit per collection and no pagination API for collection lists — you get all items or a capped subset. For a blog with 30 posts, this is invisible. For a portfolio with 200 case studies or a job board with 500 listings, it's a hard wall you'll hit at the worst possible time. Design for the data volume you'll have in 18 months, not the volume you have today.
 </Callout>
 
-For the details on where Webflow's own CMS has limits worth knowing before you commit to a structure, I've covered [Webflow CMS limits](/blog/webflow-cms-limits) in a separate post — the collection field cap and the nesting restrictions are the ones that bite teams most often.
+For the details on where Webflow's own CMS has limits worth knowing before you commit to a structure, I've covered [Webflow CMS limits](/blog/webflow-cms-limits/) in a separate post — the collection field cap and the nesting restrictions are the ones that bite teams most often.
 
 The content editor experience is also more polished in Webflow. The Webflow Editor overlays on the live site and lets non-technical users update CMS items without touching the Designer. Framer's CMS editor is a sidebar panel — functional but less intuitive for clients who've never used a headless CMS before. On every project where I've handed off CMS editing to a marketing team, Webflow's Editor has required less hand-holding.
 
@@ -108,7 +108,7 @@ Framer publishes static HTML pages rendered from React components. The runtime b
 
 Webflow's output is heavier by default. The Webflow runtime script, IX2 initialization, and the way Webflow handles font loading can push the initial page weight up significantly on sites that haven't been optimized. A Webflow site that scores 94 on Lighthouse has usually had explicit work done: unused interactions stripped, font-display set to swap, lottie files lazy-loaded, and hero images sized correctly for each breakpoint.
 
-The flip side: Webflow gives you the levers to tune. You can inject custom `<link rel="preload">` tags in the head embed, control exactly which scripts load when, and handle font loading with precision. I've covered the full process in [Webflow Core Web Vitals](/blog/webflow-core-web-vitals). On a site where performance is a hard requirement (a product launch page that will get traffic from a press hit, for example), I'd rather have Webflow's tuning surface than Framer's good-enough defaults.
+The flip side: Webflow gives you the levers to tune. You can inject custom `<link rel="preload">` tags in the head embed, control exactly which scripts load when, and handle font loading with precision. I've covered the full process in [Webflow Core Web Vitals](/blog/webflow-core-web-vitals/). On a site where performance is a hard requirement (a product launch page that will get traffic from a press hit, for example), I'd rather have Webflow's tuning surface than Framer's good-enough defaults.
 
 Framer's edge on performance is real for teams that won't do that optimization work — and most teams won't. If no one is going to audit Lighthouse on launch day, Framer's defaults are safer. If someone is going to (and they should), Webflow's tuning potential is higher.
 
@@ -124,7 +124,7 @@ Webflow gives you per-page meta titles, descriptions, and OG tags through the De
 
 Framer's SEO tooling covers the basics well: page title, meta description, OG image, and sitemap. Where it gets limited is at the edges — custom schema per CMS item, robots rules per page type, canonical management on paginated collection routes. These aren't impossible in Framer (you can inject scripts into custom code sections), but they require more manual scaffolding than Webflow's native SEO fields allow.
 
-For a full-site SEO implementation, I run through a detailed [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) on every project. About 80% of that checklist applies equally to Framer. The 20% that doesn't is mostly about schema and advanced per-page meta control — things that matter less for a five-page site and matter a lot for a 50-page content site.
+For a full-site SEO implementation, I run through a detailed [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) on every project. About 80% of that checklist applies equally to Framer. The 20% that doesn't is mostly about schema and advanced per-page meta control — things that matter less for a five-page site and matter a lot for a 50-page content site.
 
 One underappreciated SEO difference: Webflow's CMS generates collection pages with structured URLs automatically. `/blog/post-slug`, `/case-studies/client-name`, `/team/developer-name` — these routes exist as soon as you set up the collection template, with no routing configuration. In Framer, dynamic routes from CMS items work the same way now, so this gap has mostly closed. Both tools handle basic slug-based routing without developer intervention.
 
@@ -161,9 +161,9 @@ Here's the decision in plain terms:
 - You need integrations with Memberstack, Outseta, or other Webflow-specific middleware
 - Performance tuning is a hard requirement and someone will actually do the work
 
-For a founder shipping one landing page for a product launch, Framer. For anything with a blog or case studies, Webflow — the CMS depth and content management experience justify it every time. If you're unsure where your project lands, [get in touch](/contact) and I'll give you a straight answer in one conversation.
+For a founder shipping one landing page for a product launch, Framer. For anything with a blog or case studies, Webflow — the CMS depth and content management experience justify it every time. If you're unsure where your project lands, [get in touch](/contact/) and I'll give you a straight answer in one conversation.
 
-If you want deeper background on the developer side of Webflow before committing, I've written about [how to hire a Webflow developer](/blog/hire-webflow-developer-2026) with specifics on what to look for, what to pay, and how to run the first engagement without the usual friction.
+If you want deeper background on the developer side of Webflow before committing, I've written about [how to hire a Webflow developer](/blog/hire-webflow-developer-2026/) with specifics on what to look for, what to pay, and how to run the first engagement without the usual friction.
 
 <FaqSchema items={frontmatter.faq} />
 

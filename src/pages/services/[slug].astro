@@ -11,6 +11,7 @@ import {
   type ServiceLandingWithContent,
 } from '@/data/serviceLandings';
 import { site } from '@/data/site';
+import { jsonLd } from '@/lib/jsonld';
 import { Check } from 'lucide-react';
 
 export function getStaticPaths() {
@@ -28,7 +29,7 @@ const { service } = Astro.props;
 const { content } = service;
 
 const pageTitle = `${service.name} — Mahade Walid`;
-const pageDescription = service.tagline;
+const pageDescription = service.metaDescription ?? service.tagline;
 
 const serviceSchema = {
   '@context': 'https://schema.org',
@@ -38,7 +39,6 @@ const serviceSchema = {
   provider: { '@type': 'Person', name: site.name, url: site.url },
   areaServed: { '@type': 'Place', name: 'Worldwide' },
   url: `${site.url}${service.href}`,
-  keywords: content.keywords.join(', '),
 };
 
 const breadcrumbSchema = {
@@ -62,9 +62,9 @@ const faqSchema = {
 ---
 <Layout title={pageTitle} description={pageDescription}>
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" set:html={jsonLd(serviceSchema)} />
+    <script type="application/ld+json" set:html={jsonLd(breadcrumbSchema)} />
+    <script type="application/ld+json" set:html={jsonLd(faqSchema)} />
   </Fragment>
 
   <Section size="hero" tone="paper">
@@ -95,7 +95,7 @@ const faqSchema = {
           Book a call
         </a>
         <a
-          href="/work"
+          href="/work/"
           class="inline-flex h-11 items-center rounded-[10px] border border-line-strong px-5 font-medium text-ink hover:bg-paper-tint transition-colors"
         >
           See the work

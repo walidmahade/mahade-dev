@@ -3,6 +3,8 @@ interface FaqItem {
   q: string;
   a: string;
 }
+import { jsonLd } from '@/lib/jsonld';
+
 interface Props {
   items: FaqItem[];
 }
@@ -28,5 +30,5 @@ const faqSchema = {
       </div>
     ))}
   </div>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={jsonLd(faqSchema)} />
 </section>

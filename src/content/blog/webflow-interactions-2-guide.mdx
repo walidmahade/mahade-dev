@@ -28,7 +28,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow Interactions 2.0 is the most powerful native animation system available in any no-code builder, and it is also the fastest way to wreck a site's performance if you use it without discipline. This guide is a full working-developer walkthrough: every trigger type, how timelines actually work, the class-based pattern that saves hours on every project, performance traps that kill INP, and the honest answer to when you should reach for GSAP instead.
 
-The short version: webflow interactions 2.0 replaces the old event-driven system with a timeline-based model that is genuinely close to what you'd build in After Effects or GSAP. For most marketing sites, it handles everything you need. For a handful of edge cases, it doesn't, and I'll tell you exactly where those edges are. If you want help implementing any of this on your site, [get in touch](/contact).
+The short version: webflow interactions 2.0 replaces the old event-driven system with a timeline-based model that is genuinely close to what you'd build in After Effects or GSAP. For most marketing sites, it handles everything you need. For a handful of edge cases, it doesn't, and I'll tell you exactly where those edges are. If you want help implementing any of this on your site, [get in touch](/contact/).
 
 ## What changed from Interactions 1
 
@@ -81,7 +81,7 @@ One underused feature: the "Affect: different elements" setting. When you build 
 
 Scroll-in-view is the workhorse of IX2. Every section reveal, every staggered card entrance, every stat counter that starts when the user reaches it — all of these use "scroll into view." Getting this trigger right is the core skill for any Webflow developer building a content-heavy marketing site.
 
-The full breakdown of what's possible with this trigger, including offset settings and threshold tuning, lives in [Webflow scroll animations](/blog/webflow-scroll-animations) — worth reading alongside this guide. Here I'll cover the patterns that show up on every project.
+The full breakdown of what's possible with this trigger, including offset settings and threshold tuning, lives in [Webflow scroll animations](/blog/webflow-scroll-animations/) — worth reading alongside this guide. Here I'll cover the patterns that show up on every project.
 
 The simplest scroll-in-view setup: set initial state to opacity 0 and transform Y +24px (or +40px for more drama), then animate to opacity 1 and transform Y 0 over 500–700ms with ease-out. That fade-up entrance is legible, fast to build, and works on every device. It is also slightly overused, which means you can distinguish your site by varying it — try a slight scale from 0.96 to 1.0 instead of the Y translate, or use a clip-reveal by animating max-height combined with opacity.
 
@@ -156,7 +156,7 @@ Mouse-move parallax is the single biggest interactions performance trap. A mouse
 
 For LCP specifically: if your hero headline or hero image is part of an on-load animation that starts at opacity 0, the browser cannot paint that element until the JS fires and starts the animation. This delays LCP. The fix is to keep opacity on the initial state set within IX2, not as a CSS style, and ensure the IX2 runtime initializes fast. On slow connections, you can also add a CSS class with `opacity: 1` that IX2 removes at runtime — so users on slow connections see the content rather than a blank page.
 
-For a full breakdown of what's causing your Webflow site's Lighthouse scores to tank and how to fix each category, [Webflow site slow](/blog/webflow-site-slow) and [Webflow Core Web Vitals](/blog/webflow-core-web-vitals) go deeper than this section can.
+For a full breakdown of what's causing your Webflow site's Lighthouse scores to tank and how to fix each category, [Webflow site slow](/blog/webflow-site-slow/) and [Webflow Core Web Vitals](/blog/webflow-core-web-vitals/) go deeper than this section can.
 
 The practical rules I follow on every project:
 
@@ -186,7 +186,7 @@ The specific gaps in IX2 that I reach for GSAP to fill:
 
 **Fine-grained performance optimization.** GSAP's `will-change` management, lazy rendering, and precise RAF (requestAnimationFrame) control are more mature than IX2's runtime. On a page where animation performance is critical — a scroll-driven narrative with thirty animated elements — GSAP's overhead is lower and its debugging tools are better.
 
-The full implementation guide for bringing GSAP into a Webflow project — including how to load it without breaking the Designer preview — is in [GSAP in Webflow](/blog/gsap-in-webflow). The short version: add GSAP via the project's custom code panel (head), initialize via a module script in the body, and keep your GSAP code in a separate file that the Designer doesn't touch.
+The full implementation guide for bringing GSAP into a Webflow project — including how to load it without breaking the Designer preview — is in [GSAP in Webflow](/blog/gsap-in-webflow/). The short version: add GSAP via the project's custom code panel (head), initialize via a module script in the body, and keep your GSAP code in a separate file that the Designer doesn't touch.
 
 One thing I want to be clear about: reaching for GSAP is not a sign that Webflow failed. IX2 and GSAP are complementary. On every complex project I ship, the scroll-in-view reveals and hover states are IX2, and the one or two complex set-piece animations that need programmatic control are GSAP. The 80/20 split is real and it's the right working model.
 

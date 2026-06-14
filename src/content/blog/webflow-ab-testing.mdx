@@ -27,9 +27,9 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow A/B testing in 2026 works fine — but the tooling landscape changed completely when Google Optimize shut down in September 2023, and a lot of guides are still pointing at a dead product. The short answer: use VWO or Convert.com for most Webflow projects, build on Cloudflare Workers for headless setups, and never declare a winner before the stats are real.
 
-This post walks through every viable option, how to wire it up, and the pitfalls that trip up even experienced marketers. If you're about to run a test on a Webflow site you didn't build and the setup looks unfamiliar, [get in touch](/contact) before you ship something that breaks Core Web Vitals or inflates bounce rate for half your traffic.
+This post walks through every viable option, how to wire it up, and the pitfalls that trip up even experienced marketers. If you're about to run a test on a Webflow site you didn't build and the setup looks unfamiliar, [get in touch](/contact/) before you ship something that breaks Core Web Vitals or inflates bounce rate for half your traffic.
 
-I also wrote a detailed breakdown of what makes landing pages actually convert in the [Webflow landing page teardown](/blog/webflow-landing-page-teardown) — worth reading before you start testing, because testing a bad baseline just gets you a faster path to a marginally less bad baseline.
+I also wrote a detailed breakdown of what makes landing pages actually convert in the [Webflow landing page teardown](/blog/webflow-landing-page-teardown/) — worth reading before you start testing, because testing a bad baseline just gets you a faster path to a marginally less bad baseline.
 
 ## What changed when Google Optimize ended
 
@@ -83,7 +83,7 @@ For teams that want testing without a third-party subscription and are comfortab
 
 Webflow Logic can't branch page variants — it's workflow automation, not page-level variation. What it can do is write to a CMS collection or trigger external webhooks. The actual variant switching happens in custom JavaScript.
 
-A minimal DIY setup: assign the user to a variant on first visit using `Math.random()`, store the assignment in `localStorage`, and swap DOM elements based on that value. Track conversions by firing a custom event to whatever analytics tool you're already using. I cover the custom code embed patterns for this kind of setup in the [Webflow custom code guide](/blog/webflow-custom-code) — the same approach applies here.
+A minimal DIY setup: assign the user to a variant on first visit using `Math.random()`, store the assignment in `localStorage`, and swap DOM elements based on that value. Track conversions by firing a custom event to whatever analytics tool you're already using. I cover the custom code embed patterns for this kind of setup in the [Webflow custom code guide](/blog/webflow-custom-code/) — the same approach applies here.
 
 ```js
 (function () {
@@ -141,7 +141,7 @@ The practical rules that prevent this:
 
 **Don't test too many things at once.** Every active test running simultaneously splits your traffic. Two concurrent tests on the same page mean four treatment groups, each with a quarter of your traffic, each taking four times as long to reach significance.
 
-For the analytics layer that feeds test analysis, my post on [Webflow analytics with GA4 and Plausible](/blog/webflow-analytics-ga4-plausible) covers how to set up the event tracking that makes conversion measurement actually reliable — worth reading before you wire up any experiment.
+For the analytics layer that feeds test analysis, my post on [Webflow analytics with GA4 and Plausible](/blog/webflow-analytics-ga4-plausible/) covers how to set up the event tracking that makes conversion measurement actually reliable — worth reading before you wire up any experiment.
 
 ## Avoiding flicker (FOOC)
 

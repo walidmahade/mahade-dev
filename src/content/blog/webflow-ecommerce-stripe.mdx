@@ -28,7 +28,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The webflow stripe integration is one click to connect and a few hours to get right. Here is the exact setup sequence, the decisions that trip people up, and the pre-launch checklist I run on every Webflow Ecommerce project before it goes live.
 
-If you are building a store from scratch, read [Webflow Ecommerce in 2026](/blog/webflow-ecommerce-2026) first — it covers the product catalog, shipping, and fulfillment fundamentals. This guide picks up at the payment layer and goes deep. If you already know what you need and want someone to handle the build, [get in touch](/contact).
+If you are building a store from scratch, read [Webflow Ecommerce in 2026](/blog/webflow-ecommerce-2026/) first — it covers the product catalog, shipping, and fulfillment fundamentals. This guide picks up at the payment layer and goes deep. If you already know what you need and want someone to handle the build, [get in touch](/contact/).
 
 ## Native Stripe in Webflow Ecommerce
 
@@ -66,7 +66,7 @@ Stripe Checkout (Stripe's hosted page) is the fastest path when you need to go o
 
 Stripe's Payment Element is the embed option: a Stripe-hosted iframe that drops into your own page via a JS snippet. You control the surrounding layout; Stripe controls the sensitive payment fields. This is the right choice when you want a fully custom-feeling checkout but do not want to build card input from scratch.
 
-I covered the Webflow checkout experience and what you can and cannot customize in the [Webflow Ecommerce checkout guide](/blog/webflow-ecommerce-checkout) — worth reading if you are unsure which path to take.
+I covered the Webflow checkout experience and what you can and cannot customize in the [Webflow Ecommerce checkout guide](/blog/webflow-ecommerce-checkout/) — worth reading if you are unsure which path to take.
 
 <Callout type="tip">
 If you are selling one or two products and want a clean "buy now" experience, a Stripe Payment Link is genuinely the fastest option: generate it in your Stripe dashboard, embed the button with Stripe's script tag, and you have a working payment flow in under 30 minutes. No backend required. For a catalog store with cart and inventory management, stick with Webflow's native checkout.
@@ -146,7 +146,7 @@ export default {
 
 Deploy this to Cloudflare Workers, add your `STRIPE_WEBHOOK_SECRET` and `WEBFLOW_API_TOKEN` as Worker secrets, and point Stripe at the Worker URL. Stripe will verify delivery and retry automatically on failure.
 
-The same pattern applies to any post-purchase action you want to automate: update a CRM record, add the customer to a mailing list, trigger a fulfillment API. I use a similar webhook-to-API pattern in HubSpot integrations — the architecture is nearly identical, which I covered in the [Webflow HubSpot integration guide](/blog/webflow-hubspot-integration).
+The same pattern applies to any post-purchase action you want to automate: update a CRM record, add the customer to a mailing list, trigger a fulfillment API. I use a similar webhook-to-API pattern in HubSpot integrations — the architecture is nearly identical, which I covered in the [Webflow HubSpot integration guide](/blog/webflow-hubspot-integration/).
 
 ## Receipts and invoicing
 

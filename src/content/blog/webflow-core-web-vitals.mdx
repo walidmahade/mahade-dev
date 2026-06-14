@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 If your Webflow Core Web Vitals are failing, the answer is almost always one of three things: an unoptimized hero image killing your LCP, a third-party script causing layout shift or interaction delay, or fonts loading in a way that shifts content. Fix those three and you move from red to green on every URL. The rest of this guide gives you the exact steps.
 
-I run these diagnostics and fixes on every client site before handoff. A Webflow site that looks great but scores 54 on mobile PageSpeed is a liability, not an asset — it ranks worse, loads slower for real users on real networks, and undermines every SEO dollar you spend. If you are starting a new Webflow project and want to get performance right from the beginning, check the full [Webflow SEO checklist](/blog/webflow-seo-checklist-2026) first so performance and SEO decisions are made together. Or [get in touch](/contact) if you want someone to audit your existing site.
+I run these diagnostics and fixes on every client site before handoff. A Webflow site that looks great but scores 54 on mobile PageSpeed is a liability, not an asset — it ranks worse, loads slower for real users on real networks, and undermines every SEO dollar you spend. If you are starting a new Webflow project and want to get performance right from the beginning, check the full [Webflow SEO checklist](/blog/webflow-seo-checklist-2026/) first so performance and SEO decisions are made together. Or [get in touch](/contact/) if you want someone to audit your existing site.
 
 ## What Google actually measures in 2026 (LCP, CLS, INP)
 
@@ -43,7 +43,7 @@ A URL only gets the "Good" Core Web Vitals status if it passes all three thresho
 
 INP replaced FID (First Input Delay) as an official Core Web Vital in March 2024. FID only measured the delay before the browser started processing an event; INP measures the full visual response — from when a user taps or clicks to when the next frame paints. It's a harder bar, and Webflow sites with heavy third-party scripts routinely fail it.
 
-The schema layer matters here too: once your vitals are passing, structured data helps Google understand what's on the page. If you haven't set up [Webflow schema markup](/blog/webflow-schema-markup), do that after you sort the performance foundation — they compound.
+The schema layer matters here too: once your vitals are passing, structured data helps Google understand what's on the page. If you haven't set up [Webflow schema markup](/blog/webflow-schema-markup/), do that after you sort the performance foundation — they compound.
 
 ## LCP: fixing the largest contentful paint
 
@@ -63,11 +63,11 @@ Here is the fix sequence for a slow LCP hero image:
 
 **Step 4: Disable lazy loading on the hero.** Webflow applies lazy loading to images by default in many templates. The hero image should never be lazy loaded — it is above the fold and the browser needs it immediately. In the Image element settings, confirm lazy loading is off for this specific image.
 
-For a deeper breakdown of image compression workflows for Webflow, [Webflow image optimization](/blog/webflow-image-optimization) covers the full pipeline including responsive images, CDN delivery, and background images (which require a different approach since `fetchpriority` doesn't apply to CSS backgrounds).
+For a deeper breakdown of image compression workflows for Webflow, [Webflow image optimization](/blog/webflow-image-optimization/) covers the full pipeline including responsive images, CDN delivery, and background images (which require a different approach since `fetchpriority` doesn't apply to CSS backgrounds).
 
 The `preload` tag is another lever for LCP. If your LCP element is a background image set via CSS — which happens with full-bleed hero sections using a background-image embed — you need to add a `<link rel="preload" as="image" href="...">` in the `<head>` via a custom code embed in Webflow's page settings. Webflow can't add this automatically for CSS backgrounds, so it has to be done manually.
 
-For below-the-fold images, the opposite applies: [Webflow lazy loading](/blog/webflow-lazy-loading) explains how to ensure proper lazy load behavior for images lower on the page, which reduces the total bytes the browser downloads on first load and indirectly helps LCP by reducing network competition.
+For below-the-fold images, the opposite applies: [Webflow lazy loading](/blog/webflow-lazy-loading/) explains how to ensure proper lazy load behavior for images lower on the page, which reduces the total bytes the browser downloads on first load and indirectly helps LCP by reducing network competition.
 
 ## CLS: eliminating layout shift on Webflow pages
 
@@ -103,7 +103,7 @@ Every third-party script that runs in the main thread competes with your interac
 
 These are the changes I make before handing off any Webflow build. Some are minutes of work; a few require thirty minutes of careful testing. Together they reliably push a Webflow site from the 55–70 Lighthouse range into the 85–95 range on mobile.
 
-1. **Optimize and re-upload all hero and above-the-fold images as WebP.** Convert everything in the first viewport to WebP at quality 82, sized to 1920px max width. Set `fetchpriority="high"` on the primary hero image via a custom attribute. This single change accounts for the majority of LCP improvement on almost every site I've worked on. Detailed workflow at [Webflow site slow](/blog/webflow-site-slow).
+1. **Optimize and re-upload all hero and above-the-fold images as WebP.** Convert everything in the first viewport to WebP at quality 82, sized to 1920px max width. Set `fetchpriority="high"` on the primary hero image via a custom attribute. This single change accounts for the majority of LCP improvement on almost every site I've worked on. Detailed workflow at [Webflow site slow](/blog/webflow-site-slow/).
 
 2. **Disable lazy loading on above-the-fold images.** Webflow applies lazy loading broadly. Any image visible on first load without scrolling should have lazy loading disabled. Images below the fold should have it enabled. Check every breakpoint — an image that's below the fold on desktop may be above the fold on mobile.
 

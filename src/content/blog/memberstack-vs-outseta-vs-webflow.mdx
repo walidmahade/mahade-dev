@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The Memberstack vs Outseta question comes up on almost every gated-content project I scope, and the answer is usually settled in the first ten minutes — once you've answered whether the site needs billing, how many members you expect, and whether you want to replace your CRM and email tool at the same time. The short version: Webflow Memberships for free or manually managed gating under 500 users, Memberstack for paid subscriptions and clean user auth, Outseta when you want one platform to replace three tools. Everything else is implementation details.
 
-I've shipped gated sites across all three platforms in the last two years. The one I reach for changes with the brief, not with personal loyalty. If you're already scoping a project and want a second opinion before committing to a stack, [get in touch](/contact) — this is exactly the conversation I find most useful to have early.
+I've shipped gated sites across all three platforms in the last two years. The one I reach for changes with the brief, not with personal loyalty. If you're already scoping a project and want a second opinion before committing to a stack, [get in touch](/contact/) — this is exactly the conversation I find most useful to have early.
 
 ## One-line verdict per use case
 
@@ -41,11 +41,11 @@ Five scenarios, one recommendation each. If your situation maps cleanly to one o
 | Membership site replacing HubSpot + Mailchimp | Outseta | Bundles email, CRM, and billing in one platform |
 | Online course with gated lessons | Memberstack | Webflow-native UX, per-content access control, tested at scale |
 
-For more on the course use case specifically, the [webflow-gated-course](/blog/webflow-gated-course) post walks through a full implementation.
+For more on the course use case specifically, the [webflow-gated-course](/blog/webflow-gated-course/) post walks through a full implementation.
 
 ## Webflow Memberships: strengths and ceilings
 
-Webflow Memberships is genuinely good at one thing: gating content for a small, manually managed user base where billing is handled outside the platform or not at all. I covered this in full in the [Webflow Memberships review](/blog/webflow-memberships-review), but the relevant points for a comparison are these.
+Webflow Memberships is genuinely good at one thing: gating content for a small, manually managed user base where billing is handled outside the platform or not at all. I covered this in full in the [Webflow Memberships review](/blog/webflow-memberships-review/), but the relevant points for a comparison are these.
 
 The strengths are real. The login and signup pages are native Webflow Designer pages, not external redirects — you style them like any other page and they match your brand without a line of custom CSS. CMS item-level gating is cleaner than anything Memberstack or Outseta offers natively: you can gate individual collection items, not just pages, which matters for gated resource libraries and partial content archives. And because it's a Webflow-native feature, there's no JavaScript snippet loading time between page load and authentication check — session state is available immediately.
 
@@ -71,7 +71,7 @@ For the course use case specifically, Memberstack's per-content access control p
 
 Outseta's product positioning is fundamentally different from the other two. Memberstack and Webflow Memberships are membership layers you add to your existing stack. Outseta is a replacement for your stack — specifically, for the combination of a CRM, an email marketing tool, a help desk, and a membership/billing platform.
 
-The core offering bundles subscription billing (via Stripe), a lightweight CRM, email marketing with basic automation, a help desk / live chat widget, and membership access control, all under one platform and one monthly fee. For a small SaaS or membership business that would otherwise be paying for HubSpot Starter, Mailchimp, Intercom, and Memberstack separately, the consolidation can remove significant tool overhead. The [Webflow HubSpot integration](/blog/webflow-hubspot-integration) post gives a sense of how much plumbing a CRM integration normally requires — Outseta removes that entire category of work.
+The core offering bundles subscription billing (via Stripe), a lightweight CRM, email marketing with basic automation, a help desk / live chat widget, and membership access control, all under one platform and one monthly fee. For a small SaaS or membership business that would otherwise be paying for HubSpot Starter, Mailchimp, Intercom, and Memberstack separately, the consolidation can remove significant tool overhead. The [Webflow HubSpot integration](/blog/webflow-hubspot-integration/) post gives a sense of how much plumbing a CRM integration normally requires — Outseta removes that entire category of work.
 
 The Webflow integration is solid but slightly heavier than Memberstack. Outseta's login and checkout flows use an iframe or overlay widget that loads Outseta's hosted UI into your Webflow site. The UX is reasonably clean, but it's visually distinct from a Memberstack modal that can be styled to match your Webflow design system. If brand consistency on the auth flow is a priority, Memberstack wins narrowly. If consolidating four tools into one is the priority, Outseta's slightly heavier auth UX is an easy tradeoff.
 
@@ -134,7 +134,7 @@ If the one-line verdicts in section one didn't land a clear answer, this matrix 
 There's a hybrid pattern that works well for content-heavy sites that want to keep free members on Webflow Memberships while running paid tiers through Memberstack. Keep your free access group in Webflow Memberships — it costs nothing and is native. For paid tiers, use Memberstack exclusively. The two platforms can coexist on the same Webflow site because Memberstack adds its auth layer via JS without touching the Webflow Memberships configuration. You avoid Memberstack's per-member cost for free users while getting its full billing suite for the tiers that generate revenue. The implementation takes about a day to wire correctly, but the ongoing economics are favorable for sites with large free audiences and smaller paid cohorts.
 </Callout>
 
-The real deciding question is whether you're building a membership product or a gated content layer. A gated content layer needs access control and nothing else — that's Webflow Memberships, and the native integration justifies it. A membership product needs billing, user profiles, onboarding flows, and subscription management — that's Memberstack, unless you also need a CRM and email tool, in which case it's Outseta. The tools are different enough that choosing the wrong one at the start isn't a styling decision you can fix later. It's a rebuild. If you're unsure which side of that line your project sits on, [get in touch](/contact) — scoping the membership requirements before choosing the platform is exactly the kind of problem where an early conversation saves a significant amount of later engineering time.
+The real deciding question is whether you're building a membership product or a gated content layer. A gated content layer needs access control and nothing else — that's Webflow Memberships, and the native integration justifies it. A membership product needs billing, user profiles, onboarding flows, and subscription management — that's Memberstack, unless you also need a CRM and email tool, in which case it's Outseta. The tools are different enough that choosing the wrong one at the start isn't a styling decision you can fix later. It's a rebuild. If you're unsure which side of that line your project sits on, [get in touch](/contact/) — scoping the membership requirements before choosing the platform is exactly the kind of problem where an early conversation saves a significant amount of later engineering time.
 
 <FaqSchema items={frontmatter.faq} />
 

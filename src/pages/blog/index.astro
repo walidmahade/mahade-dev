@@ -16,7 +16,7 @@ const formatDate = (d: Date) =>
 ---
 <Layout
   title="Blog — Webflow, SEO, and freelance notes | Mahade Walid"
-  description="Notes on Webflow development, SEO, performance, and the business of freelance work."
+  description="Practical notes on Webflow development, technical SEO, Core Web Vitals, and the business of freelancing — written from real client builds, not theory."
 >
   <Section size="page-head" tone="paper">
     <Container>
@@ -39,7 +39,7 @@ const formatDate = (d: Date) =>
           {posts.map((post) => (
             <li>
               <a
-                href={`/blog/${post.id}`}
+                href={`/blog/${post.id}/`}
                 class="group block overflow-hidden rounded-xl border border-line bg-paper hover:border-line-strong hover:-translate-y-0.5 transition-all h-full flex flex-col"
               >
                 {post.data.heroImage && (

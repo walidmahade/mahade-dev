@@ -61,6 +61,11 @@
   text-transform: uppercase;
 }
 
+/* Prose rules live in the `components` layer so that Tailwind utilities (which
+   sit in the later `utilities` layer) always win on nested components — buttons,
+   cards, callouts, CTAs — rendered inside .prose-page. Raw markdown elements
+   carry no utilities, so they still pick up these prose styles. */
+@layer components {
 .prose-page {
   max-width: 65ch;
   color: var(--color-ink);
@@ -255,4 +260,5 @@
   border: 0;
   border-top: 1px solid var(--color-line);
   margin: 2.5rem 0;
+}
 }

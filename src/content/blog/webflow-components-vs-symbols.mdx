@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The webflow components vs symbols question has a short answer: use Components for almost everything that repeats with any variation, Symbols only for site chrome that never changes, and classes to handle styling everywhere. That covers 90% of the decisions. This guide covers the other 10% — where the lines blur, where each tool breaks down, and the exact rules I follow so I don't have to re-decide the same question mid-project.
 
-If you're inheriting a site that was built before Components existed, it's full of Symbols doing things Symbols were never designed to handle well. This guide will help you figure out what to migrate, what to leave, and how to do it without breaking live instances. [Reach out](/contact) if you need someone to work through this on an existing project.
+If you're inheriting a site that was built before Components existed, it's full of Symbols doing things Symbols were never designed to handle well. This guide will help you figure out what to migrate, what to leave, and how to do it without breaking live instances. [Reach out](/contact/) if you need someone to work through this on an existing project.
 
 ## The short answer: a decision tree
 
@@ -43,7 +43,7 @@ Before getting into how each tool works, here's the flowchart collapsed into a t
 
 The last row matters. Over-componentizing is as costly as under-componentizing — you end up with a panel full of single-use Components nobody can find and a source file that bloats publish time for no reason.
 
-Coming from Figma? The structures Figma calls components almost always become Webflow Components — not Symbols, not raw HTML. Covered in detail in [Figma to Webflow handoff](/blog/figma-to-webflow-handoff).
+Coming from Figma? The structures Figma calls components almost always become Webflow Components — not Symbols, not raw HTML. Covered in detail in [Figma to Webflow handoff](/blog/figma-to-webflow-handoff/).
 
 ## Classes: the foundation
 
@@ -51,7 +51,7 @@ Every Webflow site runs on classes whether you're thinking about them or not. Cl
 
 The mistake I see most often: developers who don't name classes deliberately end up with a panel full of `div-block-47`, `div-block-48-copy`, and `div-block-48-copy-2`. Six months later, no one can tell what those do or what changes if you edit them. Good class naming is not a style preference — it's what lets you maintain a Webflow site after you've shipped it.
 
-I use a loose utility-first naming convention: layout classes describe structure (`flex-row`, `grid-3col`), component classes describe element and variant (`card`, `card--featured`, `btn-primary`), utility classes handle one-off overrides (`mt-24`, `text-sm`). The important thing is consistency, not which convention you pick. The [Auto Layout to Webflow Flex translation](/blog/auto-layout-to-webflow-flex) post shows this in practice.
+I use a loose utility-first naming convention: layout classes describe structure (`flex-row`, `grid-3col`), component classes describe element and variant (`card`, `card--featured`, `btn-primary`), utility classes handle one-off overrides (`mt-24`, `text-sm`). The important thing is consistency, not which convention you pick. The [Auto Layout to Webflow Flex translation](/blog/auto-layout-to-webflow-flex/) post shows this in practice.
 
 Where classes fall short: anything that involves reusing structure, not just style. If you need the same card layout — image, heading, tag, paragraph, link — on five different pages, creating classes for each element and rebuilding the HTML every time is error-prone and unsustainable. That's the job of Symbols and Components.
 
@@ -106,7 +106,7 @@ Text properties cover the most common use case by a wide margin. You set a Text 
 Name properties the way a content editor would talk about the content, not the way a developer would name a CSS variable. `Card Headline` and `Card Body Copy` are better than `heading-text` and `body`. `Show Author Badge` beats `visibility-toggle-1`. The names show up in the right panel for everyone who edits instances — make them self-explanatory.
 </Callout>
 
-The connection to CMS is worth naming here: properties let you bridge Components and CMS data. When you place a Component inside a CMS Collection template, you can bind a Component property to a CMS field. The card title comes from the CMS `Title` field, the image from the CMS `Hero Image` field. The Component handles the layout and styling; the CMS handles the data. That boundary — Component for design structure, CMS for content — is the cleanest architecture for any data-driven page. I cover how to think about that boundary in detail in [Webflow CMS structure](/blog/webflow-cms-structure).
+The connection to CMS is worth naming here: properties let you bridge Components and CMS data. When you place a Component inside a CMS Collection template, you can bind a Component property to a CMS field. The card title comes from the CMS `Title` field, the image from the CMS `Hero Image` field. The Component handles the layout and styling; the CMS handles the data. That boundary — Component for design structure, CMS for content — is the cleanest architecture for any data-driven page. I cover how to think about that boundary in detail in [Webflow CMS structure](/blog/webflow-cms-structure/).
 
 ## Component overrides and when they break
 
@@ -148,7 +148,7 @@ Decisions I'd re-make on every project if I didn't write them down.
 6. **Nest Components intentionally.** Button inside Card is fine. Section inside Section is usually a sign the Component boundary is wrong. Nesting more than 2 levels deep becomes hard to maintain quickly.
 7. **Treat Component source restructures as breaking changes.** Audit instances before and after any structural edit. Publish to staging, check affected pages, then push to production. Same rigor as a database migration.
 
-If you're working from Figma files, the [Figma to Webflow handoff](/blog/figma-to-webflow-handoff) guide covers how to decide at the handoff stage which Figma components become Webflow Components, which become Symbols, and which are just classes.
+If you're working from Figma files, the [Figma to Webflow handoff](/blog/figma-to-webflow-handoff/) guide covers how to decide at the handoff stage which Figma components become Webflow Components, which become Symbols, and which are just classes.
 
 ---
 

@@ -83,7 +83,7 @@ export default function OgPreview() {
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <Card label="Twitter / X summary_large_image">
           <div className="overflow-hidden rounded-2xl border border-line bg-white">
-            <img src={imageUrl} alt="" className="aspect-[1200/630] w-full object-cover" />
+            <img src={imageUrl} alt="Open Graph image preview on Twitter / X" className="aspect-[1200/630] w-full object-cover" />
             <div className="p-3">
               <p className="text-[13px] text-[#536471]">{domain}</p>
               <p className="mt-1 text-[15px] font-medium leading-tight text-[#0f1419] line-clamp-2">
@@ -95,7 +95,7 @@ export default function OgPreview() {
 
         <Card label="LinkedIn">
           <div className="overflow-hidden rounded-md border border-[#e0e0e0] bg-white">
-            <img src={imageUrl} alt="" className="aspect-[1200/630] w-full object-cover" />
+            <img src={imageUrl} alt="Open Graph image preview on LinkedIn" className="aspect-[1200/630] w-full object-cover" />
             <div className="p-3 bg-[#eef3f8]">
               <p className="text-[14px] font-semibold leading-tight text-[#000000de] line-clamp-2">
                 {title}
@@ -110,13 +110,13 @@ export default function OgPreview() {
             <p className="text-[12px] text-ink-muted">{domain}</p>
             <p className="mt-1 text-[14px] font-semibold text-ink">{title}</p>
             <p className="mt-1 text-[13px] text-ink-muted line-clamp-2">{description}</p>
-            <img src={imageUrl} alt="" className="mt-3 max-h-40 rounded object-cover" />
+            <img src={imageUrl} alt="Open Graph image preview in a Slack / Discord unfurl" className="mt-3 max-h-40 rounded object-cover" />
           </div>
         </Card>
 
         <Card label="Facebook">
           <div className="overflow-hidden rounded-md border border-[#dadde1] bg-white">
-            <img src={imageUrl} alt="" className="aspect-[1200/630] w-full object-cover" />
+            <img src={imageUrl} alt="Open Graph image preview on Facebook" className="aspect-[1200/630] w-full object-cover" />
             <div className="p-3 bg-[#f2f3f5]">
               <p className="text-[12px] uppercase text-[#606770]">{domain}</p>
               <p className="mt-1 text-[16px] font-semibold leading-tight text-[#1d2129] line-clamp-2">

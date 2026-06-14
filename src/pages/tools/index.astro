@@ -41,7 +41,7 @@ const categories = [...new Set(tools.map((t) => t.category))];
           <div class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {list.map((tool) => (
               <a
-                href={`/tools/${tool.slug}`}
+                href={`/tools/${tool.slug}/`}
                 class="group rounded-xl border border-line bg-paper p-6 hover:border-line-strong hover:-translate-y-0.5 transition-all"
               >
                 <div class="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-brand-soft text-brand">

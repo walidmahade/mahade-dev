@@ -27,11 +27,11 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow for SaaS marketing sites is the right call — not for every company, but for the overwhelming majority of teams building their first or second marketing site under 100 pages. I've built these sites for SaaS companies at seed, Series A, and growth stage. The platform fits the use case better than WordPress in almost every dimension that matters for a marketing-driven SaaS. Here's the full setup I recommend, from page structure to integrations.
 
-If you already know what you need and want to talk scope, [get in touch](/contact). If you're still evaluating whether Webflow is right for your company, read on.
+If you already know what you need and want to talk scope, [get in touch](/contact/). If you're still evaluating whether Webflow is right for your company, read on.
 
 ## Why Webflow fits SaaS better than WordPress
 
-The comparison deserves a direct answer before we get into setup. I wrote the full breakdown in [Webflow vs WordPress in 2026](/blog/webflow-vs-wordpress-2026), but the SaaS-specific version is this:
+The comparison deserves a direct answer before we get into setup. I wrote the full breakdown in [Webflow vs WordPress in 2026](/blog/webflow-vs-wordpress-2026/), but the SaaS-specific version is this:
 
 SaaS marketing sites have a specific profile: 20–60 pages, heavy on features and use cases, a pricing page that's A/B tested every quarter, customer stories that need to be publishable by a non-developer, and a blog that needs to perform on Core Web Vitals without a DevOps budget. WordPress can do all of that — but it requires plugin stacks, hosting decisions, security maintenance, and constant performance tuning. Webflow handles it natively.
 
@@ -66,7 +66,7 @@ The lean structure that consistently performs:
 
 That's 8 static pages and 4 CMS templates. The homepage does the heavy lifting — brand, value prop, proof, and a clear path to pricing or signup. Feature pages handle the "how does it work" question for each key capability. Use cases, customer stories, and integrations are CMS-driven because they scale with the business without requiring a developer to add each new entry.
 
-Everything beyond this list should justify itself against a clear goal before it gets built. A "Partners" page, a "Security" page, a "Resources hub" — each of these earns its way in or it doesn't ship in v1. The teams I've worked with who ship tight sites first and expand later outperform the ones who try to launch complete. My [recent projects](/work) include several examples of this phased approach done well.
+Everything beyond this list should justify itself against a clear goal before it gets built. A "Partners" page, a "Security" page, a "Resources hub" — each of these earns its way in or it doesn't ship in v1. The teams I've worked with who ship tight sites first and expand later outperform the ones who try to launch complete. My [recent projects](/work/) include several examples of this phased approach done well.
 
 The CMS collections are where the real leverage lives, and they deserve their own section.
 
@@ -88,7 +88,7 @@ For a SaaS site, the four collections I almost always build:
 
 **Changelog collection.** Optional but worth building if the product ships frequently. Fields: date, version, type (feature/fix/improvement), headline, body. The changelog index becomes a credibility signal — an active changelog tells prospects the product is being worked on. It also gives the marketing team a publish target for every release.
 
-I go deep on collection architecture decisions in [Webflow CMS structure](/blog/webflow-cms-structure), including reference field patterns, multi-reference vs. option fields, and the collection limit ceiling you'll want to plan around before you hit it.
+I go deep on collection architecture decisions in [Webflow CMS structure](/blog/webflow-cms-structure/), including reference field patterns, multi-reference vs. option fields, and the collection limit ceiling you'll want to plan around before you hit it.
 
 ## Pricing page patterns
 
@@ -106,7 +106,7 @@ The three pricing page patterns I've built most often:
 
 The patterns I avoid: hiding prices entirely ("Contact us for pricing" with no anchoring), more than 4 tiers (cognitive overload), and feature matrices with 30+ rows (no one reads them). If your product has a free tier, make it a column — don't hide it in a footnote.
 
-For conversion rate patterns on pricing pages, I did a teardown with worked examples in [Webflow landing page teardown](/blog/webflow-landing-page-teardown) that applies directly here.
+For conversion rate patterns on pricing pages, I did a teardown with worked examples in [Webflow landing page teardown](/blog/webflow-landing-page-teardown/) that applies directly here.
 
 ## Customer story page
 
@@ -152,7 +152,7 @@ The one exception: gated content. If you want to gate a whitepaper or a ROI calc
 
 Five integrations matter for a SaaS marketing site. Wire them in week 1 of the build, not at launch.
 
-[HubSpot and Webflow](/blog/webflow-hubspot-integration) is the most common integration I build and the one with the most failure modes. The standard setup: HubSpot tracking script in the site-wide `<head>`, native Webflow forms replaced with HubSpot-embedded forms (or Webflow forms with a Zapier → HubSpot Zap). Lead routing, deal stages, and email sequences live entirely in HubSpot. The Webflow side just sends the form data.
+[HubSpot and Webflow](/blog/webflow-hubspot-integration/) is the most common integration I build and the one with the most failure modes. The standard setup: HubSpot tracking script in the site-wide `<head>`, native Webflow forms replaced with HubSpot-embedded forms (or Webflow forms with a Zapier → HubSpot Zap). Lead routing, deal stages, and email sequences live entirely in HubSpot. The Webflow side just sends the form data.
 
 **Segment** goes in the `<head>` as a custom code embed. Every CTA click, form submission, and page view goes through Segment's analytics.js and routes to your downstream tools — Amplitude, Mixpanel, Customer.io, wherever your data lives. Wire Segment before you wire any other analytics tool. Retrofitting attribution data after launch is painful and usually incomplete.
 
@@ -189,7 +189,7 @@ The build is done. Here's what the last two weeks before launch and the first mo
 
 The handoff package I deliver with every SaaS build: a recorded walkthrough of the Webflow Editor for the content team, documented CMS collection fields with descriptions, a style guide page inside the Webflow project showing all components and their class names, and a written record of every custom embed and third-party script. Whoever comes after me shouldn't need a call to maintain the site.
 
-If you're evaluating who to bring on for this build, [how to hire a Webflow developer in 2026](/blog/hire-webflow-developer-2026) covers exactly what to look for and what to pay. Or if you want to talk about your specific SaaS site, [the contact page](/contact) is the place to start.
+If you're evaluating who to bring on for this build, [how to hire a Webflow developer in 2026](/blog/hire-webflow-developer-2026/) covers exactly what to look for and what to pay. Or if you want to talk about your specific SaaS site, [the contact page](/contact/) is the place to start.
 
 <FaqSchema items={frontmatter.faq} />
 

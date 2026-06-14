@@ -27,11 +27,11 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 The figma to webflow handoff is where most agency projects quietly derail. Not in the kick-off. Not during design reviews. After the design is "approved" and the developer opens a Figma file that looks beautiful, is completely unbuilt, and answers almost none of the questions the build actually needs answered.
 
-I've received hundreds of Figma files across [white-label Webflow development](/blog/white-label-webflow-development) engagements and direct client work. The worst ones add two to three weeks of back-and-forth before a single class gets named in Webflow. The best ones let me open a browser tab, look at the design, and start building immediately — because every structural decision has been made and documented.
+I've received hundreds of Figma files across [white-label Webflow development](/blog/white-label-webflow-development/) engagements and direct client work. The worst ones add two to three weeks of back-and-forth before a single class gets named in Webflow. The best ones let me open a browser tab, look at the design, and start building immediately — because every structural decision has been made and documented.
 
 This post is the spec I send back to agencies before we start. If you share it with your design team before the next handoff, I'll spend less time asking questions and more time building. That's better for everyone, especially the client.
 
-If you want someone who can work from a great handoff and ship fast, [get in touch](/contact).
+If you want someone who can work from a great handoff and ship fast, [get in touch](/contact/).
 
 ## Why handoff is where most projects blow up
 
@@ -41,9 +41,9 @@ A Figma file approved in a client presentation answers the question: does this l
 
 Those are build questions, and the developer needs answers to all of them before writing a single line of CSS.
 
-The projects I've seen in my [work](/work) that launch cleanly and on schedule share one thing: a designer who treated the Figma file as a specification document, not a presentation asset. The difference in developer hours is not small. A complete handoff spec reduces clarification time by roughly half on a 10-page site. On a 25-page site with a CMS, it can eliminate a full week of revision cycles.
+The projects I've seen in my [work](/work/) that launch cleanly and on schedule share one thing: a designer who treated the Figma file as a specification document, not a presentation asset. The difference in developer hours is not small. A complete handoff spec reduces clarification time by roughly half on a 10-page site. On a 25-page site with a CMS, it can eliminate a full week of revision cycles.
 
-[White-label Webflow development](/blog/white-label-webflow-development) projects make this especially sharp — when I'm one step removed from the end client, there's no quick Slack thread to resolve ambiguity. The file has to be complete.
+[White-label Webflow development](/blog/white-label-webflow-development/) projects make this especially sharp — when I'm one step removed from the end client, there's no quick Slack thread to resolve ambiguity. The file has to be complete.
 
 ## File structure: pages, frames, naming
 
@@ -69,7 +69,7 @@ This is the single biggest technical skill gap between designers who make Webflo
 
 Webflow doesn't know what a free-floating absolute-positioned box is supposed to do at 600px wide. Webflow does know exactly what to do with a flex container with a gap of 24px that wraps at its content's minimum width. Auto Layout in Figma maps directly to that mental model. Frames with no Auto Layout map to nothing — they're artboard decorations that force the developer to reverse-engineer the layout intent.
 
-I've written a full guide on [Auto Layout to Webflow Flex](/blog/auto-layout-to-webflow-flex) if your design team needs the detailed mapping. The short version: every section, every card grid, every navigation row, every button — wrap it in Auto Layout. Set the direction (horizontal/vertical), the gap, the padding, and the alignment. That's your CSS spec. The developer doesn't have to guess.
+I've written a full guide on [Auto Layout to Webflow Flex](/blog/auto-layout-to-webflow-flex/) if your design team needs the detailed mapping. The short version: every section, every card grid, every navigation row, every button — wrap it in Auto Layout. Set the direction (horizontal/vertical), the gap, the padding, and the alignment. That's your CSS spec. The developer doesn't have to guess.
 
 The narrow exceptions: hero illustrations with overlapping elements, decorative background shapes, and cases where absolute positioning is genuinely intentional (a badge overlapping a card corner, a floating tooltip). For those, a note in the specs frame explaining the intended behavior is worth more than any amount of visual guesswork.
 
@@ -91,7 +91,7 @@ What doesn't map cleanly:
 - **Complex overlays and modals.** Figma shows the visual output. Webflow needs to know the trigger, the animation, the overlay behavior, and what element receives focus on open. Document this in the interactions spec.
 - **Figma's hidden layers.** A collapsed layer in Figma that represents a "mobile-only" element is invisible to me unless it's in a breakpoint frame or called out explicitly. Don't hide content in Figma and expect the developer to find it.
 
-For a deeper look at how Webflow's own component system works and where the legacy symbols model still applies, [Webflow components vs symbols](/blog/webflow-components-vs-symbols) covers the evolution and the practical implications for CMS-driven designs.
+For a deeper look at how Webflow's own component system works and where the legacy symbols model still applies, [Webflow components vs symbols](/blog/webflow-components-vs-symbols/) covers the evolution and the practical implications for CMS-driven designs.
 
 ## Breakpoints: 4 vs 5 and where Webflow disagrees
 
@@ -190,15 +190,15 @@ This is the checklist I send to design teams before every project starts. If I g
 11. **Asset exports** — SVG icons, logo variants (dark, light, favicon), and any decorative illustrations as named, exported files. Not embedded in frames.
 12. **Copy doc or real text in frames** — all body copy, headlines, CTAs, and form labels written. Page titles and meta descriptions included if SEO matters.
 
-The [Webflow handoff checklist](/blog/webflow-handoff-checklist) has the full developer-side version of this list — what I verify on my end before building starts. Cross-referencing both sides closes almost every gap.
+The [Webflow handoff checklist](/blog/webflow-handoff-checklist/) has the full developer-side version of this list — what I verify on my end before building starts. Cross-referencing both sides closes almost every gap.
 
-For [white-label Webflow development](/blog/white-label-webflow-development) projects specifically, I'd add a thirteenth item: brand guidelines or a link to the existing style guide. When I'm building for an agency's client without a direct line to that client, the brand constraints need to be in the file.
+For [white-label Webflow development](/blog/white-label-webflow-development/) projects specifically, I'd add a thirteenth item: brand guidelines or a link to the existing style guide. When I'm building for an agency's client without a direct line to that client, the brand constraints need to be in the file.
 
 ---
 
 A complete handoff spec is 2–4 hours of designer time on a 10-page site. That investment returns 6–12 hours of developer back-and-forth that never happens. The math is obvious — the discipline to actually do it before the build starts is the only variable.
 
-Send this post to your design lead before the next project kicks off. Or [get in touch](/contact) and let's build something where the handoff is already sorted.
+Send this post to your design lead before the next project kicks off. Or [get in touch](/contact/) and let's build something where the handoff is already sorted.
 
 <FaqSchema items={frontmatter.faq} />
 

@@ -11,6 +11,7 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   site: 'https://mahade.dev',
   output: 'static',
+  trailingSlash: 'always',
   adapter: cloudflare(),
   integrations: [react(), sitemap({
     filter: (page) => !page.includes('/404'),

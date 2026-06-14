@@ -5,10 +5,10 @@ import { site } from '@/data/site';
 
 // Services is rendered as a <ServicesMenu /> megamenu between Work and Tools.
 const trailingNav = [
-  { label: 'Tools', href: '/tools' },
-  { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Tools', href: '/tools/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'Contact', href: '/contact/' },
 ];
 
 const pathname = Astro.url.pathname;
@@ -34,10 +34,10 @@ const isActive = (href: string) =>
         <ul class="hidden md:flex items-center gap-8">
           <li>
             <a
-              href="/work"
+              href="/work/"
               class:list={[
                 'text-sm transition-colors',
-                isActive('/work')
+                isActive('/work/')
                   ? 'text-ink font-medium'
                   : 'text-ink-muted hover:text-ink',
               ]}

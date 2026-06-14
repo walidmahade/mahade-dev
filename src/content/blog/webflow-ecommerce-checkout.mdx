@@ -1,5 +1,5 @@
 ---
-title: "Webflow Ecommerce Checkout: What You Can Customize (and What You Can't)"
+title: "Webflow Ecommerce Checkout: What You Can (and Can't) Customize"
 description: "The exact set of customizations Webflow allows on the Ecommerce checkout — and the six things you'll hit walls on."
 pubDate: 2026-06-03
 tags: ["ecommerce", "checkout"]
@@ -28,7 +28,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow checkout customization has one real answer: you can control nearly everything visual and most of the copy, but the core transaction structure — fields, step sequence, URL, and payment flow — is fixed. If you go in understanding that boundary, you can build a checkout that converts well. If you go in expecting Shopify-level extensibility, you will hit walls within the first hour. I've shipped this checkout on a dozen stores, and it's the one part clients are most surprised by — they assume the page they see in the Designer is as open as every other Webflow page. It isn't.
 
-This post maps exactly what falls on each side of that line, which Custom Code tricks are safe, and when the right move is to replace Webflow's checkout altogether. If you're still evaluating whether Webflow Ecommerce fits your store at all, start with the [Webflow Ecommerce overview for 2026](/blog/webflow-ecommerce-2026) first, then come back here for the checkout detail. And if you already know you need a custom checkout built properly, [get in touch](/contact).
+This post maps exactly what falls on each side of that line, which Custom Code tricks are safe, and when the right move is to replace Webflow's checkout altogether. If you're still evaluating whether Webflow Ecommerce fits your store at all, start with the [Webflow Ecommerce overview for 2026](/blog/webflow-ecommerce-2026/) first, then come back here for the checkout detail. And if you already know you need a custom checkout built properly, [get in touch](/contact/).
 
 ## The checkout architecture
 
@@ -117,7 +117,7 @@ This appends after the element without touching Stripe's iframe, so it survives 
 
 **Unsafe: attempting to restyle or manipulate the Stripe card element.** The card number, expiry, and CVC fields render inside a cross-origin iframe injected by Stripe. They are invisible to your JavaScript and your CSS. Any tutorial that claims to have styled them is either outdated or doing something that will break silently on the next Stripe.js update.
 
-For the validation side of Custom Code, the [Webflow form validation guide](/blog/webflow-form-validation) covers safe patterns for real-time field feedback that apply to checkout as well as standard forms.
+For the validation side of Custom Code, the [Webflow form validation guide](/blog/webflow-form-validation/) covers safe patterns for real-time field feedback that apply to checkout as well as standard forms.
 
 ## Mobile checkout UX
 
@@ -147,7 +147,7 @@ The honest answer: Webflow's checkout is good enough for a straightforward DTC s
 
 You should replace it when your requirements hit the locked list. Specifically:
 
-**Multi-step UX.** If your product complexity or conversion data shows that users need a guided step-by-step flow with progress indicators and back-navigation between steps, Webflow's single-page checkout will feel abrupt. The fix is a Stripe Checkout session (hosted, multi-step, handled by Stripe) or a custom checkout built in a framework with its own routing. The [Webflow Ecommerce Stripe integration guide](/blog/webflow-ecommerce-stripe) covers what that handoff looks like and where Webflow's native Stripe connection stops.
+**Multi-step UX.** If your product complexity or conversion data shows that users need a guided step-by-step flow with progress indicators and back-navigation between steps, Webflow's single-page checkout will feel abrupt. The fix is a Stripe Checkout session (hosted, multi-step, handled by Stripe) or a custom checkout built in a framework with its own routing. The [Webflow Ecommerce Stripe integration guide](/blog/webflow-ecommerce-stripe/) covers what that handoff looks like and where Webflow's native Stripe connection stops.
 
 **Subscription billing.** Webflow Ecommerce does not support recurring subscriptions natively. If you need monthly plans, usage-based billing, or trial periods, you need Stripe Billing or a subscription platform like Lemon Squeezy — neither of which integrates into Webflow's checkout. You are building a custom checkout from that point forward.
 
@@ -155,7 +155,7 @@ You should replace it when your requirements hit the locked list. Specifically:
 
 **Gift cards as a first-class primitive.** Webflow has coupon code support but no native gift card system. If gift cards are a meaningful revenue line for your store, you need a platform that manages balances, redemption, and partial-value application natively. That is not Webflow.
 
-Scope the locked list against your requirements before committing to Webflow Ecommerce for any project where checkout complexity is a real variable. The visual and copy customization is genuinely excellent. The structural rigidity is real. Know which one matters more for your store before you build — and if you need help mapping the right architecture, [reach out](/contact).
+Scope the locked list against your requirements before committing to Webflow Ecommerce for any project where checkout complexity is a real variable. The visual and copy customization is genuinely excellent. The structural rigidity is real. Know which one matters more for your store before you build — and if you need help mapping the right architecture, [reach out](/contact/).
 
 <FaqSchema items={frontmatter.faq} />
 

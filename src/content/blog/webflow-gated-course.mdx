@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Yes, you can build a webflow gated course that charges real money and feels premium — but only if you assemble the right stack and wire it correctly from the start. Webflow alone isn't a course platform. What it is: the best front-end layer available for a course where brand, design, and conversion matter more than off-the-shelf features. I've built this architecture several times now, and this is the complete picture — from CMS schema to launch checklist — so you're not reverse-engineering it mid-project.
 
-If you already know what you want to build and want a developer to do the wiring, [get in touch](/contact).
+If you already know what you want to build and want a developer to do the wiring, [get in touch](/contact/).
 
 ## The stack you actually need
 
@@ -67,11 +67,11 @@ Lesson page template: video player embed at top, transcript toggle below, resour
 
 Access control is where most gated-course builds on Webflow stumble. You have two credible options in 2026, and they suit different project types.
 
-**Webflow Memberships** is the native option — built into Webflow's hosting, no third-party dependency. You gate pages by assigning them to a Member-only access group, handle signup/login via Webflow's built-in auth flow, and collect payment through Webflow's commerce layer. It's the least-friction setup if your requirements are simple: one membership tier, no drip, no progress tracking, no advanced plan management. The ceiling is low. You cannot query member state from JavaScript without undocumented hacks, which means progress tracking and conditional UI are hard. My full take is in the [Webflow Memberships review](/blog/webflow-memberships-review).
+**Webflow Memberships** is the native option — built into Webflow's hosting, no third-party dependency. You gate pages by assigning them to a Member-only access group, handle signup/login via Webflow's built-in auth flow, and collect payment through Webflow's commerce layer. It's the least-friction setup if your requirements are simple: one membership tier, no drip, no progress tracking, no advanced plan management. The ceiling is low. You cannot query member state from JavaScript without undocumented hacks, which means progress tracking and conditional UI are hard. My full take is in the [Webflow Memberships review](/blog/webflow-memberships-review/).
 
 **Memberstack** is what I reach for on anything beyond the simplest single-tier setup. It sits on top of Webflow without replacing any of the hosting or CMS. You gate content by adding `data-ms-content` attributes, manage plans and billing from the Memberstack dashboard, and access a JavaScript API that exposes member data — plan type, custom fields, login state — so you can drive conditional UI, progress state, and drip unlocks from the client. The API surface is mature and well-documented.
 
-The comparison between Memberstack and competing tools like Outseta is worth reading if you're undecided: [Memberstack vs Outseta vs Webflow Memberships](/blog/memberstack-vs-outseta-vs-webflow) goes deep on the tradeoffs. The short version for a course: Memberstack wins if you need progress tracking or multiple tiers; Webflow Memberships wins if you want zero external dependencies and don't need custom member state.
+The comparison between Memberstack and competing tools like Outseta is worth reading if you're undecided: [Memberstack vs Outseta vs Webflow Memberships](/blog/memberstack-vs-outseta-vs-webflow/) goes deep on the tradeoffs. The short version for a course: Memberstack wins if you need progress tracking or multiple tiers; Webflow Memberships wins if you want zero external dependencies and don't need custom member state.
 
 Whichever you choose, map your membership tiers before you touch Webflow. A course with a free preview tier, a paid full-access tier, and a cohort tier needs three distinct access groups. Setting that up in Webflow or Memberstack after building the content structure takes twice as long as building it in from the start.
 
@@ -134,7 +134,7 @@ Stripe is the right payment infrastructure regardless of what membership tool yo
 
 **Direct Stripe Checkout** makes sense when you need more control over the checkout experience — custom coupon logic, upsells, multi-item carts, or order bumps. You create a Stripe Payment Link or a Checkout Session from a serverless function, redirect the student there, and on success webhook, update their Memberstack plan or Webflow Memberships access. More moving parts, more control.
 
-For the billing architecture beyond Stripe's direct integration, the [Webflow + Stripe Checkout deep-dive](/blog/webflow-ecommerce-stripe) covers the session creation, webhook handling, and access-grant flow in detail.
+For the billing architecture beyond Stripe's direct integration, the [Webflow + Stripe Checkout deep-dive](/blog/webflow-ecommerce-stripe/) covers the session creation, webhook handling, and access-grant flow in detail.
 
 Two billing decisions to make before building: one-time vs. subscription, and refund policy. One-time purchases are simpler technically (no subscription lifecycle, no dunning) and easier for students to evaluate psychologically. Subscriptions make sense for ongoing content (new lessons added monthly) or when the access model is time-limited. Set both in Stripe before you write a line of code — changing payment models after students are enrolled is painful.
 

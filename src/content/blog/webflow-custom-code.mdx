@@ -25,7 +25,7 @@ import Callout from '@/components/blog/Callout.astro';
 import CtaCard from '@/components/blog/CtaCard.astro';
 import FaqSchema from '@/components/blog/FaqSchema.astro';
 
-Webflow custom code should be a last resort, not a first instinct. The decision rule is simple: if the native Designer can do it — even imperfectly — do it there. Custom code earns its place only when Webflow's built-in toolset genuinely stops short of what the project requires. When it does, the code should be scoped as narrowly as possible, placed in exactly the right location, and documented so whoever inherits the project doesn't spend two days reverse-engineering what you built. [Get in touch](/contact) if you're mid-project and not sure which side of that line a requirement falls on.
+Webflow custom code should be a last resort, not a first instinct. The decision rule is simple: if the native Designer can do it — even imperfectly — do it there. Custom code earns its place only when Webflow's built-in toolset genuinely stops short of what the project requires. When it does, the code should be scoped as narrowly as possible, placed in exactly the right location, and documented so whoever inherits the project doesn't spend two days reverse-engineering what you built. [Get in touch](/contact/) if you're mid-project and not sure which side of that line a requirement falls on.
 
 I've built and reviewed enough Webflow sites to have strong opinions here. The pattern I see most often is not reckless custom code — it's unnecessary custom code, added because a developer was more comfortable writing JS than learning how far the Designer actually reaches. That comfort has a cost: maintenance burden, onboarding friction, and debugging surface area that didn't need to exist.
 
@@ -45,7 +45,7 @@ Webflow's native capabilities have expanded significantly over the last few year
 
 What Webflow handles natively today, with no code: scroll and hover interactions, page transitions, CMS-driven content, form collection and notification routing, basic ecommerce, dynamic page slugs, conditional visibility, and breakpoint-specific layout. That covers the overwhelming majority of marketing site requirements. If your mental model of Webflow is based on the platform as it existed in 2021, update it.
 
-Where it stops short: custom UI behavior that responds to user state in real time (multi-step logic, progressive disclosure beyond simple show/hide, dependent dropdowns), advanced animation beyond what IX2 provides (pinned scroll sequences, character-level text animation — the full picture is in [GSAP in Webflow](/blog/gsap-in-webflow)), deeply custom form UX (real-time validation, conditional field rendering, multi-page forms with session state — covered thoroughly in [Webflow form validation](/blog/webflow-form-validation)), and third-party integrations that don't have a Logic connector or Zapier hook.
+Where it stops short: custom UI behavior that responds to user state in real time (multi-step logic, progressive disclosure beyond simple show/hide, dependent dropdowns), advanced animation beyond what IX2 provides (pinned scroll sequences, character-level text animation — the full picture is in [GSAP in Webflow](/blog/gsap-in-webflow/)), deeply custom form UX (real-time validation, conditional field rendering, multi-page forms with session state — covered thoroughly in [Webflow form validation](/blog/webflow-form-validation/)), and third-party integrations that don't have a Logic connector or Zapier hook.
 
 That's where custom code lives. Not "I want the nav to behave a bit differently" — that's Interactions. "I need a multi-step application form where field 4 only shows if field 2 was answered with a specific value and the state persists across a page refresh" — that's custom code.
 
@@ -56,9 +56,9 @@ These are the use cases where I reach for it without hesitation, because the nat
 | Use case | Why custom code wins |
 |---|---|
 | GSAP scroll animations (pinning, SplitText, path drawing) | IX2 has no pin support and no character-level split. GSAP handles both in ~20 lines |
-| Structured data / JSON-LD schema | Webflow's native SEO fields don't output schema. An Embed with a `<script type="application/ld+json">` block is the only path — see [Webflow schema markup](/blog/webflow-schema-markup) |
+| Structured data / JSON-LD schema | Webflow's native SEO fields don't output schema. An Embed with a `<script type="application/ld+json">` block is the only path — see [Webflow schema markup](/blog/webflow-schema-markup/) |
 | Custom form validation with real-time feedback | Webflow's native form validation is HTML5-only, no custom error messages, no async checks. A focused validation script handles all of it without a platform swap |
-| File upload handling beyond native limits | Webflow Forms don't accept file uploads at all. Custom embed plus a signed URL flow (S3, Cloudflare R2) is the only solution — full walkthrough in [Webflow file uploads](/blog/webflow-file-uploads) |
+| File upload handling beyond native limits | Webflow Forms don't accept file uploads at all. Custom embed plus a signed URL flow (S3, Cloudflare R2) is the only solution — full walkthrough in [Webflow file uploads](/blog/webflow-file-uploads/) |
 | Third-party widget initialization (live chat, maps, booking tools) | Widgets like Intercom, Crisp, and embedded booking iframes need a script tag and often an init call. Two lines in Project Settings footer |
 | Clipboard copy, keyboard shortcuts, and micro-UX | Tiny interactions (copy-to-clipboard buttons, keyboard navigation) require ~5 lines of JS and aren't approachable any other way |
 

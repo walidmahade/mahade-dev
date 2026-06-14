@@ -27,9 +27,9 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow file upload works — with the right pattern. The native form input handles most straightforward cases, Uploadcare covers the mid-range, and pre-signed S3 handles everything large or sensitive. Which one you need depends almost entirely on file size and whether the files require secure delivery.
 
-I've wired up file uploads on Webflow forms for intake flows, portfolio submission forms, client portals, and legal onboarding. The native option gets you 80% of the way there. The other 20% is where clients almost always underestimate the work. If you're building something that needs more than basic file attachment, [get in touch](/contact) and we can scope it properly.
+I've wired up file uploads on Webflow forms for intake flows, portfolio submission forms, client portals, and legal onboarding. The native option gets you 80% of the way there. The other 20% is where clients almost always underestimate the work. If you're building something that needs more than basic file attachment, [get in touch](/contact/) and we can scope it properly.
 
-This post assumes you already have a Webflow form working. If you're still fighting validation or conditional fields, read [multi-step forms in Webflow](/blog/webflow-multi-step-forms) first — the patterns here build on that foundation.
+This post assumes you already have a Webflow form working. If you're still fighting validation or conditional fields, read [multi-step forms in Webflow](/blog/webflow-multi-step-forms/) first — the patterns here build on that foundation.
 
 ## Webflow's native upload limits
 
@@ -80,7 +80,7 @@ Filestack's widget works on the same principle as Uploadcare — external upload
 
 Cloudinary is different in character. It's an image and video CDN with transformation capabilities, not primarily a form-upload tool. You can wire up Cloudinary's Upload Widget the same way (script on the page, hidden field for the URL, callback on completion), but Cloudinary's real value is post-upload: automatic format conversion, quality optimization, and responsive image delivery via URL parameters. For portfolio intake forms where clients submit raw image assets you'll later display in a CMS, Cloudinary earns its cost. For general file uploads, it's overkill.
 
-Both Filestack and Cloudinary require [custom code in Webflow](/blog/webflow-custom-code) — there are no native integrations. All three patterns (Uploadcare, Filestack, Cloudinary) live in the same custom code embed or `</body>` script block. The pattern is identical; the library and API key change.
+Both Filestack and Cloudinary require [custom code in Webflow](/blog/webflow-custom-code/) — there are no native integrations. All three patterns (Uploadcare, Filestack, Cloudinary) live in the same custom code embed or `</body>` script block. The pattern is identical; the library and API key change.
 
 One practical note on Filestack: the free tier limits uploads to 100MB per file and 1,000 transforms per month. For production use on a client site that will see real volume, the $49/month Basic plan is the floor you need.
 
@@ -131,7 +131,7 @@ Native Webflow uploads store files on Webflow's CDN with unguessable but permane
 
 The security architecture for sensitive files is straightforward: S3 with pre-signed URL delivery and a short expiry (15 minutes, or as long as the user reasonably needs to download it). The Webflow form stores the S3 object key, not the public URL. When a legitimate user needs to access the file, a backend endpoint generates a fresh pre-signed URL on demand. The previous URL has already expired.
 
-For form validation patterns that catch bad input before anything gets uploaded, [Webflow form validation](/blog/webflow-form-validation) covers client-side and server-side approaches in detail — worth reading alongside this if you're building anything that handles user-submitted files.
+For form validation patterns that catch bad input before anything gets uploaded, [Webflow form validation](/blog/webflow-form-validation/) covers client-side and server-side approaches in detail — worth reading alongside this if you're building anything that handles user-submitted files.
 
 The other consideration is file type spoofing. A user can rename a `.exe` to `.pdf` and your `accept="application/pdf"` attribute won't stop them. Client-side validation is user-facing polish, not a security control. Any real file type enforcement needs to happen server-side — MIME type sniffing on the actual file bytes, not the filename extension. If you're processing uploaded files in any way (parsing, displaying, forwarding), validate the actual file type before touching the contents.
 

@@ -27,7 +27,7 @@ import FaqSchema from '@/components/blog/FaqSchema.astro';
 
 Webflow international SEO is one of those topics where doing it half-right is almost worse than not doing it at all. A botched hreflang setup sends conflicting signals to Google. A poorly structured URL architecture makes consolidating link equity nearly impossible. And Webflow's current hosting model adds a constraint most guides don't acknowledge: you can't run multiple domains off a single Webflow project without a workaround. This post covers the full playbook — URL strategy, hreflang implementation, Search Console configuration, ccTLD decisions, and the traps that swallow international launches whole.
 
-If you're building from scratch and want to gut-check the fundamentals before going international, the [Webflow SEO checklist for 2026](/blog/webflow-seo-checklist-2026) is a good baseline to clear first. And if you'd rather hand this off to someone who's done it, [get in touch](/contact).
+If you're building from scratch and want to gut-check the fundamentals before going international, the [Webflow SEO checklist for 2026](/blog/webflow-seo-checklist-2026/) is a good baseline to clear first. And if you'd rather hand this off to someone who's done it, [get in touch](/contact/).
 
 ## The 3 URL strategies (subfolder, subdomain, ccTLD)
 
@@ -65,7 +65,7 @@ A few things to note in that pattern: `x-default` is not optional — it's the f
 
 In Webflow, you add hreflang tags through the page-level custom code field (Head section). For static pages, this means editing each page individually. For CMS-driven pages, you can inject them dynamically using CMS embed logic — the collection template head custom code supports CMS field variables, so you can store the alternate URL set as a CMS field and output it per-record. It's not elegant, but it works.
 
-The hreflang relationships between language variants and full SEO implementation are covered in depth in [Webflow multi-language SEO](/blog/webflow-multi-language-seo) if you're working specifically with language variants rather than country-regional splits.
+The hreflang relationships between language variants and full SEO implementation are covered in depth in [Webflow multi-language SEO](/blog/webflow-multi-language-seo/) if you're working specifically with language variants rather than country-regional splits.
 
 ## International Targeting in Search Console
 
@@ -85,7 +85,7 @@ Generic TLDs (`.com`, `.net`, `.io`, `.co`) do benefit from Search Console targe
 
 Subdomains require their own Search Console properties too. `de.example.com` is a separate property from `example.com`. Verify it separately and set the country target there.
 
-Pair this with your [Webflow sitemap and robots.txt configuration](/blog/webflow-sitemap-robots-canonical) — international sites need a sitemap that includes all language/region variants, and Webflow's auto-generated sitemap won't account for your alternate URLs unless you supplement it with a custom sitemap file served from `public/`.
+Pair this with your [Webflow sitemap and robots.txt configuration](/blog/webflow-sitemap-robots-canonical/) — international sites need a sitemap that includes all language/region variants, and Webflow's auto-generated sitemap won't account for your alternate URLs unless you supplement it with a custom sitemap file served from `public/`.
 
 ## ccTLDs: when they're worth the cost
 
@@ -113,7 +113,7 @@ Local case studies and social proof. A testimonial from a US company is weak tru
 
 Country-specific calls to action. "Book a call" in German timezone phrasing with a German-localized Cal.com calendar is meaningfully different from a generic CTA. These details signal that the regional version of the site is maintained by someone who understands the local market.
 
-The question of which localization tool to use — Webflow's native Localization feature versus Weglot or similar — is a different decision tree. I break down the trade-offs between tools in [Webflow Localization vs. Weglot](/blog/webflow-localization-vs-weglot), which covers the SEO implications of each approach specifically.
+The question of which localization tool to use — Webflow's native Localization feature versus Weglot or similar — is a different decision tree. I break down the trade-offs between tools in [Webflow Localization vs. Weglot](/blog/webflow-localization-vs-weglot/), which covers the SEO implications of each approach specifically.
 
 ## Multi-language vs multi-regional
 
@@ -125,7 +125,7 @@ Multi-regional SEO is about serving different national audiences, possibly in th
 
 The overlap case — and the most complex one — is multi-language-multi-regional: different countries, different languages, with some languages appearing in multiple countries. A company targeting France, Germany, and French-speaking Belgium needs `fr-FR`, `de-DE`, and `fr-BE` variants. The hreflang set grows quickly, the translation workload triples, and the CMS architecture has to handle country-specific and language-specific field variants simultaneously.
 
-For most Webflow projects, the practical advice: don't start with the overlap case. Pick either multi-language (scale to more languages in your primary market) or multi-regional (expand to new country markets in a language you already have). Get one right before combining. The [Webflow multi-language SEO guide](/blog/webflow-multi-language-seo) and [Webflow Localization vs. Weglot](/blog/webflow-localization-vs-weglot) both approach this from the language-first angle if that's your starting point.
+For most Webflow projects, the practical advice: don't start with the overlap case. Pick either multi-language (scale to more languages in your primary market) or multi-regional (expand to new country markets in a language you already have). Get one right before combining. The [Webflow multi-language SEO guide](/blog/webflow-multi-language-seo/) and [Webflow Localization vs. Weglot](/blog/webflow-localization-vs-weglot/) both approach this from the language-first angle if that's your starting point.
 
 ## The common pitfalls
 

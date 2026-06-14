@@ -17,16 +17,16 @@ const copy = {
   consult: {
     eyebrow: 'Getting stuck?',
     heading: 'Want a second pair of eyes on this?',
-    body: 'If you are hitting a wall on Webflow SEO, performance, or CMS structure, I can <a class="text-brand underline underline-offset-2" href="/services/webflow-audits">review your setup</a> and tell you what to fix.',
+    body: 'If you are hitting a wall on Webflow SEO, performance, or CMS structure, I can <a class="text-brand underline underline-offset-2" href="/services/webflow-audits/">review your setup</a> and tell you what to fix.',
     cta: 'Get in touch',
-    href: '/contact',
+    href: '/contact/',
   },
   subscribe: {
     eyebrow: 'More like this',
     heading: 'Building on Webflow?',
     body: 'Read the rest of the blog for more guides on Webflow CMS, SEO, and performance.',
     cta: 'See all posts',
-    href: '/blog',
+    href: '/blog/',
   },
 };
 
@@ -38,7 +38,7 @@ const c = copy[variant];
   <p class="mt-3 text-body text-ink-muted" set:html={c.body}></p>
   <a
     href={c.href}
-    class="mt-5 inline-flex items-center gap-2 rounded-md bg-ink px-5 py-2.5 text-paper font-medium hover:gap-3 transition-all"
+    class="mt-5 inline-flex items-center gap-2 rounded-md bg-ink px-5 py-2.5 text-paper font-medium no-underline hover:gap-3 transition-all"
   >
     {c.cta} →
   </a>
