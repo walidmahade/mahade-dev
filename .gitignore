@@ -7,6 +7,8 @@ dist/
 # Playwright MCP screenshots (local verification only)
 .playwright-mcp/
 /*.png
+# Claude Preview local dev-server config
+.claude/launch.json
 
 # dependencies
 node_modules/
